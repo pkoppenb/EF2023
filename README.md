@@ -1,5 +1,5 @@
 # EF2023
-Analyse des elections fédérales de 2023, canton de vaud
+Analyse des elections fédérales de 2023, canton de Vaud
 
 pour tourner:
 
