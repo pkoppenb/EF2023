@@ -161,8 +161,8 @@ class Liste():
             print("Je ne touve pas {0}".format(self.nom))
             exit()
         self.parti = None  # lien vers parti
-        self.suffrages_par_parti = {}
-        self.doubles_par_parti = {}
+        self.suffrages_par_liste = {}
+        self.doubles_par_liste = {}
         self.candidats = [ ]
         
     def connu(self,nom):
@@ -175,15 +175,15 @@ class Liste():
         """
         Ajoute les suffrages d'un candidat
         """
-#        print("Suffrages du candidat {0}: {1}".format(candidat.nom, candidat.suffrages_par_parti))
-#        print("Suffrages du parti    {0}: {1}".format(self.nom, self.suffrages_par_parti))
+#        print("Suffrages du candidat {0}: {1}".format(candidat.nom, candidat.suffrages_par_liste))
+#        print("Suffrages du parti    {0}: {1}".format(self.nom, self.suffrages_par_liste))
         self.candidats.append(candidat) # liste des candidats
-        for k in candidat.suffrages_par_parti.keys() : self.suffrages_par_parti[k] += candidat.suffrages_par_parti[k]
-        for k in candidat.doubles_par_parti.keys() : self.doubles_par_parti[k] += candidat.doubles_par_parti[k]
-        # print("Liste {0} a {1} suffrages depuis {2}".format(self.nom,self.suffrages,self.suffrages_par_parti))
+        for k in candidat.suffrages_par_liste.keys() : self.suffrages_par_liste[k] += candidat.suffrages_par_liste[k]
+        for k in candidat.doubles_par_liste.keys() : self.doubles_par_liste[k] += candidat.doubles_par_liste[k]
+        # print("Liste {0} a {1} suffrages depuis {2}".format(self.nom,self.suffrages,self.suffrages_par_liste))
 
     def check(self):
-        s = sum([v for v in self.suffrages_par_parti.values()])
+        s = sum([v for v in self.suffrages_par_liste.values()])
         print("{0}: {1} suffrages compl {2}, mod {3}+{4}, autres {5}, s.d. {6} -> {7} =? {8}"
               .format(self.nom,
                       self.suffrages,
@@ -200,8 +200,8 @@ class Liste():
         """
         colors = {_sd: "black"}
         suffs = {}
-        for k in self.suffrages_par_parti.keys():
-            suffs[k] = self.suffrages_par_parti[k]
+        for k in self.suffrages_par_liste.keys():
+            suffs[k] = self.suffrages_par_liste[k]
 #            print("Pour {0} je cherche {1}".format(self.nom,k))
             for l in listes.values():
                 if l.nom == k :
@@ -213,7 +213,7 @@ class Liste():
 #                    print('Trouvé parti {0} couleur {1}'.format(l.parti.nom,l.couleur))
                     break
 #                else: colors.append('black')
-#        print(self.nom,self.suffrages_par_parti.keys(),colors)
+#        print(self.nom,self.suffrages_par_liste.keys(),colors)
 
         suffs = dict(sorted(suffs.items(), key=lambda item: item[1], reverse=True))
       
@@ -271,8 +271,8 @@ class Parti(Liste):
                 self.listes.append(l)
                 self.couleur = l.couleur
                 self.alliance = l.alliance
-        self.suffrages_par_parti = {}
-        self.doubles_par_parti = {}
+        self.suffrages_par_liste = {}
+        self.doubles_par_liste = {}
         self.classe = "Parti"
         print("Nouveau parti {0} contenant {1} listes".format(self.nom_parti,len(self.listes)))
 
@@ -284,21 +284,21 @@ class Parti(Liste):
         """
         for l in listes.values():  # je boucle sur les listes
             if l.nom_parti != self.nom : continue    # je ne garde que les listes du parti
-            for k in l.suffrages_par_parti.keys():  # je boucle encore sur les listes
+            for k in l.suffrages_par_liste.keys():  # je boucle encore sur les listes
                 if k==_sd: pi = k  # sans dénomination
                 else:   # je cherche le parti de k
                     for ll in listes.values():
                         if ll.nom==k : pi = ll.nom_parti
-                if pi in self.suffrages_par_parti.keys():
-                    print(u"{0} Trouvé {1} - j'ajoute {2}".format(self.nom,pi,l.suffrages_par_parti[k]))
-                    self.suffrages_par_parti[pi] += l.suffrages_par_parti[k]
-                    self.doubles_par_parti[pi] += l.doubles_par_parti[k]
+                if pi in self.suffrages_par_liste.keys():
+                    print(u"{0} Trouvé {1} - j'ajoute {2}".format(self.nom,pi,l.suffrages_par_liste[k]))
+                    self.suffrages_par_liste[pi] += l.suffrages_par_liste[k]
+                    self.doubles_par_liste[pi] += l.doubles_par_liste[k]
                 else:
-                    print(u"{0} Nouveau {1} - je crée avec {2}".format(self.nom,pi,l.suffrages_par_parti[k]))
-                    self.suffrages_par_parti[pi] = l.suffrages_par_parti[k]
-                    self.doubles_par_parti[pi] = l.doubles_par_parti[k]
+                    print(u"{0} Nouveau {1} - je crée avec {2}".format(self.nom,pi,l.suffrages_par_liste[k]))
+                    self.suffrages_par_liste[pi] = l.suffrages_par_liste[k]
+                    self.doubles_par_liste[pi] = l.doubles_par_liste[k]
                 
-        # print("Le parti {0} a des suffrages de {1}".format(self.nom,self.suffrages_par_parti))
+        # print("Le parti {0} a des suffrages de {1}".format(self.nom,self.suffrages_par_liste))
 
 #############################################################################
 class Candidat():
@@ -318,8 +318,8 @@ class Candidat():
         self.nom+=nn[-1]
         # print(u'Crée candidat {0} liste {1:2}, place {2:2}: {3}'.format(self.numero,self.liste_id,self.place,self.nom))
         self.pvl = None
-        self.suffrages_par_parti = {}
-        self.doubles_par_parti = {}
+        self.suffrages_par_liste = {}
+        self.doubles_par_liste = {}
         self.biffes = 0
         self.biffe_pour_qui = {}
         self.biffe_pour_qui_unique = {}
@@ -345,13 +345,13 @@ class Candidat():
             if nS>0:
                 if b.liste: bn = b.liste.nom
                 else: bn = _sd
-                if bn in self.suffrages_par_parti.keys():
-                    self.suffrages_par_parti[bn] += nS
-                    if b.double(self.numero): self.doubles_par_parti[bn] += b.poids
+                if bn in self.suffrages_par_liste.keys():
+                    self.suffrages_par_liste[bn] += nS
+                    if b.double(self.numero): self.doubles_par_liste[bn] += b.poids
                 else:
-                    self.suffrages_par_parti[bn] = nS
-                    self.doubles_par_parti[bn] = 0   # create
-                    if b.double(self.numero): self.doubles_par_parti[bn] = b.poids
+                    self.suffrages_par_liste[bn] = nS
+                    self.doubles_par_liste[bn] = 0   # create
+                    if b.double(self.numero): self.doubles_par_liste[bn] = b.poids
                 self.suffrages += b.suffrages[self.numero]*b.poids
                 ### amis
                 if b.double(self.numero) or b.liste != self.liste:  # ajout sur une autre liste ou doubles
@@ -385,7 +385,7 @@ class Candidat():
                     incrementeOuCree(self.biffe_pour_qui_unique,candUnique[0],b.poids) # un seul
                     # if self.numero=='12.02': print("Le candidat {1} a été biffé d'une liste {2}, et {3} a recu {4} voix sur un bulletin {5}".format(self.numero,self.nom,b.nom_liste_originale,c,v,b.suffrages))
                     
-#        print("Candidat {0} a {1} suffrages dans {2}".format(self.nom,self.suffrages,self.suffrages_par_parti))
+#        print("Candidat {0} a {1} suffrages dans {2}".format(self.nom,self.suffrages,self.suffrages_par_liste))
 
         self.liste.miseAjour(self)
 
@@ -434,6 +434,36 @@ class Candidat():
         plt.title("Candidats ajoutés en même temps que {0}".format(self.nom))
         deuxPlots("Amis-{0}".format(goodName(self.nom)))
         plt.clf()
+
+    def listes(self,listes):
+        """
+        suffrages du candidat par listes
+        """
+        s_listes = dict(sorted(self.suffrages_par_liste.items(), key=lambda item: item[1], reverse=True))
+        # print("s_listes {0} listes {1}".format(s_listes,listes))
+        cols = []
+        # Ca c'est très compliqué parce que j'indexe par nom et pas numéro. A changer.
+        for n in s_listes.keys():
+            if n == _sd : cols.append("black")
+            else:
+                for k in listes.values():
+                    if k.nom == n:  cols.append(k.couleur)
+        s_listes[ "Liste complète"] = int(self.liste.suffrages_liste_complete/_sieges)
+        cols.append(self.liste.couleur)
+        y_pos = np.arange(len(s_listes))
+        plt.barh(y_pos,s_listes.values(),color=cols )
+        plt.gca().invert_yaxis()
+        plt.yticks(y_pos, labels= list(s_listes.keys() ))
+        plt.xlabel('Suffrages de {0}'.format(self.nom))
+        plt.title("Suffrages de {0} par liste".format(self.nom))
+        plt.xscale('log')
+        for i, v in enumerate(s_listes.values()):
+            plt.text(1.02*v, i + .25, str(v), color='blue', fontweight='bold')
+        deuxPlots("Suffrages-Candidat-{0}".format(goodName(self.nom)))
+        plt.clf()
+        plt.xscale('linear')
+        
+        
 
 #############################################################################
 def lisBulletins(listes):
@@ -499,8 +529,8 @@ def lisScrutin():
     # mettre à jour la liste des listes
     for l in listes.values():
         for nl in noms_des_listes:
-            l.suffrages_par_parti[nl] = 0
-            l.doubles_par_parti[nl] = 0
+            l.suffrages_par_liste[nl] = 0
+            l.doubles_par_liste[nl] = 0
             
 
     noms_des_partis = {}
@@ -523,7 +553,7 @@ def parasite(nom,listes):
     para = {}
     for l in listes.values():
         if not l.nom == nom :
-            para[l] = l.suffrages_par_parti[nom]
+            para[l] = l.suffrages_par_liste[nom]
     y_pos = np.arange(len(para.values()))
     fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.25)
     para = dict(sorted(para.items(), key=lambda item: item[1], reverse=True))
@@ -554,8 +584,8 @@ def candidatsParasites(nomParti,candidats,partis=None):
         if c.liste.nom in listes : continue
         para[c] = 0
         for l in listes:
-            if l in c.suffrages_par_parti.keys():
-                para[c] += c.suffrages_par_parti[l]
+            if l in c.suffrages_par_liste.keys():
+                para[c] += c.suffrages_par_liste[l]
     para = dict(sorted(para.items(), key=lambda item: item[1], reverse=True))
     nn = 25
     kk = list(para.keys())[:nn]
@@ -635,8 +665,8 @@ def lisScrutin():
     # mettre à jour la liste des listes
     for l in listes.values():
         for nl in noms_des_listes:
-            l.suffrages_par_parti[nl] = 0
-            l.doubles_par_parti[nl] = 0
+            l.suffrages_par_liste[nl] = 0
+            l.doubles_par_liste[nl] = 0
             
 
     noms_des_partis = {}
@@ -659,7 +689,7 @@ def parasite(nom,listes):
     para = {}
     for l in listes.values():
         if not l.nom == nom :
-            para[l] = l.suffrages_par_parti[nom]
+            para[l] = l.suffrages_par_liste[nom]
     y_pos = np.arange(len(para.values()))
     fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.25)
     para = dict(sorted(para.items(), key=lambda item: item[1], reverse=True))
@@ -690,8 +720,8 @@ def candidatsParasites(nomParti,candidats,partis=None):
         if c.liste.nom in listes : continue
         para[c] = 0
         for l in listes:
-            if l in c.suffrages_par_parti.keys():
-                para[c] += c.suffrages_par_parti[l]
+            if l in c.suffrages_par_liste.keys():
+                para[c] += c.suffrages_par_liste[l]
     para = dict(sorted(para.items(), key=lambda item: item[1], reverse=True))
     nn = 25
     kk = list(para.keys())[:nn]
@@ -729,17 +759,18 @@ for p in partis.values(): p.check()
 
 # vérification
 print("##################################################################################")
-# print("Listes: {0}".format( [ k for k in listes[12].suffrages_par_parti.keys()] ))
-for p in listes.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_parti.values()]))
+# print("Listes: {0}".format( [ k for k in listes[12].suffrages_par_liste.keys()] ))
+for p in listes.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_liste.values()]))
 print("##################################################################################")
 # print("Partis: {0}".format( partis.keys() ))
-for p in partis.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_parti.values()],p.suffrages))
+for p in partis.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_liste.values()],p.suffrages))
 print("##################################################################################")
 
 # graphiques pour les candidats
 for c in candidats.values():
     print("Candidat {0} liste {1} parti {2}".format(c.nom,c.liste.nom,c.liste.parti.nom))
     if c.liste.parti.nom == "PVL":
+        c.listes(listes)
         c.amis(candidats,listes)
         c.biffage(candidats,listes, unique=False)
         c.biffage(candidats,listes, unique=True)
