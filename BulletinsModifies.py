@@ -26,6 +26,17 @@ def deuxPlots(nom):
     plt.savefig("png/{0}.png".format(nom))
 
 #############################################################################
+class Commune():
+    """
+    Une commune
+    """
+    def __init__(self,row):
+        self.numero
+        self.nom
+        self.suffrages
+
+    
+#############################################################################
 class Bulletin():
     """
     Une catégorie unique de bulletin
@@ -213,7 +224,7 @@ class Liste():
         suffs = dict(sorted(suffs.items(), key=lambda item: item[1], reverse=True))
 
         y_pos = np.arange(len(suffs.values()))
-        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.25)
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
         plt.barh(y_pos,suffs.values(),color=[colors[k] for k in list(suffs.keys())])
         plt.yticks(y_pos, labels=(suffs.keys()))
         plt.xlabel('Suffrages')
@@ -231,7 +242,7 @@ class Liste():
             biffs[c.nom] = c.biffes
         biffs = dict(sorted(biffs.items(), key=lambda item: item[1], reverse=False))
         y_pos = np.arange(len(biffs.values()))
-        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.25)
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
         plt.barh(y_pos,biffs.values(),color=self.couleur)
         plt.yticks(y_pos, labels=(biffs.keys()))
         plt.xlabel('Biffages')
@@ -247,23 +258,91 @@ class Liste():
         sorted_cands = {  }
         for c in self.candidats : sorted_cands[c] = c.suffrages
         sorted_cands = dict(sorted(sorted_cands.items(), key=lambda item: item[1], reverse=False))
-        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.25)
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
         y_pos = np.arange(len(self.candidats))
+
+        # les biffés je les mets à gauche
+        biffes = [ -c.biffes for c in sorted_cands.keys() ]
+        plt.barh(y_pos,biffes,color='red',label='Biffés')
+        
+        # listes complètes
         base = [ self.suffrages_liste_complete/_sieges for c in sorted_cands.keys() ]
-        plt.barh(y_pos,base,color='green',label='Listes complètes')
+        plt.barh(y_pos,base,color='cyan',label='Listes complètes')
+        
+        # puis je mets les doublés au dessus de la base
         doubles = [ c.doubles for c in sorted_cands.keys() ]
-        plt.barh(y_pos,doubles,left=base,color='blue',label='doublés')
-        sums = [ b+d for d,b in zip(base,doubles) ]
-        suffs =  [ c.suffrages-c.doubles for c in sorted_cands.keys() ]
-        plt.barh(y_pos,suffs,left=sums,color='red',label='autres suffrages')
+        plt.barh(y_pos,doubles,left=base,color='green',label='Doublés')
+        sums = [ int(b+d) for d,b in zip(base,doubles) ]
+        
+        # les autres de fait contiennent les biffages
+        suffs =  [ c.suffrages-c.doubles for c in sorted_cands.keys() ]  
+        plt.barh(y_pos,suffs,left=sums,color='blue',label='Autres suffrages')
+        sums = [ int(b+d) for d,b in zip(sums,suffs) ]
         
         plt.xlabel('Suffrages')
         plt.title(self.nom)
         plt.yticks(y_pos, labels=[c.nom for c in sorted_cands.keys()])
-        plt.legend()
+        off = -0.01*sums[0]
+        for i, v in enumerate(sums):
+            plt.text(off+v, i - .25, str(v), color='white', ha='right') # horizontal alignment
+        plt.legend(loc="lower right")
         deuxPlots("SuffragesParCanddidat-{0}".format(goodName(self.nom)))
         plt.clf()
         
+    def candidatsParasites(self,candidats):
+        """
+        Candidats parasites sur les listes PVL
+        """
+        para = {}
+        listes = []
+        if self.classe == "Parti":
+            listes = [ l.numero for l in p.listes ]
+        else:
+            listes = [ self.numero ]
+            #    print("Je cherche les parasites de {0} Listes: {1}".format(self.nom,listes))
+        for c in candidats.values():
+            if c.liste.numero in listes : continue
+            para[c] = 0
+            for l in listes:
+                if l in c.suffrages_par_liste.keys():
+                    para[c] += c.suffrages_par_liste[l]
+        #    print("Trouvé {0} parasites".format(len(para)))
+        para = dict(sorted(para.items(), key=lambda item: item[1], reverse=True))
+        nn = 25
+        kk = list(para.keys())[:nn]
+        vv = list(para.values())[:nn]
+        y_pos = np.arange(len(kk))
+        plt.barh(y_pos,vv,color=[ c.liste.couleur for c in kk ] )
+        plt.gca().invert_yaxis()
+        plt.yticks(y_pos, labels=[k.nom for k in kk])
+        plt.xlabel('Suffrages obtenus chez {0}'.format(self.nom))
+        plt.title("Candidats parasites de {0}".format(self.nom))
+        deuxPlots("CandidatsParasite-{0}".format(goodName(self.nom)))
+        plt.clf()
+        
+    def parasite(self,listes):
+        """
+        qui parasite la liste ?
+        """
+        para = {}
+        idx = self.numero
+        if self.classe == "Parti": idx = self.nom # on indexe les partis par nom
+        for l in listes.values():   # peut être un numero ou un nom
+            if not (l.nom == self.nom):
+                print("Parasitage de {2} - Parti {0} suffrages_par_liste {1}".format(l.nom,l.suffrages_par_liste,idx))
+                para[l] = l.suffrages_par_liste[idx]
+                print("Parasitage de {0} par {1} : {2} suffrages".format(self.nom,l.nom,para[l]))
+        y_pos = np.arange(len(para.values()))
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
+        para = dict(sorted(para.items(), key=lambda item: item[1], reverse=True))
+        plt.barh(y_pos,para.values(),color = [l.couleur for l in para.keys()])
+        plt.yticks(y_pos, labels=[ l.nom for l in para.keys()])
+        plt.xlabel('Suffrages obtenus chez {0}'.format(self.nom))
+        plt.title("Parasitage de {0}".format(self.nom))
+        plt.gca().invert_yaxis()
+        deuxPlots("Parasite-{0}-{1}".format(self.classe,goodName(self.nom)))
+        plt.clf()
+    
 
 
 #############################################################################
@@ -300,15 +379,13 @@ class Parti(Liste):
     def miseAjour(self,listes):
         """
         Mise à jour des suffrages du parti
-
-        Je pourrais probablement simplifier maintenant que ce sont des dictionnaires
         """
         for l in listes.values():  # je boucle sur les listes
             if l.nom_parti != self.nom : continue    # je ne garde que les listes du parti
-            for k in l.suffrages_par_liste.keys():  # je boucle encore sur les listes
+            for k in l.suffrages_par_liste.keys():   # je boucle encore sur les listes
                 if k==0: pi = _sd  # sans dénomination
                 else: pi = listes[k].nom_parti
-                if k in self.suffrages_par_liste.keys():   # les partis sont indexés par parti
+                if pi in self.suffrages_par_liste.keys():   # les partis sont indexés par nom
                     print(u"{0} Trouvé {1} - j'ajoute {2}".format(self.nom,pi,l.suffrages_par_liste[k]))
                     self.suffrages_par_liste[pi] += l.suffrages_par_liste[k]
                     self.doubles_par_liste[pi] += l.doubles_par_liste[k]
@@ -317,7 +394,7 @@ class Parti(Liste):
                     self.suffrages_par_liste[pi] = l.suffrages_par_liste[k]
                     self.doubles_par_liste[pi] = l.doubles_par_liste[k]
                 
-        # print("Le parti {0} a des suffrages de {1}".format(self.nom,self.suffrages_par_liste))
+        print("Le parti {0} a des suffrages de {1}".format(self.nom,self.suffrages_par_liste))
 
 #############################################################################
 class Candidat():
@@ -420,7 +497,7 @@ class Candidat():
             biff = dict(sorted(self.biffe_pour_qui_unique.items(), key=lambda item: item[1], reverse=True))
         else:
             biff = dict(sorted(self.biffe_pour_qui.items(), key=lambda item: item[1], reverse=True))
-        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.25)
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
         nn = 25
         kk = list(biff.keys())[:nn]
         vv = list(biff.values())[:nn]
@@ -443,7 +520,7 @@ class Candidat():
         Meilleurs amis
         """
         amis = dict(sorted(self.ajoutes_aussi.items(), key=lambda item: item[1], reverse=True))
-        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.25)
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
         nn = 25
         kk = list(amis.keys())[:nn]
         vv = list(amis.values())[:nn]
@@ -483,7 +560,7 @@ class Candidat():
         plt.title("Suffrages de {0} par liste".format(self.nom))
         plt.xscale('log')
         for i, v in enumerate(s_listes.values()):
-            plt.text(1.02*v, i + .25, str(v), color='blue', fontweight='bold')
+            plt.text(1.02*v, i + .25, str(v), color='blue')
         deuxPlots("Suffrages-Candidat-{0}".format(goodName(self.nom)))
         plt.clf()
         plt.xscale('linear')
@@ -571,62 +648,7 @@ def lisScrutin():
             
     return listes,partis
                 
-#############################################################################
-def parasite(nom,listes):
-    """
-    qui parasite la liste nom ?
-    """
-    para = {}
-    for l in listes.values():
-        if not (l.nom == nom) and not ( l.numero == nom):
-            para[l] = l.suffrages_par_liste[nom]
-    y_pos = np.arange(len(para.values()))
-    fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.25)
-    para = dict(sorted(para.items(), key=lambda item: item[1], reverse=True))
-    plt.barh(y_pos,para.values(),color = [l.couleur for l in para.keys()])
-    plt.yticks(y_pos, labels=[ l.nom for l in para.keys()])
-    if type(nom) is int: nom = listes[nom].nom  # hacky
-    plt.xlabel('Suffrages obtenus chez {0}'.format(nom))
-    plt.title("Parasitage de {0}".format(nom))
-    plt.gca().invert_yaxis()
-    deuxPlots("Parasite-{0}".format(goodName(nom)))
-    plt.clf()
-    
-#############################################################################
-def candidatsParasites(liste,candidats):
-    """
-    Candidats parasites sur les listes PVL
-
-    Si nomParti est un parti, il fait donner partis
-    """
-    para = {}
-    listes = []
-    if liste.classe == "Parti":
-        listes = [ l.numero for l in p.listes ]
-    else:
-        listes = [ liste.numero ]
-#    print("Je cherche les parasites de {0} Listes: {1}".format(liste.nom,listes))
-    for c in candidats.values():
-        if c.liste.numero in listes : continue
-        para[c] = 0
-        for l in listes:
-            if l in c.suffrages_par_liste.keys():
-                para[c] += c.suffrages_par_liste[l]
-#    print("Trouvé {0} parasites".format(len(para)))
-    para = dict(sorted(para.items(), key=lambda item: item[1], reverse=True))
-    nn = 25
-    kk = list(para.keys())[:nn]
-    vv = list(para.values())[:nn]
-    y_pos = np.arange(len(kk))
-    plt.barh(y_pos,vv,color=[ c.liste.couleur for c in kk ] )
-    plt.gca().invert_yaxis()
-    plt.yticks(y_pos, labels=[k.nom for k in kk])
-    plt.xlabel('Suffrages obtenus chez {0}'.format(liste.nom))
-    plt.title("Candidats parasites de {0}".format(liste.nom))
-    deuxPlots("CandidatsParasite-{0}".format(goodName(liste.nom)))
-    plt.clf()
-        
-       
+   
 
 #############################################################################
 # main
@@ -649,7 +671,7 @@ for p in partis.values(): p.check()
 
 # vérification
 print("##################################################################################")
-print("Listes: {0}".format( listes ))
+# print("Listes: {0}".format( listes ))
 print("Listes: {0}".format( [ k for k in listes[12].suffrages_par_liste.keys()] ))
 for p in listes.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_liste.values()]))
 print("##################################################################################")
@@ -661,15 +683,15 @@ print("#########################################################################
 for l in listes.values():
     l.suffragesParCandidat()
     l.plotSuffrages(listes)
-    parasite(l.numero,listes)
-    if l.parti.nom == "PVL" : candidatsParasites(l,candidats)
+    l.parasite(listes)
+    if l.parti.nom == "PVL" : l.candidatsParasites(candidats)
     l.biffage()
 
 # graphiques pour les partis
 for p in partis.values():
     p.plotSuffrages(partis)
-    parasite(p.nom,partis)
-    candidatsParasites(p,candidats)
+    p.parasite(partis)
+    p.candidatsParasites(candidats)
 
 # graphiques pour les candidats
 for c in candidats.values():
