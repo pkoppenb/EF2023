@@ -27,17 +27,6 @@ def deuxPlots(nom):
     plt.savefig("png/{0}.png".format(nom))
 
 #############################################################################
-class Commune():
-    """
-    Une commune
-    """
-    def __init__(self,numero,nom):
-        self.numero
-        self.nom
-        self.suffrages
-
-    
-#############################################################################
 class Bulletin():
     """
     Une catégorie unique de bulletin
@@ -101,6 +90,45 @@ class Bulletin():
         return self.exprimes==_sieges
 
 #############################################################################
+class Commune():
+    """
+    Une commune
+    """
+    def __init__(self,numero,nom):
+        self.numero = numero
+        self.nom = nom
+        self.suffrages = 0
+
+    def partis(self,partis,normalise=True):
+        """
+        Résultats par partis dans une commune
+        """
+        # if "PVL" in partis.keys() : print(self.nom, partis["PVL"].nom,
+        #                                  partis["PVL"].compacts_par_commune[self.numero],partis["PVL"].autres_suffrages_par_commune[self.numero])
+        if normalise: facteur = 100./self.suffrages
+        else: facteur = 1.0
+        compacts = { k: facteur*_sieges*partis[k].compacts_par_commune[self.numero] for k in partis.keys() }
+        autres   = { k: facteur*sum(partis[k].autres_suffrages_par_commune[self.numero].values()) for k in partis.keys() }
+        total    = { k: compacts[k]+autres[k] for k in partis.keys() }
+        total = dict(sorted(total.items(), key=lambda item: item[1], reverse=False))
+        # print("{0}: compacts {1} autres {2} total {3}".format(self.nom, compacts, autres, total))
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
+        y_pos = np.arange(len(compacts))
+        plt.barh(y_pos,[compacts[k] for k in total.keys()],color=[ partis[k].couleur for k in total.keys()],edgecolor=[ partis[k].couleur for k in total.keys()] )
+        plt.barh(y_pos,[autres[k] for k in total.keys()],left=[compacts[k] for k in total.keys()],edgecolor=[ partis[k].couleur for k in total.keys()], color=['white' for k in total.keys()] )
+        off = -0.01*list(total.values())[0]
+        for i, v in enumerate(list(total.values())):
+            plt.text(off+v, i - .25, str(int(v)), color='black', ha='left') # horizontal alignment
+        if normalise: plt.xlabel('Pourcentages des partis')
+        else: plt.xlabel('Suffrages des partis')
+        plt.title(self.nom)
+        plt.yticks(y_pos, labels=[partis[k].nom for k in total.keys()])
+        deuxPlots("Commune-{0}-{1}s".format(goodName(self.nom),list(partis.values())[0].classe))
+        plt.clf()
+        
+        
+    
+#############################################################################
 class Liste():
     """
     Liste
@@ -115,6 +143,12 @@ class Liste():
         self.suffrages_sans_denom = int(row[8])
         self.suffrages = self.suffrages_liste_complete+self.suffrages_nom_liste_modifiee+self.suffrages_comp_liste_modifiee+self.suffrages_autres_listes+self.suffrages_sans_denom
         self.classe = "Liste"
+        self.parti = None  # lien vers parti
+        self.suffrages_par_liste = {}
+        self.doubles_par_liste = {}
+        self.candidats = [ ]
+        self.compacts_par_commune = {}
+        self.autres_suffrages_par_commune = {}
         print("Nouvelle liste {0:2} {1} a {2} suffrages".format(self.numero,self.nom,self.suffrages))
         
         if 'Sans' in self.nom:
@@ -172,10 +206,6 @@ class Liste():
         else:
             print("Je ne touve pas {0}".format(self.nom))
             exit()
-        self.parti = None  # lien vers parti
-        self.suffrages_par_liste = {}
-        self.doubles_par_liste = {}
-        self.candidats = [ ]
         
     def connu(self,nom):
         """
@@ -283,7 +313,7 @@ class Liste():
         plt.xlabel('Suffrages')
         plt.title(self.nom)
         plt.yticks(y_pos, labels=[c.nom for c in sorted_cands.keys()])
-        off = -0.01*sums[0]
+        off = 0.01*sums[0]
         for i, v in enumerate(sums):
             plt.text(off+v, i - .25, str(v), color='white', ha='right') # horizontal alignment
         plt.legend(loc="lower right")
@@ -396,6 +426,8 @@ class Parti(Liste):
         self.suffrages_sans_denom = 0
         self.suffrages = 0
         self.listes = []
+        self.compacts_par_commune = {}
+        self.autres_suffrages_par_commune = {}
         for l in listes.values():
             if l.nom_parti==nom:
                 l.parti = self
@@ -415,8 +447,7 @@ class Parti(Liste):
         """
         Mise à jour des suffrages du parti
         """
-        for l in listes.values():  # je boucle sur les listes
-            if l.nom_parti != self.nom : continue    # je ne garde que les listes du parti
+        for l in self.listes:  # je boucle sur les listes
             for k in l.suffrages_par_liste.keys():   # je boucle encore sur les listes
                 if k==0: pi = _sd  # sans dénomination
                 else: pi = listes[k].nom_parti
@@ -428,6 +459,15 @@ class Parti(Liste):
                     # print(u"{0} Nouveau {1} - je crée avec {2}".format(self.nom,pi,l.suffrages_par_liste[k]))
                     self.suffrages_par_liste[pi] = l.suffrages_par_liste[k]
                     self.doubles_par_liste[pi] = l.doubles_par_liste[k]
+
+            for c in l.compacts_par_commune.keys():
+                if c not in self.compacts_par_commune.keys() :  # create on first list
+                    self.compacts_par_commune[c] = l.compacts_par_commune[c]
+                    self.autres_suffrages_par_commune[c] = l.autres_suffrages_par_commune[c]
+                else:
+                    self.compacts_par_commune[c] += l.compacts_par_commune[c]
+                    for k in self.autres_suffrages_par_commune[c].keys(): self.autres_suffrages_par_commune[c][k]+=l.autres_suffrages_par_commune[c][k]
+                # print("{0} Mise à jour de {1} avec {2}: suffrages par commune {3}".format(c,self.nom,l.nom,l.autres_suffrages_par_commune[c]))
                 
         print("Le parti {0} a des suffrages de {1}".format(self.nom,self.suffrages_par_liste))
 
@@ -451,6 +491,7 @@ class Candidat():
         self.pvl = None
         self.suffrages_par_liste = {}
         self.doubles_par_liste = {}
+        self.suffrages_par_commune = {}
         self.biffes = 0
         self.doubles = 0
         self.biffe_pour_qui = {}
@@ -458,14 +499,6 @@ class Candidat():
         self.ajoutes_aussi = {}
         self.suffrages = 0
         self.classe = "Candidat"
-
-    def est_pvl(self):
-        """
-        Est-ce un PVL?
-        """
-        if self.pvl is None:   # calcule une seule fois
-            self.pvl = ('PVL' == self.liste.parti )
-        return self.pvl
 
     def analyse(self,bulletins):
         """
@@ -684,7 +717,7 @@ def lisScrutin():
     return listes,partis
                 
 #############################################################################
-def lisCommune(candidats,listes):
+def lisCommunes(candidats,listes):
     """
     Lis le fichier des communes
     """
@@ -694,29 +727,54 @@ def lisCommune(candidats,listes):
         nL = 0  # ligne
         for row in ff:
             nL += 1
-            if nL==2:
-                nom_listes = [ r for r in row[7:] ]
-                print("Les listes sont {0}".format(nom_listes))
-            elif nL>=3:
+#            print("Ligne {0}: {1}".format(nL,row))
+            if nL==3:
+                nom_listes = [ r for r in row[9:] ]
+                # print("Les listes sont {0}".format(nom_listes))
+                ListKeys = []   # liste qui mappe l'ordre dans ce fichier avec l'ordre des numéros de listes
+                for n in nom_listes:
+                    for l in listes.values():
+                        if n==l.nom : ListKeys.append(l.numero)
+                ListKeys.append(0)  # sd
+                print("Les listes dans l'ordre du fichier sont {0}".format([ listes[lk].nom for lk in ListKeys[:-1] ]))
+                    
+            elif nL>=4:
+                # commune
                 num = int(row[0])
                 nom = row[1]
-                cand_id = int(row[2])
-                # 3 : liste
+                cand_id = row[2]
+                la_liste = listes[ int(cand_id[:2]) ]
+                # 3 : nom de la liste
                 cand_nom = row[4]+" "+row[5]
-                non_mod = int(row[6])
+                non_mod = int(row[6])  # par liste
                 mod = int(row[7])
-                # 8: total
+                tot = int(row[8])
                 parListe = [ int(r) for r in row[9:] ]
                 
-                print("{0} {1} : {2} {3} a {4}+{5} suffrages de {6}".format(num,nom,cand_id,cand_nom,non_mod,mod))
+                if num not in communes.keys():
+                    communes[num] = Commune(num,nom)
+                if num not in la_liste.compacts_par_commune: la_liste.compacts_par_commune[num] = non_mod
+                if num not in la_liste.autres_suffrages_par_commune.keys(): la_liste.autres_suffrages_par_commune[num] = {}
+                communes[num].suffrages += tot # incrémente le total de suffrages
                 
-    
+                candidats[cand_id].suffrages_par_commune[num] = { ListKeys[i]: parListe[i] for i in range(len(parListe))}
+                for k in candidats[cand_id].suffrages_par_commune[num].keys():
+                    if k in  la_liste.autres_suffrages_par_commune[num].keys():
+                        la_liste.autres_suffrages_par_commune[num][k] += candidats[cand_id].suffrages_par_commune[num][k]
+                    else:
+                        la_liste.autres_suffrages_par_commune[num][k] = candidats[cand_id].suffrages_par_commune[num][k]
+                # if num==5726: print("Ajouté {0} à {1} dans {2}: autres_suffrages_par_commune {3} somme {4}".format(cand_id,la_liste.nom,nom,la_liste.autres_suffrages_par_commune[num],sum(list(la_liste.autres_suffrages_par_commune[num].values()))))
+
+                # print("Commune {0} {1} : Candidat {2} {3} a {4}+{5} suffrages de {6}".format(num,nom,cand_id,cand_nom,non_mod,mod,candidats[cand_id].suffrages_par_commune[num]))
+                
+    return communes
 
 #############################################################################
 # main
 #############################################################################
 listes,partis = lisScrutin()
 candidats,bulletins = lisBulletins(listes)
+communes = lisCommunes(candidats,listes)
 attribueListes(candidats,listes)
 
 print("J'ai {0} listes de {1} partis et {2} candidats pour {3} bulletins différents".format(len(listes),len(partis),len(candidats),len(bulletins)))
@@ -741,6 +799,12 @@ print("#########################################################################
 for p in partis.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_liste.values()],p.suffrages))
 print("##################################################################################")
 
+# graphiques pour les communes
+for c in communes.values():
+    c.partis(listes,normalise=False)
+    c.partis(partis,normalise=False)
+
+exit()
 # graphiques pour les listes
 for l in listes.values():
     l.suffragesParCandidat()
