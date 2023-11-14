@@ -2,6 +2,7 @@ import csv
 
 _file = 'export-bulletins-PR-CHCN-20231022.csv'
 _summary = 'ScrutinsParListe.csv'
+_communes = 'CHCN20231022.csv'
 _sd = "Sans dénom."
 import matplotlib.pyplot as plt
 import numpy as np
@@ -30,7 +31,7 @@ class Commune():
     """
     Une commune
     """
-    def __init__(self,row):
+    def __init__(self,numero,nom):
         self.numero
         self.nom
         self.suffrages
@@ -329,20 +330,54 @@ class Liste():
         if self.classe == "Parti": idx = self.nom # on indexe les partis par nom
         for l in listes.values():   # peut être un numero ou un nom
             if not (l.nom == self.nom):
-                print("Parasitage de {2} - Parti {0} suffrages_par_liste {1}".format(l.nom,l.suffrages_par_liste,idx))
+                # print("Parasitage de {2} - Parti {0} suffrages_par_liste {1}".format(l.nom,l.suffrages_par_liste,idx))
                 para[l] = l.suffrages_par_liste[idx]
-                print("Parasitage de {0} par {1} : {2} suffrages".format(self.nom,l.nom,para[l]))
+                # print("Parasitage de {0} par {1} : {2} suffrages".format(self.nom,l.nom,para[l]))
+        para = dict(sorted(para.items(), key=lambda item: item[1], reverse=True))
+
         y_pos = np.arange(len(para.values()))
         fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
-        para = dict(sorted(para.items(), key=lambda item: item[1], reverse=True))
         plt.barh(y_pos,para.values(),color = [l.couleur for l in para.keys()])
         plt.yticks(y_pos, labels=[ l.nom for l in para.keys()])
-        plt.xlabel('Suffrages obtenus chez {0}'.format(self.nom))
         plt.title("Parasitage de {0}".format(self.nom))
+        plt.xlabel('Suffrages obtenus chez {0}'.format(self.nom))
         plt.gca().invert_yaxis()
         deuxPlots("Parasite-{0}-{1}".format(self.classe,goodName(self.nom)))
         plt.clf()
-    
+
+        self.bilan(para)  # bilan du plus ou moins
+
+    def bilan(self,para):
+        """
+        Le bilan du plus et du moins
+        """
+        diff = {}
+        plus = {}
+        for l in para.keys():
+            if self.classe == "Liste": plus[l] = self.suffrages_par_liste[l.numero]  # suffrage de cette liste chez d'autres
+            else : plus[l] = self.suffrages_par_liste[l.nom]
+            diff[l] = plus[l]-para[l]
+            # print("{0} a {1} voix chez {2} et en perd {3}: diff = {4}".format(self.nom,plus[l],l.nom,para[l],diff[l]))
+        # on met dans l'ordre
+        diff = dict(sorted(diff.items(), key=lambda item: item[1], reverse=True))  #
+        diff[self] = sum(diff.values())  # bilan total
+        plus[self] = 0
+        para[self] = 0
+        # plot
+        y_pos = np.arange(len(diff.values()))
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
+        plt.barh(y_pos,[ plus[l] for l in diff.keys()], edgecolor = [l.couleur for l in diff.keys()], color=['white' for l in diff.keys()])
+        plt.barh(y_pos,[ -para[l] for l in diff.keys()], edgecolor = [l.couleur for l in diff.keys()], color=['white' for l in diff.keys()])
+        plt.barh(y_pos,diff.values(), color = [l.couleur for l in diff.keys()])
+        plt.xlabel("Suffrages sur d'autres listes moins les suffrages perdus")
+        plt.title("Bilan de {0}".format(self.nom))
+        ticks = [ l.nom for l in list(diff.keys())[:-1]]
+        ticks.append("Total")
+        plt.yticks(y_pos, labels=ticks)
+        plt.gca().invert_yaxis()
+        plt.vlines(x = 0., ymin = plt.gca().get_ylim()[0], ymax = plt.gca().get_ylim()[1],colors = 'grey',linewidth=1)
+        deuxPlots("Bilan-{0}-{1}".format(self.classe,goodName(self.nom)))
+        plt.clf()
 
 
 #############################################################################
@@ -386,11 +421,11 @@ class Parti(Liste):
                 if k==0: pi = _sd  # sans dénomination
                 else: pi = listes[k].nom_parti
                 if pi in self.suffrages_par_liste.keys():   # les partis sont indexés par nom
-                    print(u"{0} Trouvé {1} - j'ajoute {2}".format(self.nom,pi,l.suffrages_par_liste[k]))
+                    # print(u"{0} Trouvé {1} - j'ajoute {2}".format(self.nom,pi,l.suffrages_par_liste[k]))
                     self.suffrages_par_liste[pi] += l.suffrages_par_liste[k]
                     self.doubles_par_liste[pi] += l.doubles_par_liste[k]
                 else:
-                    print(u"{0} Nouveau {1} - je crée avec {2}".format(self.nom,pi,l.suffrages_par_liste[k]))
+                    # print(u"{0} Nouveau {1} - je crée avec {2}".format(self.nom,pi,l.suffrages_par_liste[k]))
                     self.suffrages_par_liste[pi] = l.suffrages_par_liste[k]
                     self.doubles_par_liste[pi] = l.doubles_par_liste[k]
                 
@@ -648,7 +683,34 @@ def lisScrutin():
             
     return listes,partis
                 
-   
+#############################################################################
+def lisCommune(candidats,listes):
+    """
+    Lis le fichier des communes
+    """
+    communes = {}
+    with open(_communes) as f:
+        ff = csv.reader(f)
+        nL = 0  # ligne
+        for row in ff:
+            nL += 1
+            if nL==2:
+                nom_listes = [ r for r in row[7:] ]
+                print("Les listes sont {0}".format(nom_listes))
+            elif nL>=3:
+                num = int(row[0])
+                nom = row[1]
+                cand_id = int(row[2])
+                # 3 : liste
+                cand_nom = row[4]+" "+row[5]
+                non_mod = int(row[6])
+                mod = int(row[7])
+                # 8: total
+                parListe = [ int(r) for r in row[9:] ]
+                
+                print("{0} {1} : {2} {3} a {4}+{5} suffrages de {6}".format(num,nom,cand_id,cand_nom,non_mod,mod))
+                
+    
 
 #############################################################################
 # main
