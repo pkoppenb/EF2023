@@ -3,7 +3,11 @@ import csv
 _file = 'export-bulletins-PR-CHCN-20231022.csv'
 _summary = 'ScrutinsParListe.csv'
 _communes = 'CHCN20231022.csv'
+_partis = 'sd-t-17.02-NRW2023-parteien-appendix.csv'
 _sd = "Sans dénom."
+_suissesDeLetranger1 = 9999   # chez les vaudois
+_suissesDeLetranger2 = 19220   # chez l'OFS
+
 import matplotlib.pyplot as plt
 import numpy as np
 plt.figure(figsize=(7,5))
@@ -98,6 +102,7 @@ class Commune():
         self.numero = numero
         self.nom = nom
         self.suffrages = 0
+        self.suffrages_par_parti = {}
 
     def partis(self,partis,normalise=True):
         """
@@ -168,7 +173,7 @@ class Liste():
             self.alliance = 'Droite'
             self.couleur = "royalblue"
         elif 'Vert' in self.nom or 'JVVD' in self.nom:
-            self.nom_parti = 'Verts'
+            self.nom_parti = 'VERT-E-S'
             self.alliance = 'Gauche'
             self.couleur = "forestgreen"
         elif 'VERT' in self.nom:
@@ -176,7 +181,7 @@ class Liste():
             self.alliance = 'PVL'
             self.couleur = "yellowgreen"
         elif 'POP' in self.nom:
-            self.nom_parti = 'POP'
+            self.nom_parti = 'PST/Sol.'
             self.alliance = 'Gauche'
             self.couleur = "maroon"
         elif 'Libres' in self.nom:
@@ -196,9 +201,9 @@ class Liste():
             self.alliance = 'UDF'
             self.couleur = "gray"
         elif u'EàG' in self.nom:
-            self.nom_parti = 'EàG'
+            self.nom_parti = 'PST/Sol.'
             self.alliance = 'Gauche'
-            self.couleur = "firebrick"
+            self.couleur = "maroon"
         elif 'PEV' in self.nom:
             self.nom_parti = 'PEV'
             self.alliance = 'Centre'
@@ -428,6 +433,7 @@ class Parti(Liste):
         self.listes = []
         self.compacts_par_commune = {}
         self.autres_suffrages_par_commune = {}
+        self.total_par_commune = {}
         for l in listes.values():
             if l.nom_parti==nom:
                 l.parti = self
@@ -717,11 +723,10 @@ def lisScrutin():
     return listes,partis
                 
 #############################################################################
-def lisCommunes(candidats,listes):
+def lisCommunes(communes,candidats,listes):
     """
-    Lis le fichier des communes
+    Lis le fichier vaudois des communes et candidats
     """
-    communes = {}
     with open(_communes) as f:
         ff = csv.reader(f)
         nL = 0  # ligne
@@ -750,9 +755,13 @@ def lisCommunes(candidats,listes):
                 mod = int(row[7])
                 tot = int(row[8])
                 parListe = [ int(r) for r in row[9:] ]
+
                 
                 if num not in communes.keys():
-                    communes[num] = Commune(num,nom)
+                    if num==_suissesDeLetranger1: num = _suissesDeLetranger2
+                    else:
+                        print("Je ne trouve pas la commune {0} {1}".format(num,nom))
+                        exit()
                 if num not in la_liste.compacts_par_commune: la_liste.compacts_par_commune[num] = non_mod
                 if num not in la_liste.autres_suffrages_par_commune.keys(): la_liste.autres_suffrages_par_commune[num] = {}
                 communes[num].suffrages += tot # incrémente le total de suffrages
@@ -767,14 +776,49 @@ def lisCommunes(candidats,listes):
 
                 # print("Commune {0} {1} : Candidat {2} {3} a {4}+{5} suffrages de {6}".format(num,nom,cand_id,cand_nom,non_mod,mod,candidats[cand_id].suffrages_par_commune[num]))
                 
-    return communes
+    return 
 
+#############################################################################
+def lisPartis(partis):
+    """
+    Lis le fichier suisse des communes et partis
+    """
+    communes = {}
+    with open(_partis) as f:
+        ff = csv.reader(f,delimiter=';')
+        nL = 0  # ligne
+        for row in ff:
+            nL += 1
+            if row[0]=='Gemeinde' and row[4]=='Vaud':
+                # print(row)
+                nom = row[2]
+                num = int(row[5])
+                if num not in communes.keys():
+                    c = Commune(num,nom)
+                    communes[num] = c
+                    print("Crée commune {0} {1}".format(num,nom))
+                parti = row[9]
+                if row[12]=='': suffrages = 0
+                else: suffrages = int(row[12])
+                c.suffrages += suffrages
+                c.suffrages_par_parti[parti] = suffrages
+                if parti in partis.keys():
+                    partis[parti].total_par_commune[num] = suffrages
+                    # print("Ajouté commune {0} parti {1} suffrages {2}".format(nom,parti,suffrages))
+                elif 0==suffrages:  # ne participe pas
+                    pass # do nothing
+                elif 'Autres' == parti:
+                    pass
+                                          
+    return communes
+    
 #############################################################################
 # main
 #############################################################################
 listes,partis = lisScrutin()
 candidats,bulletins = lisBulletins(listes)
-communes = lisCommunes(candidats,listes)
+communes = lisPartis(partis)
+lisCommunes(communes,candidats,listes)
 attribueListes(candidats,listes)
 
 print("J'ai {0} listes de {1} partis et {2} candidats pour {3} bulletins différents".format(len(listes),len(partis),len(candidats),len(bulletins)))
@@ -804,7 +848,6 @@ for c in communes.values():
     c.partis(listes,normalise=False)
     c.partis(partis,normalise=False)
 
-exit()
 # graphiques pour les listes
 for l in listes.values():
     l.suffragesParCandidat()
