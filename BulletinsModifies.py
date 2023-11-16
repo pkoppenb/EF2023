@@ -25,10 +25,27 @@ def incrementeOuCree(dico,cle,valeur):
 
 def deuxPlots(nom):
     """
-    Cree un pdf et un png
+    Crée un pdf et un png
     """
     plt.savefig("pdf/{0}.pdf".format(nom))
     plt.savefig("png/{0}.png".format(nom))
+
+def tableau(nom,lignes,colonnes):
+    """
+    Crée un tableau de données en csv
+    """
+    print("tableau avec {0} et {1}".format(lignes,colonnes))
+    with open("csv/{0}.csv".format(nom),"w") as f:
+        # d'abord l'en-tete
+        f.write(nom)
+        for k in colonnes.keys(): f.write(", {0}".format(k))
+        f.write("\n")
+        # ensuite chaque ligne
+        for i,l in enumerate(lignes):
+            f.write(l)
+            for k in colonnes.keys(): f.write(", {0}".format(colonnes[k][i]))
+            f.write("\n")
+    f.close()
 
 #############################################################################
 class Bulletin():
@@ -412,6 +429,12 @@ class Liste():
         plt.gca().invert_yaxis()
         plt.vlines(x = 0., ymin = plt.gca().get_ylim()[0], ymax = plt.gca().get_ylim()[1],colors = 'grey',linewidth=1)
         deuxPlots("Bilan-{0}-{1}".format(self.classe,goodName(self.nom)))
+        plus[self] = sum(plus.values())
+        para[self] = sum(para.values())
+        tableau("Bilan-{0}-{1}".format(self.classe,goodName(self.nom)),ticks,
+                { "gagnés" : [ plus[l] for l in diff.keys()],
+                  "perdus" : [ -para[l] for l in diff.keys()],
+                  "bilan" : list(diff.values()) })
         plt.clf()
 
 
@@ -843,10 +866,11 @@ print("#########################################################################
 for p in partis.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_liste.values()],p.suffrages))
 print("##################################################################################")
 
-# graphiques pour les communes
-for c in communes.values():
-    c.partis(listes,normalise=False)
-    c.partis(partis,normalise=False)
+# graphiques pour les partis
+for p in partis.values():
+    p.plotSuffrages(partis)
+    p.parasite(partis)
+    p.candidatsParasites(candidats)
 
 # graphiques pour les listes
 for l in listes.values():
@@ -856,11 +880,10 @@ for l in listes.values():
     if l.parti.nom == "PVL" : l.candidatsParasites(candidats)
     l.biffage()
 
-# graphiques pour les partis
-for p in partis.values():
-    p.plotSuffrages(partis)
-    p.parasite(partis)
-    p.candidatsParasites(candidats)
+# graphiques pour les communes
+for c in communes.values():
+    c.partis(listes,normalise=False)
+    c.partis(partis,normalise=False)
 
 # graphiques pour les candidats
 for c in candidats.values():
