@@ -34,7 +34,7 @@ def tableau(nom,lignes,colonnes):
     """
     Crée un tableau de données en csv
     """
-    print("tableau avec {0} et {1}".format(lignes,colonnes))
+    # print("tableau avec {0} et {1}".format(lignes,colonnes))
     with open("csv/{0}.csv".format(nom),"w") as f:
         # d'abord l'en-tete
         f.write(nom)
@@ -129,7 +129,7 @@ class Commune():
         #                                  partis["PVL"].compacts_par_commune[self.numero],partis["PVL"].autres_suffrages_par_commune[self.numero])
         if normalise: facteur = 100./self.suffrages
         else: facteur = 1.0
-        compacts = { k: facteur*_sieges*partis[k].compacts_par_commune[self.numero] for k in partis.keys() }
+        compacts = { k: facteur*partis[k].compacts_par_commune[self.numero] for k in partis.keys() }
         autres   = { k: facteur*sum(partis[k].autres_suffrages_par_commune[self.numero].values()) for k in partis.keys() }
         total    = { k: compacts[k]+autres[k] for k in partis.keys() }
         total = dict(sorted(total.items(), key=lambda item: item[1], reverse=False))
@@ -169,8 +169,8 @@ class Liste():
         self.suffrages_par_liste = {}
         self.doubles_par_liste = {}
         self.candidats = [ ]
-        self.compacts_par_commune = {}
-        self.autres_suffrages_par_commune = {}
+        self.compacts_par_commune = {}           # structure: {commune_id : suffrages }
+        self.autres_suffrages_par_commune = {}   # structure: {commune_id : { liste: suffrages}}
         print("Nouvelle liste {0:2} {1} a {2} suffrages".format(self.numero,self.nom,self.suffrages))
         
         if 'Sans' in self.nom:
@@ -249,9 +249,11 @@ class Liste():
         # print("Liste {0} a {1} suffrages depuis {2}".format(self.nom,self.suffrages,self.suffrages_par_liste))
 
     def check(self):
+        # print("Check avec {0} suffrages pour la liste {1} sur des bulletins {2} pour {3}".format(self.autres_suffrages_par_commune[5938][0],0,5938,self.nom))
         s = sum([v for v in self.suffrages_par_liste.values()])
-        print("{0}: {1} suffrages compl {2}, mod {3}+{4}, autres {5}, s.d. {6} -> {7} =? {8}"
-              .format(self.nom,
+        print("{0} {1}: suffrages: {2}, complète: {3}, modifiée: {4}+{5}, autres listes: {6}, s.d. {7} -> {8} =? {9}"
+              .format(self.classe,
+                      self.nom,
                       self.suffrages,
                       self.suffrages_liste_complete,
                       self.suffrages_nom_liste_modifiee,
@@ -259,6 +261,18 @@ class Liste():
                       self.suffrages_autres_listes,
                       self.suffrages_sans_denom,
                       self.suffrages-self.suffrages_liste_complete-self.suffrages_comp_liste_modifiee,s))
+        s1 = sum(list(self.compacts_par_commune.values()))
+        s2 = sum([ sum(s.values()) for s in self.autres_suffrages_par_commune.values() ]) # boucle sur autres listes
+        if not s==s2 :
+            print("{0} {1}: Somme des suffrages par commune {2} + autres {3}".format(self.classe,self.nom,s1,s2))
+            exit()
+        """    
+        if self.classe == "Parti" :
+            s3 = sum(list(self.total_par_commune.values()))
+            print("{0} {1}: Somme des suffrages par commune {2} + autres {3}, parti: {4}".format(self.classe,self.nom,s1,s2,s3))
+        else: 
+            print("{0} {1}: Somme des suffrages par commune {2} + autres {3}".format(self.classe,self.nom,s1,s2))
+        """
 
     def plotSuffrages(self,listes):
         """
@@ -476,6 +490,7 @@ class Parti(Liste):
         """
         Mise à jour des suffrages du parti
         """
+#        print("J'entre dans la miseAjour avec {0} suffrages pour la liste {1} sur des bulletins {2} pour {3}".format(listes[1].autres_suffrages_par_commune[5938][0],0,5938,listes[1].nom))
         for l in self.listes:  # je boucle sur les listes
             for k in l.suffrages_par_liste.keys():   # je boucle encore sur les listes
                 if k==0: pi = _sd  # sans dénomination
@@ -488,17 +503,32 @@ class Parti(Liste):
                     # print(u"{0} Nouveau {1} - je crée avec {2}".format(self.nom,pi,l.suffrages_par_liste[k]))
                     self.suffrages_par_liste[pi] = l.suffrages_par_liste[k]
                     self.doubles_par_liste[pi] = l.doubles_par_liste[k]
+                #print("Boucle 1 de miseAjour avec {0} suffrages pour la liste {1} sur des bulletins {2} pour {3}".format(listes[1].autres_suffrages_par_commune[5938][0],0,5938,listes[1].nom))
 
             for c in l.compacts_par_commune.keys():
-                if c not in self.compacts_par_commune.keys() :  # create on first list
+#                print("Parti {0} Boucle 2 liste {1} commune {2}".format(self.nom,l.nom,c))
+                if c not in self.compacts_par_commune.keys() :  # create first list
                     self.compacts_par_commune[c] = l.compacts_par_commune[c]
-                    self.autres_suffrages_par_commune[c] = l.autres_suffrages_par_commune[c]
+                    # Intéressant: ça ne copie pas le dictionnaire, ça crée un pointeur vers celui de la liste.
+                    # self.autres_suffrages_par_commune[c] = l.autres_suffrages_par_commune[c]
+                    # Il faut créer les éléments du dictionnaire un par un
+                    self.autres_suffrages_par_commune[c] = {}
+                    for k in l.autres_suffrages_par_commune[c].keys():
+                        self.autres_suffrages_par_commune[c][k]=l.autres_suffrages_par_commune[c][k]
+                    # print("      Boucle 2 je crée compacts {0} et autres {1}".format(l.compacts_par_commune[c],l.autres_suffrages_par_commune[c]))
                 else:
                     self.compacts_par_commune[c] += l.compacts_par_commune[c]
-                    for k in self.autres_suffrages_par_commune[c].keys(): self.autres_suffrages_par_commune[c][k]+=l.autres_suffrages_par_commune[c][k]
-                # print("{0} Mise à jour de {1} avec {2}: suffrages par commune {3}".format(c,self.nom,l.nom,l.autres_suffrages_par_commune[c]))
+                    for k in self.autres_suffrages_par_commune[c].keys():
+                        self.autres_suffrages_par_commune[c][k]+=l.autres_suffrages_par_commune[c][k]
+#                        print("{0}: J'ajoute {1}: {2} pour donner {3} pour commune {4} et bulletin {5}".format(self.nom,l.nom,l.autres_suffrages_par_commune[c][k],self.autres_suffrages_par_commune[c][k],c,k))
+                    # print("      Boucle 2 incrémente compacts {0} et autres {1}".format(l.compacts_par_commune[c],l.autres_suffrages_par_commune[c]))
+#                print("Boucle 2 de miseAjour avec {0} suffrages pour la liste {1} sur des bulletins {2} pour {3}".format(listes[1].autres_suffrages_par_commune[5938][0],0,5938,listes[1].nom))
+                if listes[1].autres_suffrages_par_commune[5938][0]>116: exit()
+
                 
-        print("Le parti {0} a des suffrages de {1}".format(self.nom,self.suffrages_par_liste))
+#        print("Le parti {0} a des suffrages de {1}".format(self.nom,self.suffrages_par_liste))
+#        print("Je sors de la miseAjour avec {0} suffrages pour la liste {1} sur des bulletins {2} pour {3}".format(listes[1].autres_suffrages_par_commune[5938][0],0,5938,listes[1].nom))
+        
 
 #############################################################################
 class Candidat():
@@ -779,26 +809,33 @@ def lisCommunes(communes,candidats,listes):
                 tot = int(row[8])
                 parListe = [ int(r) for r in row[9:] ]
 
-                
                 if num not in communes.keys():
                     if num==_suissesDeLetranger1: num = _suissesDeLetranger2
                     else:
                         print("Je ne trouve pas la commune {0} {1}".format(num,nom))
                         exit()
-                if num not in la_liste.compacts_par_commune: la_liste.compacts_par_commune[num] = non_mod
+                if num not in la_liste.compacts_par_commune:   # je dois les ajouter 1 à 1 parce que des listes, comme les jeunes du centre ont certains candidats doublés et pas d'autres.
+                    la_liste.compacts_par_commune[num] = non_mod
+                else:
+                    la_liste.compacts_par_commune[num] += non_mod
+                
                 if num not in la_liste.autres_suffrages_par_commune.keys(): la_liste.autres_suffrages_par_commune[num] = {}
                 communes[num].suffrages += tot # incrémente le total de suffrages
-                
+
+                # liste des voix venant d'autres listes. Le dernier est s.d.
                 candidats[cand_id].suffrages_par_commune[num] = { ListKeys[i]: parListe[i] for i in range(len(parListe))}
-                for k in candidats[cand_id].suffrages_par_commune[num].keys():
-                    if k in  la_liste.autres_suffrages_par_commune[num].keys():
+                
+                for k in candidats[cand_id].suffrages_par_commune[num].keys():    # je boucle sur les listes 
+                    if k in la_liste.autres_suffrages_par_commune[num].keys():    
                         la_liste.autres_suffrages_par_commune[num][k] += candidats[cand_id].suffrages_par_commune[num][k]
                     else:
                         la_liste.autres_suffrages_par_commune[num][k] = candidats[cand_id].suffrages_par_commune[num][k]
+                    # if la_liste.numero==1 and num==5938: print("Commune {6} {0} liste {1} candidat {2} suff. de la liste {3}: j'ajoute {4} pour avoir {5}".format(nom,la_liste.nom,cand_id,k,candidats[cand_id].suffrages_par_commune[num][k],la_liste.autres_suffrages_par_commune[num][k],num))
                 # if num==5726: print("Ajouté {0} à {1} dans {2}: autres_suffrages_par_commune {3} somme {4}".format(cand_id,la_liste.nom,nom,la_liste.autres_suffrages_par_commune[num],sum(list(la_liste.autres_suffrages_par_commune[num].values()))))
 
                 # print("Commune {0} {1} : Candidat {2} {3} a {4}+{5} suffrages de {6}".format(num,nom,cand_id,cand_nom,non_mod,mod,candidats[cand_id].suffrages_par_commune[num]))
-                
+
+#    print("Je sors de la lecture avec {0} suffrages pour la liste {1} sur des bulletins {2} pour {3}".format(listes[1].autres_suffrages_par_commune[5938][0],0,5938,listes[1].nom))
     return 
 
 #############################################################################
@@ -819,7 +856,7 @@ def lisPartis(partis):
                 if num not in communes.keys():
                     c = Commune(num,nom)
                     communes[num] = c
-                    print("Crée commune {0} {1}".format(num,nom))
+                    # print("Crée commune {0} {1}".format(num,nom))
                 parti = row[9]
                 if row[12]=='': suffrages = 0
                 else: suffrages = int(row[12])
@@ -859,7 +896,6 @@ for p in partis.values(): p.check()
 # vérification
 print("##################################################################################")
 # print("Listes: {0}".format( listes ))
-print("Listes: {0}".format( [ k for k in listes[12].suffrages_par_liste.keys()] ))
 for p in listes.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_liste.values()]))
 print("##################################################################################")
 # print("Partis: {0}".format( partis.keys() ))
@@ -887,8 +923,8 @@ for c in communes.values():
 
 # graphiques pour les candidats
 for c in candidats.values():
-    print("Candidat {0} liste {1} parti {2}".format(c.nom,c.liste.nom,c.liste.parti.nom))
     if c.liste.parti.nom == "PVL":
+        print("Candidat {0} liste {1} parti {2}".format(c.nom,c.liste.nom,c.liste.parti.nom))
         c.listes(listes)
         c.amis(candidats,listes)
         c.biffage(candidats,listes, unique=False)
