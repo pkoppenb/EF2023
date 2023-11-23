@@ -36,128 +36,62 @@ Fin du fichier
 Les listes dans l'ordre du fichier sont ['EàG', 'Jeunes UDC', 'JLRV', 'JSV', 'JVVD', 'La Terre au Centre', 'Le Centre', 'Les Jeunes du Centre', 'Les Libres', 'Les Vert·e·s', 'PEV', 'PLR', 'PLR.Énergie libérale', 'POP', 'PPVD', 'PSV', 'UDC', 'UDC Liberté et Mobilité', 'UDF', "VERT'LIBÉRAUX", "VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN", "VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX"]
 J'ai 22 listes de 11 partis et 385 candidats pour 64292 bulletins différents
 Liste Les Jeunes du Centre: suffrages: 18419, complète: 9196, modifiée: 1360+308, autres listes: 1935, s.d. 5620 -> 8915 =? 8915
+Liste Les Jeunes du Centre: Somme des suffrages par commune 9196 + autres 8915, total 18111
 Liste PPVD: suffrages: 27136, complète: 17119, modifiée: 2442+563, autres listes: 1717, s.d. 5295 -> 9454 =? 9454
+Liste PPVD: Somme des suffrages par commune 17119 + autres 9454, total 26573
 Liste POP: suffrages: 55152, complète: 31673, modifiée: 7247+932, autres listes: 4939, s.d. 10361 -> 22547 =? 22547
+Liste POP: Somme des suffrages par commune 31673 + autres 22547, total 54220
 Liste Les Vert·e·s: suffrages: 403972, complète: 241471, modifiée: 75319+8152, autres listes: 28120, s.d. 50910 -> 154349 =? 154349
+Liste Les Vert·e·s: Somme des suffrages par commune 241471 + autres 154349, total 395820
 Liste Les Libres: suffrages: 41401, complète: 16302, modifiée: 7424+1525, autres listes: 4972, s.d. 11178 -> 23574 =? 23574
+Liste Les Libres: Somme des suffrages par commune 12870 + autres 23574, total 36444
 Liste JSV: suffrages: 36745, complète: 17328, modifiée: 2628+731, autres listes: 5197, s.d. 10861 -> 18686 =? 18686
+Liste JSV: Somme des suffrages par commune 17328 + autres 18686, total 36014
 Liste PSV: suffrages: 830944, complète: 545984, modifiée: 151904+24602, autres listes: 34726, s.d. 73728 -> 260358 =? 260358
+Liste PSV: Somme des suffrages par commune 545984 + autres 260358, total 806342
 Liste Jeunes UDC: suffrages: 37137, complète: 24168, modifiée: 2619+595, autres listes: 3695, s.d. 6060 -> 12374 =? 12374
+Liste Jeunes UDC: Somme des suffrages par commune 24168 + autres 12374, total 36542
 Liste PLR: suffrages: 697117, complète: 373445, modifiée: 196922+23565, autres listes: 34763, s.d. 68422 -> 300107 =? 300107
+Liste PLR: Somme des suffrages par commune 373445 + autres 300107, total 673552
 Liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN: suffrages: 78704, complète: 49685, modifiée: 8286+1559, autres listes: 6511, s.d. 12663 -> 27460 =? 27460
+Liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN: Somme des suffrages par commune 49685 + autres 27460, total 77145
 Liste La Terre au Centre: suffrages: 55366, complète: 26277, modifiée: 4522+797, autres listes: 7433, s.d. 16337 -> 28292 =? 28292
+Liste La Terre au Centre: Somme des suffrages par commune 26277 + autres 28292, total 54569
 Liste VERT'LIBÉRAUX: suffrages: 135399, complète: 75335, modifiée: 22002+5227, autres listes: 11535, s.d. 21300 -> 54837 =? 54837
+Liste VERT'LIBÉRAUX: Somme des suffrages par commune 75335 + autres 54837, total 130172
 Liste UDC Liberté et Mobilité: suffrages: 102544, complète: 69065, modifiée: 9426+2090, autres listes: 9517, s.d. 12446 -> 31389 =? 31389
+Liste UDC Liberté et Mobilité: Somme des suffrages par commune 69065 + autres 31389, total 100454
 Liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX: suffrages: 44624, complète: 26106, modifiée: 3289+672, autres listes: 4473, s.d. 10084 -> 17846 =? 17846
+Liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX: Somme des suffrages par commune 26106 + autres 17846, total 43952
 Liste Le Centre: suffrages: 79176, complète: 46170, modifiée: 10947+3001, autres listes: 5848, s.d. 13210 -> 30005 =? 30005
+Liste Le Centre: Somme des suffrages par commune 46170 + autres 30005, total 76175
 Liste UDC: suffrages: 518163, complète: 348802, modifiée: 103550+16013, autres listes: 15779, s.d. 34019 -> 153348 =? 153348
+Liste UDC: Somme des suffrages par commune 348802 + autres 153348, total 502150
 Liste UDF: suffrages: 21095, complète: 12939, modifiée: 4394+607, autres listes: 1146, s.d. 2009 -> 7549 =? 7549
+Liste UDF: Somme des suffrages par commune 10896 + autres 7549, total 18445
 Liste JVVD: suffrages: 59910, complète: 34998, modifiée: 6288+1000, autres listes: 6061, s.d. 11563 -> 23912 =? 23912
+Liste JVVD: Somme des suffrages par commune 34998 + autres 23912, total 58910
 Liste EàG: suffrages: 93980, complète: 59489, modifiée: 11448+1418, autres listes: 7651, s.d. 13974 -> 33073 =? 33073
+Liste EàG: Somme des suffrages par commune 59489 + autres 33073, total 92562
 Liste PLR.Énergie libérale: suffrages: 50114, complète: 26201, modifiée: 5246+1356, autres listes: 8282, s.d. 9029 -> 22557 =? 22557
+Liste PLR.Énergie libérale: Somme des suffrages par commune 26201 + autres 22557, total 48758
 Liste JLRV: suffrages: 20544, complète: 7999, modifiée: 1965+671, autres listes: 4244, s.d. 5665 -> 11874 =? 11874
+Liste JLRV: Somme des suffrages par commune 7999 + autres 11874, total 19873
 Liste PEV: suffrages: 25259, complète: 14364, modifiée: 3926+693, autres listes: 1807, s.d. 4469 -> 10202 =? 10202
+Liste PEV: Somme des suffrages par commune 14364 + autres 10202, total 24566
 Parti Centre: suffrages: 152961, complète: 81643, modifiée: 16829+4106, autres listes: 0, s.d. 0 -> 67212 =? 67212
+Parti Centre: Somme des suffrages par commune 81643 + autres 67212, total 152961
 Parti Pirates: suffrages: 27136, complète: 17119, modifiée: 2442+563, autres listes: 0, s.d. 0 -> 9454 =? 9454
+Parti Pirates: Somme des suffrages par commune 17119 + autres 9454, total 0
 Parti PST/Sol.: suffrages: 149132, complète: 91162, modifiée: 18695+2350, autres listes: 0, s.d. 0 -> 55620 =? 55620
+Parti PST/Sol.: Somme des suffrages par commune 91162 + autres 55620, total 149132
 Parti VERT-E-S: suffrages: 463882, complète: 276469, modifiée: 81607+9152, autres listes: 0, s.d. 0 -> 178261 =? 178261
+Parti VERT-E-S: Somme des suffrages par commune 276469 + autres 178261, total 463882
 Parti Libres: suffrages: 41401, complète: 16302, modifiée: 7424+1525, autres listes: 0, s.d. 0 -> 23574 =? 23574
+Parti Libres: Somme des suffrages par commune 12870 + autres 23574, total 0
 Parti PS: suffrages: 867689, complète: 563312, modifiée: 154532+25333, autres listes: 0, s.d. 0 -> 279044 =? 279044
+Parti PS: Somme des suffrages par commune 563312 + autres 279044, total 867689
 Parti UDC: suffrages: 657844, complète: 442035, modifiée: 115595+18698, autres listes: 0, s.d. 0 -> 197111 =? 197111
+Parti UDC: Somme des suffrages par commune 442035 + autres 197111, total 657844
 Parti PLR: suffrages: 767775, complète: 407645, modifiée: 204133+25592, autres listes: 0, s.d. 0 -> 334538 =? 334538
-Parti PVL: suffrages: 258727, complète: 151126, modifiée: 33577+7458, autres listes: 0, s.d. 0 -> 100143 =? 100143
-Parti UDF: suffrages: 21095, complète: 12939, modifiée: 4394+607, autres listes: 0, s.d. 0 -> 7549 =? 7549
-Parti PEV: suffrages: 25259, complète: 14364, modifiée: 3926+693, autres listes: 0, s.d. 0 -> 10202 =? 10202
-##################################################################################
-Les Jeunes du Centre a 18419 suffrages dont 8915 mod. de [5620, 1360, 34, 18, 138, 83, 24, 293, 6, 253, 84, 109, 159, 10, 68, 463, 113, 7, 3, 16, 13, 12, 29]
-PPVD a 27136 suffrages dont 9454 mod. de [5295, 29, 2442, 73, 404, 62, 75, 455, 8, 100, 20, 28, 105, 8, 33, 46, 81, 14, 73, 63, 6, 12, 22]
-POP a 55152 suffrages dont 22547 mod. de [10361, 14, 95, 7247, 1292, 44, 117, 2133, 16, 117, 26, 15, 58, 15, 15, 54, 113, 5, 177, 590, 4, 12, 27]
-Les Vert·e·s a 403972 suffrages dont 154349 mod. de [50910, 66, 202, 316, 75319, 298, 232, 17885, 17, 2124, 458, 190, 2115, 72, 191, 608, 775, 63, 975, 1283, 63, 23, 164]
-Les Libres a 41401 suffrages dont 23574 mod. de [11178, 37, 115, 53, 787, 7424, 24, 1064, 35, 831, 132, 166, 346, 55, 60, 398, 529, 60, 43, 76, 17, 18, 126]
-JSV a 36745 suffrages dont 18686 mod. de [10861, 15, 81, 131, 1228, 44, 2628, 2563, 2, 105, 38, 17, 115, 4, 62, 50, 58, 2, 396, 254, 1, 4, 27]
-PSV a 830944 suffrages dont 260358 mod. de [73728, 94, 243, 666, 15597, 470, 504, 151904, 38, 6153, 578, 393, 2526, 260, 203, 1314, 3180, 186, 497, 1265, 92, 28, 439]
-Jeunes UDC a 37137 suffrages dont 12374 mod. de [6060, 10, 22, 14, 31, 25, 3, 114, 2619, 515, 7, 63, 39, 137, 6, 94, 2260, 240, 1, 1, 17, 15, 81]
-PLR a 697117 suffrages dont 300107 mod. de [68422, 82, 123, 65, 1836, 406, 40, 7108, 92, 196922, 778, 683, 3232, 920, 183, 2006, 15056, 295, 79, 45, 801, 385, 548]
-VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN a 78704 suffrages dont 27460 mod. de [12663, 28, 60, 13, 903, 91, 20, 1005, 2, 1449, 8286, 80, 1833, 28, 201, 293, 360, 11, 27, 19, 31, 22, 35]
-La Terre au Centre a 55366 suffrages dont 28292 mod. de [16337, 88, 67, 47, 457, 159, 22, 985, 46, 1771, 181, 4522, 483, 142, 84, 1075, 1435, 113, 20, 33, 35, 17, 173]
-VERT'LIBÉRAUX a 135399 suffrages dont 54837 mod. de [21300, 73, 61, 29, 1916, 138, 39, 2140, 21, 3557, 1008, 157, 22002, 77, 315, 675, 854, 33, 61, 34, 84, 38, 225]
-UDC Liberté et Mobilité a 102544 suffrages dont 31389 mod. de [12446, 2, 43, 18, 67, 29, 4, 353, 143, 2360, 17, 131, 104, 9426, 15, 170, 5823, 95, 0, 11, 65, 22, 45]
-VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX a 44624 suffrages dont 17846 mod. de [10084, 45, 69, 16, 589, 72, 42, 578, 7, 697, 385, 72, 1241, 11, 3289, 218, 217, 9, 62, 16, 53, 21, 53]
-Le Centre a 79176 suffrages dont 30005 mod. de [13210, 107, 44, 33, 338, 122, 16, 960, 13, 1828, 168, 311, 612, 64, 62, 10947, 822, 45, 12, 12, 51, 25, 203]
-UDC a 518163 suffrages dont 153348 mod. de [34019, 9, 77, 29, 178, 136, 6, 1150, 383, 10280, 63, 287, 343, 1400, 30, 452, 103550, 424, 3, 14, 176, 84, 255]
-UDF a 21095 suffrages dont 7549 mod. de [2009, 3, 9, 4, 42, 12, 3, 108, 54, 125, 4, 8, 22, 13, 0, 30, 426, 4394, 0, 2, 4, 0, 277]
-JVVD a 59910 suffrages dont 23912 mod. de [11563, 16, 69, 88, 3199, 45, 189, 1158, 2, 177, 41, 30, 210, 4, 53, 59, 77, 5, 6288, 577, 10, 12, 40]
-EàG a 93980 suffrages dont 33073 mod. de [13974, 18, 73, 443, 3187, 49, 130, 2806, 6, 93, 29, 26, 94, 5, 22, 44, 79, 8, 504, 11448, 2, 1, 32]
-PLR.Énergie libérale a 50114 suffrages dont 22557 mod. de [9029, 6, 21, 3, 150, 57, 16, 452, 6, 5254, 68, 84, 404, 88, 28, 248, 1234, 13, 5, 11, 5246, 89, 45]
-JLRV a 20544 suffrages dont 11874 mod. de [5665, 14, 16, 14, 75, 36, 10, 237, 15, 2624, 33, 38, 153, 35, 35, 131, 582, 9, 8, 7, 151, 1965, 21]
-PEV a 25259 suffrages dont 10202 mod. de [4469, 8, 31, 8, 148, 35, 8, 309, 16, 217, 21, 58, 92, 13, 16, 196, 206, 392, 7, 19, 6, 1, 3926]
-##################################################################################
-Centre a 152961 suffrages dont 67212 mod. de [35167, 18982, 145, 159, 968, 364, 2300, 2651, 4005, 1901, 165, 405]
-Pirates a 27136 suffrages dont 9454 mod. de [5295, 103, 2442, 136, 477, 62, 530, 97, 118, 158, 14, 22]
-PST/Sol. a 149132 suffrages dont 55620 mod. de [24335, 171, 168, 19728, 5160, 93, 5186, 234, 229, 244, 13, 59]
-VERT-E-S a 463882 suffrages dont 178261 mod. de [62473, 969, 271, 2264, 85781, 343, 19464, 947, 2409, 3068, 68, 204]
-Libres a 41401 suffrages dont 23574 mod. de [11178, 601, 115, 129, 830, 7424, 1088, 619, 866, 538, 60, 126]
-PS a 867689 suffrages dont 279044 mod. de [84589, 1883, 324, 2316, 17718, 514, 157599, 3542, 6383, 3522, 188, 466]
-UDC a 657844 suffrages dont 197111 mod. de [52525, 1218, 142, 87, 280, 190, 1630, 125741, 13534, 624, 759, 381]
-PLR a 767775 suffrages dont 334538 mod. de [83116, 3292, 160, 145, 2153, 499, 7863, 18028, 213437, 4914, 317, 614]
-PVL a 258727 suffrages dont 100143 mod. de [44047, 1641, 190, 127, 3558, 301, 3824, 1577, 5952, 38560, 53, 313]
-UDF a 21095 suffrages dont 7549 mod. de [2009, 41, 9, 6, 42, 12, 111, 493, 129, 26, 4394, 277]
-PEV a 25259 suffrages dont 10202 mod. de [4469, 262, 31, 27, 155, 35, 317, 235, 224, 129, 392, 3926]
-##################################################################################
-Candidat Richard Claire liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Bolomey Olivier liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Longchamp Nadège liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Chapuisat Jean-François liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Lude Nathalie liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Cavalli Jean liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Renaud Céline liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Béguin Jean-Marc liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Pillet Line liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Berger Christophe liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat de Benoit Alice liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Bourgeois Olivier liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Quaglia Brigitte liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Reymond Pierre-Antoine liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Plagellat Cécile liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Roch Maxime liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Tinguely Carine liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Jan Dominique-Alain liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Heitzmann Michel liste VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN parti PVL
-Candidat Pointet François liste VERT'LIBÉRAUX parti PVL
-Candidat Weber Céline liste VERT'LIBÉRAUX parti PVL
-Candidat Schaller Graziella liste VERT'LIBÉRAUX parti PVL
-Candidat Miéville Laurent liste VERT'LIBÉRAUX parti PVL
-Candidat Morandi-Bettex Laetitia liste VERT'LIBÉRAUX parti PVL
-Candidat Vionnet Blaise liste VERT'LIBÉRAUX parti PVL
-Candidat Cavalli Virginie liste VERT'LIBÉRAUX parti PVL
-Candidat De Benedictis Jerome liste VERT'LIBÉRAUX parti PVL
-Candidat Albiker Pochon Caroline liste VERT'LIBÉRAUX parti PVL
-Candidat Humbert Sébastien liste VERT'LIBÉRAUX parti PVL
-Candidat Diserens Véronique liste VERT'LIBÉRAUX parti PVL
-Candidat Paquier Mathias liste VERT'LIBÉRAUX parti PVL
-Candidat de La Baume Charlotte liste VERT'LIBÉRAUX parti PVL
-Candidat Favre Jean-Claude liste VERT'LIBÉRAUX parti PVL
-Candidat Fankhauser Carmen liste VERT'LIBÉRAUX parti PVL
-Candidat Jaccard Sylvain liste VERT'LIBÉRAUX parti PVL
-Candidat Eggert Nina liste VERT'LIBÉRAUX parti PVL
-Candidat Dupertuis Michael liste VERT'LIBÉRAUX parti PVL
-Candidat Favre Guy liste VERT'LIBÉRAUX parti PVL
-Candidat Albers Simon liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Pointet Cloé liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Girod Jennifer liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Repond Nathanaël liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Bähler Mélanie liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Chappuis Alexandre liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Schaffer Clara liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Mäder Michael liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Wasilewski-Rasca Laureline liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Bonjour Thomas liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Dind Céline liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Jotti Hadrien liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Kaufmann Leïla liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Milliet Alexandre liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Ducommun Pauline liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Currat Mehdi liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Rathle Maxime liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Vidoz Mattia liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
-Candidat Léchot Julien liste VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX parti PVL
+Parti PLR: Somme des suffrages par commune 407645 + autres 334538, total 767775

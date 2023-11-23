@@ -7,6 +7,7 @@ _partis = 'sd-t-17.02-NRW2023-parteien-appendix.csv'
 _sd = "Sans dénom."
 _suissesDeLetranger1 = 9999   # chez les vaudois
 _suissesDeLetranger2 = 19220   # chez l'OFS
+_max = 25 # numbre maximal de lignes
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -171,6 +172,7 @@ class Liste():
         self.candidats = [ ]
         self.compacts_par_commune = {}           # structure: {commune_id : suffrages }
         self.autres_suffrages_par_commune = {}   # structure: {commune_id : { liste: suffrages}}
+        self.total_par_commune = {}              # structure: {commune_id : suffrages }
         print("Nouvelle liste {0:2} {1} a {2} suffrages".format(self.numero,self.nom,self.suffrages))
         
         if 'Sans' in self.nom:
@@ -263,8 +265,10 @@ class Liste():
                       self.suffrages-self.suffrages_liste_complete-self.suffrages_comp_liste_modifiee,s))
         s1 = sum(list(self.compacts_par_commune.values()))
         s2 = sum([ sum(s.values()) for s in self.autres_suffrages_par_commune.values() ]) # boucle sur autres listes
+        s4 = sum(list(self.total_par_commune.values()))
+        print("{0} {1}: Somme des suffrages par commune {2} + autres {3}, total {4}".format(self.classe,self.nom,s1,s2,s4))
         if not s==s2 :
-            print("{0} {1}: Somme des suffrages par commune {2} + autres {3}".format(self.classe,self.nom,s1,s2))
+            print("{0} {1}: Somme des suffrages par commune {2} + autres {3}, total {4}".format(self.classe,self.nom,s1,s2,s4))
             exit()
         """    
         if self.classe == "Parti" :
@@ -375,7 +379,7 @@ class Liste():
                     para[c] += c.suffrages_par_liste[l]
         #    print("Trouvé {0} parasites".format(len(para)))
         para = dict(sorted(para.items(), key=lambda item: item[1], reverse=True))
-        nn = 25
+        nn = _max
         kk = list(para.keys())[:nn]
         vv = list(para.values())[:nn]
         y_pos = np.arange(len(kk))
@@ -452,6 +456,41 @@ class Liste():
         plt.clf()
 
 
+    def communes(self,communes,pires=False,absolu=False):
+        """
+        Meilleures et pires communes de la liste
+
+        Attention: je n'ai pas le détail des suffrages non-nominatifs par liste
+        """
+        pourcents = {}
+        quoi = "Meilleures"
+        if pires: quoi = "Pires"
+        if len(self.total_par_commune)<1: return # pas pour pirates et libres
+        if not absolu:
+            for c in communes.keys(): pourcents[c] = 100.*self.total_par_commune[c]/communes[c].suffrages
+            pourcents = dict(sorted(pourcents.items(), key=lambda item: item[1], reverse=pires))
+        else:
+            pourcents = dict(sorted(self.total_par_commune.items(), key=lambda item: item[1], reverse=pires))
+        
+        top25 = list(pourcents.keys())[-_max:]
+        pc25 = list(pourcents.values())[-_max:]
+        # print(pourcents,top25,pc25)
+        y_pos = np.arange(len(top25))
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
+        plt.barh(y_pos,pc25,color=self.couleur)
+        if absolu:  plt.xlabel('Suffrages dans la commune')
+        else: plt.xlabel('Pourcentage dans la commune')
+        plt.title("{0} communes de {1}".format(quoi,self.nom))
+        plt.yticks(y_pos, labels=[communes[c].nom for c in top25])
+        if absolu:
+            if communes[top25[0]].nom=='Lausanne': plt.xlim(1.1*pc25[1]) # couper Lausanne
+            deuxPlots("{0}-{1}-Suffrages-{2}-Communes".format(self.classe,goodName(self.nom),quoi))
+        else: deuxPlots("{0}-{1}-{2}-Communes".format(self.classe,goodName(self.nom),quoi))
+        plt.clf()
+            
+            
+        
+        
 #############################################################################
 class Parti(Liste):
     """
@@ -521,6 +560,7 @@ class Parti(Liste):
                     for k in self.autres_suffrages_par_commune[c].keys():
                         self.autres_suffrages_par_commune[c][k]+=l.autres_suffrages_par_commune[c][k]
 #                        print("{0}: J'ajoute {1}: {2} pour donner {3} pour commune {4} et bulletin {5}".format(self.nom,l.nom,l.autres_suffrages_par_commune[c][k],self.autres_suffrages_par_commune[c][k],c,k))
+
                     # print("      Boucle 2 incrémente compacts {0} et autres {1}".format(l.compacts_par_commune[c],l.autres_suffrages_par_commune[c]))
 #                print("Boucle 2 de miseAjour avec {0} suffrages pour la liste {1} sur des bulletins {2} pour {3}".format(listes[1].autres_suffrages_par_commune[5938][0],0,5938,listes[1].nom))
                 if listes[1].autres_suffrages_par_commune[5938][0]>116: exit()
@@ -625,7 +665,7 @@ class Candidat():
         else:
             biff = dict(sorted(self.biffe_pour_qui.items(), key=lambda item: item[1], reverse=True))
         fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
-        nn = 25
+        nn = _max
         kk = list(biff.keys())[:nn]
         vv = list(biff.values())[:nn]
         cc = [ listes[int(k[0:2])].couleur for k in kk ]  # k est genre "07.16" qui donne listes[7]. 
@@ -648,7 +688,7 @@ class Candidat():
         """
         amis = dict(sorted(self.ajoutes_aussi.items(), key=lambda item: item[1], reverse=True))
         fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
-        nn = 25
+        nn = _max
         kk = list(amis.keys())[:nn]
         vv = list(amis.values())[:nn]
         cc = [ listes[int(k[0:2])].couleur for k in kk ]  # k est genre "07.16" qui donne listes[7]. 
@@ -834,6 +874,8 @@ def lisCommunes(communes,candidats,listes):
                 # if num==5726: print("Ajouté {0} à {1} dans {2}: autres_suffrages_par_commune {3} somme {4}".format(cand_id,la_liste.nom,nom,la_liste.autres_suffrages_par_commune[num],sum(list(la_liste.autres_suffrages_par_commune[num].values()))))
 
                 # print("Commune {0} {1} : Candidat {2} {3} a {4}+{5} suffrages de {6}".format(num,nom,cand_id,cand_nom,non_mod,mod,candidats[cand_id].suffrages_par_commune[num]))
+                
+                la_liste.total_par_commune[num] = la_liste.compacts_par_commune[num] + sum(list(la_liste.autres_suffrages_par_commune[num].values()))
 
 #    print("Je sors de la lecture avec {0} suffrages pour la liste {1} sur des bulletins {2} pour {3}".format(listes[1].autres_suffrages_par_commune[5938][0],0,5938,listes[1].nom))
     return 
@@ -907,6 +949,10 @@ for p in partis.values():
     p.plotSuffrages(partis)
     p.parasite(partis)
     p.candidatsParasites(candidats)
+    p.communes(communes)
+    p.communes(communes,True)  # pires
+    p.communes(communes,False,True) # absolu
+    p.communes(communes,True,True)  # pires, absolu
 
 # graphiques pour les listes
 for l in listes.values():
@@ -915,6 +961,8 @@ for l in listes.values():
     l.parasite(listes)
     if l.parti.nom == "PVL" : l.candidatsParasites(candidats)
     l.biffage()
+    l.communes(communes)
+    l.communes(communes,True)  # pires
 
 # graphiques pour les communes
 for c in communes.values():
