@@ -480,10 +480,10 @@ class Liste():
         plt.barh(y_pos,pc25,color=self.couleur)
         if absolu:  plt.xlabel('Suffrages dans la commune')
         else: plt.xlabel('Pourcentage dans la commune')
-        plt.title("{0} communes de {1}".format(quoi,self.nom))
+        plt.title("{1}: {0} communes".format(quoi,self.nom))
         plt.yticks(y_pos, labels=[communes[c].nom for c in top25])
-        if absolu:
-            if communes[top25[0]].nom=='Lausanne': plt.xlim(1.1*pc25[1]) # couper Lausanne
+        if absolu and not pires:
+            if communes[top25[-1]].nom=='Lausanne' and 1.5*pc25[-2]<pc25[-1]: plt.xlim(0,1.5*pc25[-2]) # couper Lausanne
             deuxPlots("{0}-{1}-Suffrages-{2}-Communes".format(self.classe,goodName(self.nom),quoi))
         else: deuxPlots("{0}-{1}-{2}-Communes".format(self.classe,goodName(self.nom),quoi))
         plt.clf()
