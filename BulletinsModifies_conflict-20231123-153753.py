@@ -8,14 +8,13 @@ _sd = "Sans dénom."
 _suissesDeLetranger1 = 9999   # chez les vaudois
 _suissesDeLetranger2 = 19220   # chez l'OFS
 _max = 25 # numbre maximal de lignes
-_sieges = 19   # 19 sieges
-_moitie = int(_sieges/2.+1)   # il faut 10 pour avoir la moitié
-_vaud = 7.5366869013
 
 import matplotlib.pyplot as plt
 import numpy as np
 plt.figure(figsize=(7,5))
 fig, ax = plt.subplots()
+_sieges = 19   # 19 sieges
+_moitie = int(_sieges/2.+1)   # il faut 10 pour avoir la moitié
 
 def goodName(name):
     name2 = name.replace(" ","_").replace("(","_").replace(")","_").replace("/","_").replace(">","_g_").replace("<","_l_").replace("*","_times_").replace(".","_").replace("[","_").replace("]","_").replace("{","_").replace("}","_").replace("||","_or_").replace("&&","_and_").replace("&","_").replace("|","_").replace(":","_vs_").replace("'","_").replace("#","N").replace('·','_')
@@ -733,49 +732,26 @@ class Candidat():
         plt.clf()
         plt.xscale('linear')
         
-    def communes(self,communes,relatif=True):
+    def communes(self,relatif=True):
         """
         Meilleures communes du candidat relatif à la liste
         """
-        cand = {}
-        parti = {}
-        
+        candidat = {}
         for k in self.suffrages_par_commune.keys():
-            if relatif:
-                if (self.liste.parti.total_par_commune[k]>0): cand[k] = _sieges*1.0*sum(list(self.suffrages_par_commune[k].values()))/self.liste.parti.total_par_commune[k]
-            else:
-                cand[k] = _sieges*100.*sum(list(self.suffrages_par_commune[k].values()))/communes[k].suffrages
-                    
-        cand = dict(sorted(cand.items(), key=lambda item: item[1], reverse=False))
-        if not relatif: # parti dans le même ordre
-            for k in cand.keys():
-                parti[k] = 100.*self.liste.parti.total_par_commune[k]/communes[k].suffrages
-
-        tt = list(cand.keys())[-_max:]
-        top25 = [ communes[c].nom for c in tt ]
-        pc25 = list(cand.values())[-_max:]
-        pa25 = list(parti.values())[-_max:]
-        top25.append("Vaud")
-        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
+            candidat[k] = 1.0*self.suffrages_par_commune[k]/self.liste.suffrages_par_commune[k]
+        candidat = dict(sorted(candidat.items(), key=lambda item: item[1], reverse=True))
+        top25 = list(candidat.keys())[-_max:]
+        pc25 = list(candidat.values())[-_max:]
         y_pos = np.arange(len(top25))
-        plt.yticks(y_pos, labels=top25)
-        if relatif:
-            pc25.append(1.0*_sieges*self.suffrages/self.liste.parti.suffrages)
-            plt.barh(y_pos,pc25,color=self.liste.parti.couleur)
-            plt.xlabel('Suffrages relatif au parti')
-            plt.title("{0}: relatif au parti".format(self.nom))
-            deuxPlots("Candidat_{0}_Communes_relatif_au_parti".format(goodName(self.nom)))
-        else:
-            pc25.append(_sieges*_vaud*self.suffrages/self.liste.parti.suffrages)
-            pa25.append(_vaud)
-            width = 0.4
-            plt.barh(y_pos+width/2,pc25,width,color='Black',label=self.nom)
-            plt.barh(y_pos-width/2,pa25,width,color=self.liste.parti.couleur,label=self.liste.parti.nom)
-            plt.xlabel('Pourcents (pondérés par sièges)')
-            plt.title("{0}: meilleures communes".format(self.nom))
-            plt.legend(loc="lower right")
-            deuxPlots("Candidat_{0}_Communes".format(goodName(self.nom)))
-
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
+        plt.barh(y_pos,pc25,color=self.couleur)
+        plt.xlabel('Suffrages du candidat/liste')
+        plt.title("{0}: relatif à la liste".format(self.nom))
+        plt.yticks(y_pos, labels=[communes[c].nom for c in top25])
+        if absolu and not pires:
+            if communes[top25[-1]].nom=='Lausanne' and 1.5*pc25[-2]<pc25[-1]: plt.xlim(0,1.5*pc25[-2]) # couper Lausanne
+            deuxPlots("{0}-{1}-Suffrages-{2}-Communes".format(self.classe,goodName(self.nom),quoi))
+        else: deuxPlots("{0}-{1}-{2}-Communes".format(self.classe,goodName(self.nom),quoi))
         plt.clf()
             
         
@@ -991,17 +967,6 @@ print("#########################################################################
 for p in partis.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_liste.values()],p.suffrages))
 print("##################################################################################")
 
-# graphiques pour les candidats
-for c in candidats.values():
-    if c.liste.parti.nom == "PVL":
-        print("Candidat {0} liste {1} parti {2}".format(c.nom,c.liste.nom,c.liste.parti.nom))
-        c.communes(communes)
-        c.communes(communes,False)
-        c.listes(listes)
-        c.amis(candidats,listes)
-        c.biffage(candidats,listes, unique=False)
-        c.biffage(candidats,listes, unique=True)
-
 # graphiques pour les partis
 for p in partis.values():
     p.plotSuffrages(partis)
@@ -1027,6 +992,15 @@ for c in communes.values():
     c.partis(listes,normalise=False)
     c.partis(partis,normalise=False)
 
+# graphiques pour les candidats
+for c in candidats.values():
+    if c.liste.parti.nom == "PVL":
+        print("Candidat {0} liste {1} parti {2}".format(c.nom,c.liste.nom,c.liste.parti.nom))
+        c.listes(listes)
+        c.amis(candidats,listes)
+        c.biffage(candidats,listes, unique=False)
+        c.biffage(candidats,listes, unique=True)
+        c.communes()
     
 """
 Questions auxquelles je veux répondre pour le PVL:
