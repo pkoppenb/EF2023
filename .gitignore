@@ -1,3 +1,8 @@
 pdf/*.pdf
 png/*.png
 csv/*.csv
+LaTeX/*.aux
+LaTeX/*.log
+LaTeX/*.out
+LaTeX/*.toc
+log

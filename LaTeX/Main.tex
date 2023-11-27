@@ -1,0 +1,738 @@
+\pdfoutput=1
+\documentclass[11pt,a4paper]{article}
+\usepackage[top=1in, bottom=1.25in, left=1in, right=1in]{geometry}
+\usepackage{graphicx}  % to include figures (can also use other packages)
+\usepackage[francais]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ifthen}
+
+\usepackage{hyperref}
+\usepackage{charter}
+%
+\newcommand{\IF}[4]{\ifthenelse{\equal{#1}{#2}}{#3}{#4}}%
+%\def\papercopyright{CERN on behalf of the LHCb collaboration}
+\def\papercopyright{\the\year\ Patrick Koppenburg} % new since 9/Apr/2018
+\def\paperlicence{CC BY 4.0 licence}
+\def\paperlicenceurl{https://creativecommons.org/licenses/by/4.0/}
+
+
+\def\thewidth{0.45\textwidth}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Liste}[2][NONE]{
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\begin{figure}[t]\centering
+\includegraphics[width=\thewidth]{../pdf/Liste-Suffrages-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-Bilan-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-Suffrages-Par-Candidat-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-DoublagesBiffages-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-Parasite-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-CandidatsParasite-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-#2-Meilleures-Communes.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-#2-Pires-Communes.pdf}
+\caption{Graphiques pour la Liste \leNom. Voir page~\pageref{Expl:Liste}.}\label{Fig:Liste:#2}
+\end{figure}
+\clearpage
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Parti}[2][NONE]{
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\begin{figure}[t]\centering
+\includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-Bilan-#2.pdf}
+%\includegraphics[width=\thewidth]{../pdf/Parti-SuffragesParCandidat-#2.pdf}
+%\includegraphics[width=\thewidth]{../pdf/Parti-Biffages-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-Parasite-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-CandidatsParasite-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-#2-Meilleures-Communes.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-#2-Pires-Communes.pdf}
+\caption{Graphiques pour le Parti \leNom. Voir page~\pageref{Expl:Parti}.}\label{Fig:Parti:#2}
+\end{figure}
+\clearpage
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PartiNonOFS}[2][NONE]{  % parti inconnu de l'OFS
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\begin{figure}[t]\centering
+\includegraphics[width=\thewidth]{../pdf/Parti-Bilan-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-#2.pdf}
+%\includegraphics[width=\thewidth]{../pdf/Parti-SuffragesParCandidat-#2.pdf}
+%\includegraphics[width=\thewidth]{../pdf/Parti-Biffages-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-Parasite-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-CandidatsParasite-#2.pdf}
+\caption{Graphiques pour le Parti \leNom. Ce parti n'est pas traîté par l'OFS et n'a donc pas tous les graphiques.  Voir page~\pageref{Expl:Parti}.}\label{Fig:Parti:#2}
+\end{figure}
+\clearpage
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Candidat}[2]{
+%\subsection{Résultats de #2}
+\begin{figure}[t]\centering
+\includegraphics[width=\thewidth]{../pdf/Candidat-#1-Communes.pdf}
+%\includegraphics[width=\thewidth]{../pdf/Candidat-#1-Communes-relatif-a-la-liste.pdf}
+\includegraphics[width=\thewidth]{../pdf/Candidat-Suffrages-#1.pdf}
+\includegraphics[width=\thewidth]{../pdf/Candidat-Amis-#1.pdf}
+\includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-#1.pdf}
+%\includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-Unique-#1.pdf}
+\caption{Graphiques pour #2. Voir page~\pageref{Expl:Candidat}.}\label{Fig:Cand:#1}
+\end{figure}
+%\clearpage
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Commune}[2][NONE]{
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\begin{figure}[t]\centering
+\includegraphics[width=\thewidth]{../pdf/Commune-#2-Listes.pdf}
+\includegraphics[width=\thewidth]{../pdf/Commune-#2-Partis.pdf}
+\caption{Graphiques pour la Commune \leNom. Voir page~\pageref{Expl:Commune}.}\label{Fig:Com:#2}
+\end{figure}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titlepage}
+\pagenumbering{roman}
+
+% Header ---------------------------------------------------
+\vspace*{-1.5cm}
+\centerline{\large PARTI VERT'LIBÉRAL VAUDOIS}
+\vspace*{1.5cm}
+\noindent
+\begin{tabular*}{\linewidth}{lc@{\extracolsep{\fill}}r@{\extracolsep{0pt}}}
+\includegraphics[width=.40\textwidth]{Logo.png} & & \today\\%
+% not in paper \hline
+\end{tabular*}
+
+\vspace*{4.0cm}
+
+% Title --------------------------------------------------
+{\normalfont\bfseries\boldmath\huge
+\begin{center}
+  Élections fédérales 2023 au Canton de Vaud \\---\\
+  Analyse des bulletins modifiés et des résultats par commune
+\end{center}
+}
+
+\vspace*{2.0cm}
+
+% Authors -------------------------------------------------
+\begin{center}
+%In the footnote, replace 'paper' by 'Letter' in case of submission to PRL or PLB 
+% Edit macro in main.tex to keep metadata correct
+Patrick Koppenburg~\footnote{\href{mailto:patrick@koppenburg.ch}{patrick@koppenburg.ch}}
+\end{center}
+
+\vspace{\fill}
+
+% Abstract -----------------------------------------------
+\begin{abstract}
+  
+  
+\end{abstract}
+
+\vspace{\fill}
+
+{\footnotesize 
+% Edit macro in main.tex to keep metadata correct
+\centerline{\copyright~\papercopyright. \href{\paperlicenceurl}{\paperlicence}.}}
+\vspace*{2mm}
+
+\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+Ces statistiques sont établies sur la base des fichiers mis à disposition par le Canton et l'OFS.
+Notamment j'utilise deux énormes fichiers, l'un contenant tous les bulletins modifiés et
+l'autre les résultats de chaque candidat par commune et par liste. Ces fichiers sont lus
+par du code en {\tt python} qui génère des graphiques avec {\tt matplotlib}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Limitations}
+Malgré cette pléthore de chiffres, les données ne sont pas complètes. Je ne peux pas
+déterminer le nombre de suffrages supplémentaires (non nominatifs) des listes
+par commune. En principe, ces données pourraient être extraites du site web interactif du canton,
+mais malheureusement ne sont pas fournies dans un fichier lisible automatiquement.
+L'information est fournie au niveau des partis (i.e. la somme de plusieurs listes) par l'OFS.
+Mais cet office ne connaît pas les Libres ni les Pirates. Aussi, il fusionne le POP et EàG.
+C'est pourquoi certaines informations sont manquantes.
+
+Ci après j'inclus tous les graphiques automatiquement. Dans tous les cas
+je mets un paragraphe d'explication pour le premier groupe de graphiques
+d'une catégorie.
+
+Le lecteur comprendra bien que tous les graphiques ainsi que ce document sont générés automatiquement, ce qui peut avoir un effet sur la grammaire. Je vous prie de m'en excuser.
+%%%%%%%%
+\subsection*{Accès au code}
+Le code est dans le dépôt {\tt github} \href{https://github.com/pkoppenb/EF2023}{https://github.com/pkoppenb/EF2023}. Demandez-moi l'accès si besoin. Le code a besoin de {\tt python3}, {\tt latex} et {\tt make}.
+%%%%%%%%
+\subsection{Vocabulaire}
+Quelques définitions ne sont probablement pas inutiles
+\begin{description}
+\item[Un suffrage] est un vote exprimé par l'électeur. Au Canton de Vaud chaque électeur a 19 suffrages.
+\item[Un bulletin compact] est une liste que l'électeur a mise dans l'urne sans rien y changer. Cela donne
+19 suffrages à la liste.
+\item[Un bulletin modifié] est tout bulletin valable qui n'est pas compact. L'électeur peut avoir biffé des noms, ajouté d'autres, et doublé des candidats.
+\item[Un bulletin sans dénomination] est le bulletin vierge sur lequel l'électeur a composé sa propre liste de candidats. A noter que si l'électeur a y inscrit un nom de parti, cela devient un bulletin modifié et figure pas dans la catégorie ci-dessus.\\
+Je me suis permis une petite entorse: si un bulletin sans dénomination comporte 10 ou plus candidats du même parti,\footnote{C'est bien 10 du même parti. Je choisis ensuite la liste comme celle qui a reçu le plus de suffrages.} je le compte comme bulletin modifié et non comme sans dénomination. 
+\end{description}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Répartition des sièges}
+La répartition des sièges se fait selon un algorithme qui permet de déterminer qui a eu quel siège.
+Le premier siège va a celui qui aurait pris le siège si un seul était en jeu, et ainsi de suite jusqu'à 19.
+La répartition est donnée en table~\ref{Tab:Sieges}.
+
+Si en 2019 nous avions les 8ème et 19ème sièges, cette année nous obtenons le 11ème. Il aurait fallu 25 sièges pour en avoir un second, qui serait allé à Claire Richard, première de la liste 2.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}\centering
+\caption{Attribution des sièges.}\label{Tab:Sieges}
+\vskip 1em
+\begin{tabular}{r|l @{ (}r@{ )\ } l|l}
+Siège & Parti & nb. & Candidat  & vient-ensuite\\
+\hline
+1 & PS & 1 & Pierre-Yves Maillard & Brenda Tuosto\\
+2 & PLR & 1& Jacqueline de Quattro  \\
+3 & Verts & 1& Sophie Michaud Gigon  \\
+4 & UDC &1 & Jacques Nicolet  \\
+5 & PS & 2&  Roger Normann \\
+6 & PLR & 2& Pascal Broulis & Daniel Ruch \\
+7 & PS & 3& Samuel Bendahan  \\
+8 & UDC & 2&  Michaël Buffat \\
+9 & Verts & 2& Raphaël Mahaim  \\
+10 & PLR & 3 & Olivier Feller  \\
+11 & PVL & 1& Céline Weber  \\
+12 & PS & 4& Brigitte Crottaz  \\
+13 & UDC & 3&  Yvan Pahud \\
+14 & Centre & 1& Isablle Chappuis  \\
+15 & PS & 5& Jean Tschopp  \\
+16 & PLR & 4& Laurent Wehrli  \\
+17 & Verts & 3& Léonore Porchet  \\
+18 & UDC & 4&  Sylvain Freymond \\
+19 & PS & 6& Jessica Jaccoud  \\
+\hline
+20 & PLR & 5& Daniel Ruch & Alexandre Berthoud \\
+25 & PVL & 2& Claire Richard  \\
+\end{tabular}
+\end{table}
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Résultats des listes et du  parti}
+\label{Expl:Parti}
+Un parti est la somme de toutes ses listes. Ainsi, les résultats du PVL sont en
+Figure~\ref{Fig:Parti:PVL}, qui est la somme des graphiques des trois listes en Figures~\ref{Fig:Liste:VERT_LIBERAUX} à~\ref{Fig:Liste:JEUNES_VERT_LIBERAUX}.
+Les autres partis sont dans l'annexe~\ref{AutresPartis}.
+
+Les graphiques que l'on trouvera pour le parti sont:
+\begin{description}
+\item[Suffrages:] Graphique des suffrages que les candidats des trois listes PVL obtiennent. Le plus grand nombre vient des listes non modifiées. Suivent les listes sans dénomination et les listes PVL modifiées. Ensuite 6000 suffrages viennent du PLR.
+
+
+Les listes sans dénomination dominent. Suivent les autres listes PVL. Ici, il s'agit de suffrages que ces candidats d'une liste PVL obtiennent sur une autres liste PVL. Suit le PLR puis le PS.
+\item[Bilan:] Pour tous les bulletins modifiés, je compte en positif les suffrages pour des candidats PVL obtenus sur des listes d'autres partis et en négatif les suffrages obtenus par des candidats d'autres partis obtenus sur les listes PVL. La barre remplie est la différence.
+Ainsi, en Fig.~\ref{Fig:Parti:PVL} on voit que les candidats PVL font 6000 suffrages sur des listes PLR, et des candidats PLR font 5000 suffrages sur nos listes. Le bilan est positif de près de 1000 suffrages.\\
+Au bas du graphique se trouve le total de tous les bilans. Le PVL a un bilan positif de 2000 suffrages. Ce sont autant de suffrages cherchés chez les électeurs d'autres partis. On peut aussi considérer que ce sont 2000 suffrages d'électeurs prêts à voter pour des vert'libéraux, mais sans mettre nos listes dans l'urne.
+\item[Parasitage:] Ventilation des suffrages de candidats d'autres partis obtenus sur les listes PVL. 5000 voix partent chez le PLR. C'est la même information que sur le graphique 'Bilan', mais classées par nombre décroissant de suffrages.
+\item[Candidats parasites:] Ce graphique montre les 25 premiers candidats d'autres paries qui font des voix sur les listes du parti. Jacqueline de Quattro cartonne chez nous, alors que Pierre-Yves Maillard pu Pascal Broulis gagnent généralement chez les autres partis.
+\item[Meilleures communes:] Le classement des communes où nous faisons le plus de suffrages en pourcent. Bravo à Vaux-sur-Morges et Trélex, qui mènent le bal bien que les locaux Claude-Alain Gebhard et David Vogel n'étaient pas candidats. Pour moi ça montre l'intérêt de s'investir dans le temps. Une campagne aux cantonales a des effets sur la campagne suivante.  
+\item[Pires communes:] Et la fin du classement. Nous avons 0 voix à Novalles.
+\end{description}
+\label{Expl:Liste}
+Les mêmes graphiques se trouvent aussi pour les listes, composés de manière analogue.
+En plus il y a 
+\begin{description}
+\item[Candidats:] Suffrages par candidat de la liste, avec le détail des suffrages par liste complète, suffrages doublés, et suffrages complémentaires de bulletins modifiés auxquels sont soustraits les suffrages perdus parce que le candidat est biffé de la liste. Ces derniers sont aussi indiqués en négatif en rouge.
+\item[Doublages et Biffages:] Classement des candidats par nombre de fois qu'ils sont doublés. On indique aussi le nombre de fois qu'ils sont biffés.
+\end{description}
+%%%
+\Parti{PVL}
+\Liste[Vert'libéraux]{VERT_LIBERAUX}
+\Liste[PVL Engagés pour demain]{ENGAGES_POUR_DEMAIN}
+\Liste[Jeunes PVL]{JEUNES_VERT_LIBERAUX}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Matrice des bilans}
+Comme je détermine pour chaque parti (liste) le bilan des suffrages par rapport aux autres partis (listes),
+je peux représenter ces données sous forme de matrice en figure~\ref{Fig:Matrice}.
+La taille du disque indique la valeur absolue du bilan et la couleur si c'est une perte ou un gain.
+Les valeurs sur la diagonale sont les sommes des bilans pour chaque parti (liste).
+%%%%%%%
+\begin{figure}[t]\centering
+\includegraphics[width=0.6\textwidth]{../pdf/Bilans-des-Partis.pdf}
+\includegraphics[width=0.6\textwidth]{../pdf/Bilans-des-Listes.pdf}
+\caption{Matrice des bilans.}\label{Fig:Matrice}
+\end{figure}
+%%%%%%%
+\pagebreak
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Résultats des candidats de la liste 1}
+\label{Expl:Candidat}
+Pour les candidats individuels, les graphiques suivants sont inclus:
+\begin{description}
+\item[Meilleures communes:] Classement des 15 meilleures communes par pourcentages de suffrages obtenus.
+Le canton est listé en haut en comparaison. Les barres noires sont celles du candidat et les vertes la liste du candidat.\footnote{Je note que les suffrages que j'utilise correspondent aux suffrages utilisés par le canton, mais pas le pourcentage. La différence est minime, mais je n'en comprends pas l'origine.}
+%\item[Relatif à la liste:] Les suffrages du candidat dans chaque commune sont rapportées aux suffrages de la liste (divisées par 19).
+\item[Suffrages par liste:] Nombre de suffrages obtenues sur les différentes listes modifiées. La liste complète est en bas de graphe. Notez l'échelle logarithmique.
+\item[Candidats ajoutés en même temps que le candidat:] Je regarde les bulletins modifiées où le candidat est ajouté, c'est à dire les liste d'autres partis ou la liste du candidat s'il y est doublé. Ensuite, on compte les suffrages additionnels (selon la même définition) obtenus par d'autres candidats sur ces bulletins. C'est un peu la liste des ``meilleurs amis''.
+\item[Candidats ajoutés quand le candidat est biffé:] Ici, inversement, je regarde les bulletins dont le candidat est biffé. Qui en a profité?\footnote{On ne sait évidemment pas qui en a profité exactement. Si Céline Weber et François Pointet sont tous deux biffés pour mettre Broulis et Maillard à la place, je compte Broulis et Maillard dans le graphique de Céline et aussi dans le graphique de François.} La minuscule barre noire indique qui profite lorsque le candidat est le seul biffé de la lsite. C'est tellement rare que ça se voit à peine.
+%\item[Candidats ajoutés quand le candidat est le seul biffé:] Il y a des rares bulletins où le candidat considéré est biffé et lui seul. Qui alors en profite? C'est anecdotique, et c'est exactement le message de ce graphique. S'il y avait des campagnes de ``biffez X pour doubler Y'' ça se verrait ici.
+\end{description}
+Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
+
+\Candidat{Weber_Celine}{Celine Weber}
+\Candidat{Pointet_Francois}{François Pointet}
+\Candidat{Schaller_Graziella}{Graziella Schaller}
+\Candidat{Mieville_Laurent}{Laurent Mieville}
+\Candidat{Morandi-Bettex_Laetitia}{L{\ae}titia Morandi-Bettex}
+\Candidat{Vionnet_Blaise}{Blaise Vionnet}
+\Candidat{Cavalli_Virginie}{Virginie Cavalli}
+\Candidat{De_Benedictis_Jerome}{Jerome De Benedictis}
+\Candidat{Albiker_Pochon_Caroline}{Caroline Pochon Albiker}
+\Candidat{Humbert_Sebastien}{Sebastien Humbert}
+\Candidat{Diserens_Veronique}{Veronique Diserens}
+\Candidat{Paquier_Mathias}{Mathias Paquier}
+\Candidat{de_La_Baume_Charlotte}{Charlotte de La Baume}
+\Candidat{Favre_Jean-Claude}{Jean-Claude Favre}
+\Candidat{Fankhauser_Carmen}{Carmen Fankhauser}
+\Candidat{Jaccard_Sylvain}{Sylvain Jaccard}
+\Candidat{Eggert_Nina}{Nina Eggert}
+\Candidat{Dupertuis_Michael}{Michael Dupertuis}
+\Candidat{Favre_Guy}{Guy Favre}
+\clearpage
+\section{Résultats des candidats de la liste 2}
+\Candidat{Richard_Claire}{Claire Richard}
+\Candidat{Bolomey_Olivier}{Olivier Bolomey}
+\Candidat{Longchamp_Nadege}{Nadège Longchamp}
+\Candidat{Chapuisat_Jean-Francois}{Jean-François Chapuisat}
+\Candidat{Lude_Nathalie}{Nathalie Lude}
+\Candidat{Cavalli_Jean}{Jean Cavalli}
+\Candidat{Renaud_Celine}{Celine Renaud}
+\Candidat{Beguin_Jean-Marc}{Jean-Marc Beguin}
+\Candidat{Pillet_Line}{Line Pillet}
+\Candidat{Berger_Christophe}{Christophe Berger}
+\Candidat{de_Benoit_Alice}{Alice de Benoit}
+\Candidat{Bourgeois_Olivier}{Olivier Bourgeois}
+\Candidat{Quaglia_Brigitte}{Brigitte Quaglia}
+\Candidat{Reymond_Pierre-Antoine}{Pierre-Antoine Reymond}
+\Candidat{Plagellat_Cecile}{Cecile Plagellat}
+\Candidat{Roch_Maxime}{Maxime Roch}
+\Candidat{Tinguely_Carine}{Carine Tinguely}
+\Candidat{Jan_Dominique-Alain}{Dominique-Alain Jan}
+\Candidat{Heitzmann_Michel}{Michel Heitzmann}
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Résultats des candidats des Jeunes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Candidat{Albers_Simon}{Simon Albers}
+\Candidat{Pointet_Cloe}{Cloé Pointet}
+\Candidat{Girod_Jennifer}{Jennifer Girod}
+\Candidat{Repond_Nathanael}{Nathanaël Repond}
+\Candidat{Bahler_Melanie}{Melanie Bähler}
+\Candidat{Chappuis_Alexandre}{Alexandre Chappuis}
+\Candidat{Schaffer_Clara}{Clara Schaffer}
+\Candidat{Mader_Michael}{Michael Mäder}
+\Candidat{Wasilewski-Rasca_Laureline}{Laureline Wasilewski-Rasca}
+\Candidat{Bonjour_Thomas}{Thomas Bonjour}
+\Candidat{Dind_Celine}{Celine Dind}
+\Candidat{Jotti_Hadrien}{Hadrien Jotti}
+\Candidat{Kaufmann_Leila}{Leïla Kaufmann}
+\Candidat{Milliet_Alexandre}{Alexandre Milliet}
+\Candidat{Ducommun_Pauline}{Pauline Ducommun}
+\Candidat{Currat_Mehdi}{Mehdi Currat}
+\Candidat{Rathle_Maxime}{Maxime Rathle}
+\Candidat{Vidoz_Mattia}{Mattia Vidoz}
+\Candidat{Lechot_Julien}{Julien Lechot}
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Résultats des autres partis}\label{AutresPartis}
+%%%
+\Parti{PS}
+\Liste{PSV}
+\Liste{JSV}
+%%%
+\Parti{PEV}
+\Liste{PEV}
+%%%
+\Parti{PLR}
+\Liste{PLR}
+\Liste[PLR Energie libérale]{PLR_Energie_liberale}
+\Liste{JLRV}
+%%%
+\Parti{UDC}
+\Liste{UDC}
+\Liste[UDC Liberté et Mobilité]{UDC_Liberte_et_Mobilite}
+\Liste[Jeunes UDC]{Jeunes_UDC}
+%%%
+\Parti{UDF}
+\Liste{UDF}
+%%%
+\Parti{Centre}
+\Liste[Le Centre]{Le_Centre}
+\Liste[La Terre au Centre]{La_Terre_au_Centre}
+%%%
+\PartiNonOFS{Libres}
+\Liste[Les Libres]{Les_Libres}
+%%%
+\PartiNonOFS{Pirates}
+\Liste{PPVD}
+%%%
+\Parti[POP/EàG]{PST_Sol_}
+\Liste{POP}
+\Liste[EàG]{EaG}
+%%%
+\Parti{VERT-E-S}
+\Liste[Les Vertes]{Les_Vert_e_s}
+\Liste{JVVD}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\section{Résultats des élus}\label{AutresElus}
+\Candidat{Mahaim_Raphael}{Mahaim Raphaël} % Les Vert·e·s
+\Candidat{Michaud_Gigon_Sophie}{Michaud Gigon Sophie} % Les Vert·e·s
+\Candidat{Porchet_Leonore}{Porchet Léonore} % Les Vert·e·s
+\Candidat{Maillard_Pierre-Yves}{Maillard Pierre-Yves} % PSV
+\Candidat{Crottaz_Brigitte}{Crottaz Brigitte} % PSV
+\Candidat{Bendahan_Samuel}{Bendahan Samuel} % PSV
+\Candidat{Nordmann_Roger}{Nordmann Roger} % PSV
+\Candidat{Tuosto_Brenda}{Tuosto Brenda} % PSV
+\Candidat{Tschopp_Jean}{Tschopp Jean} % PSV
+\Candidat{Jaccoud_Jessica}{Jaccoud Jessica} % PSV
+\Candidat{Broulis_Pascal}{Broulis Pascal} % PLR
+\Candidat{de_Quattro_Jacqueline}{de Quattro Jacqueline} % PLR
+\Candidat{Feller_Olivier}{Feller Olivier} % PLR
+\Candidat{Ruch_Daniel}{Ruch Daniel} % PLR
+\Candidat{Wehrli_Laurent}{Wehrli Laurent} % PLR
+\Candidat{Chappuis_Isabelle}{Chappuis Isabelle} % Le Centre
+\Candidat{Buffat_Michael}{Buffat Michaël} % UDC
+\Candidat{Nicolet_Jacques}{Nicolet Jacques} % UDC
+\Candidat{Pahud_Yvan}{Pahud Yvan} % UDC
+\Candidat{Freymond_Sylvain}{Freymond Sylvain} % UDC
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Résultats des communes}
+\label{Expl:Commune}
+Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage de mettre les communes voisines sont ensemble.
+
+\begin{description}
+\item[Suffrages des partis:] Suffrages pour chaque parti. La barre solide sont les suffrages de liste complète.
+\item[Suffrages des listes:] La même chose pour les listes.
+\end{description}
+
+\Commune[Aigle]{Aigle}
+\Commune[Bex]{Bex}
+\Commune[Chessel]{Chessel}
+\Commune[Corbeyrier]{Corbeyrier}
+\Commune[Gryon]{Gryon}
+\Commune[Lavey-Morcles]{Lavey-Morcles}
+\Commune[Leysin]{Leysin}
+\Commune[Noville]{Noville}
+\Commune[Ollon]{Ollon}
+\Commune[Ormont-Dessous]{Ormont-Dessous}
+\Commune[Ormont-Dessus]{Ormont-Dessus}
+\Commune[Rennaz]{Rennaz}
+\Commune[Roche (VD)]{Roche__VD_}
+\Commune[Villeneuve (VD)]{Villeneuve__VD_}
+\Commune[Yvorne]{Yvorne}
+\clearpage
+\Commune[Aubonne]{Aubonne}
+\Commune[Ballens]{Ballens}
+\Commune[Berolle]{Berolle}
+\Commune[Bière]{Biere}
+\Commune[Bougy-Villars]{Bougy-Villars}
+\Commune[Féchy]{Fechy}
+\Commune[Gimel]{Gimel}
+\Commune[Longirod]{Longirod}
+\Commune[Marchissy]{Marchissy}
+\Commune[Mollens (VD)]{Mollens__VD_}
+\Commune[Saint-George]{Saint-George}
+\Commune[Saint-Livres]{Saint-Livres}
+\Commune[Saint-Oyens]{Saint-Oyens}
+\Commune[Saubraz]{Saubraz}
+\Commune[Avenches]{Avenches}
+\Commune[Cudrefin]{Cudrefin}
+\Commune[Faoug]{Faoug}
+\Commune[Vully-les-Lacs]{Vully-les-Lacs}
+\clearpage
+\Commune[Bettens]{Bettens}
+\Commune[Bournens]{Bournens}
+\Commune[Boussens]{Boussens}
+\Commune[La Chaux (Cossonay)]{La_Chaux__Cossonay_}
+\Commune[Chavannes-le-Veyron]{Chavannes-le-Veyron}
+\Commune[Chevilly]{Chevilly}
+\Commune[Cossonay]{Cossonay}
+\Commune[Cuarnens]{Cuarnens}
+\Commune[Daillens]{Daillens}
+\Commune[Dizy]{Dizy}
+\Commune[Eclépens]{Eclepens}
+\Commune[Ferreyres]{Ferreyres}
+\Commune[Gollion]{Gollion}
+\Commune[Grancy]{Grancy}
+\Commune[L'Isle]{L_Isle}
+\Commune[Lussery-Villars]{Lussery-Villars}
+\Commune[Mauraz]{Mauraz}
+\Commune[Mex (VD)]{Mex__VD_}
+\Commune[Moiry]{Moiry}
+\Commune[Mont-la-Ville]{Mont-la-Ville}
+\Commune[Montricher]{Montricher}
+\Commune[Orny]{Orny}
+\Commune[Penthalaz]{Penthalaz}
+\Commune[Penthaz]{Penthaz}
+\Commune[Pompaples]{Pompaples}
+\Commune[La Sarraz]{La_Sarraz}
+\Commune[Senarclens]{Senarclens}
+\Commune[Sullens]{Sullens}
+\Commune[Vufflens-la-Ville]{Vufflens-la-Ville}
+\clearpage
+\Commune[Assens]{Assens}
+\Commune[Bercher]{Bercher}
+\Commune[Bottens]{Bottens}
+\Commune[Bretigny-sur-Morrens]{Bretigny-sur-Morrens}
+\Commune[Cugy (VD)]{Cugy__VD_}
+\Commune[Echallens]{Echallens}
+\Commune[Essertines-sur-Yverdon]{Essertines-sur-Yverdon}
+\Commune[Etagnières]{Etagnieres}
+\Commune[Fey]{Fey}
+\Commune[Froideville]{Froideville}
+\Commune[Morrens (VD)]{Morrens__VD_}
+\Commune[Oulens-sous-Echallens]{Oulens-sous-Echallens}
+\Commune[Pailly]{Pailly}
+\Commune[Penthéréaz]{Penthereaz}
+\Commune[Poliez-Pittet]{Poliez-Pittet}
+\Commune[Rueyres]{Rueyres}
+\Commune[Saint-Barthélemy (VD)]{Saint-Barthelemy__VD_}
+\Commune[Villars-le-Terroir]{Villars-le-Terroir}
+\Commune[Vuarrens]{Vuarrens}
+\Commune[Montilliez]{Montilliez}
+\Commune[Goumoëns]{Goumoens}
+\clearpage
+\Commune[Bonvillars]{Bonvillars}
+\Commune[Bullet]{Bullet}
+\Commune[Champagne]{Champagne}
+\Commune[Concise]{Concise}
+\Commune[Corcelles-près-Concise]{Corcelles-pres-Concise}
+\Commune[Fiez]{Fiez}
+\Commune[Fontaines-sur-Grandson]{Fontaines-sur-Grandson}
+\Commune[Giez]{Giez}
+\Commune[Grandevent]{Grandevent}
+\Commune[Grandson]{Grandson}
+\Commune[Mauborget]{Mauborget}
+\Commune[Mutrux]{Mutrux}
+\Commune[Novalles]{Novalles}
+\Commune[Onnens (VD)]{Onnens__VD_}
+\Commune[Provence]{Provence}
+\Commune[Sainte-Croix]{Sainte-Croix}
+\Commune[Tévenon]{Tevenon}
+\Commune[Belmont-sur-Lausanne]{Belmont-sur-Lausanne}
+\Commune[Cheseaux-sur-Lausanne]{Cheseaux-sur-Lausanne}
+\Commune[Crissier]{Crissier}
+\Commune[Epalinges]{Epalinges}
+\Commune[Jouxtens-Mézery]{Jouxtens-Mezery}
+\Commune[Lausanne]{Lausanne}
+\Commune[Le Mont-sur-Lausanne]{Le_Mont-sur-Lausanne}
+\Commune[Paudex]{Paudex}
+\Commune[Prilly]{Prilly}
+\Commune[Pully]{Pully}
+\Commune[Renens (VD)]{Renens__VD_}
+\Commune[Romanel-sur-Lausanne]{Romanel-sur-Lausanne}
+\Commune[Chexbres]{Chexbres}
+\Commune[Forel (Lavaux)]{Forel__Lavaux_}
+\Commune[Lutry]{Lutry}
+\Commune[Puidoux]{Puidoux}
+\Commune[Rivaz]{Rivaz}
+\Commune[Saint-Saphorin (Lavaux)]{Saint-Saphorin__Lavaux_}
+\Commune[Savigny]{Savigny}
+\Commune[Bourg-en-Lavaux]{Bourg-en-Lavaux}
+\clearpage
+\Commune[Aclens]{Aclens}
+\Commune[Bremblens]{Bremblens}
+\Commune[Buchillon]{Buchillon}
+\Commune[Bussigny]{Bussigny}
+\Commune[Chavannes-près-Renens]{Chavannes-pres-Renens}
+\Commune[Chigny]{Chigny}
+\Commune[Clarmont]{Clarmont}
+\Commune[Denens]{Denens}
+\Commune[Denges]{Denges}
+\Commune[Echandens]{Echandens}
+\Commune[Echichens]{Echichens}
+\Commune[Ecublens (VD)]{Ecublens__VD_}
+\Commune[Etoy]{Etoy}
+\Commune[Lavigny]{Lavigny}
+\Commune[Lonay]{Lonay}
+\Commune[Lully (VD)]{Lully__VD_}
+\Commune[Lussy-sur-Morges]{Lussy-sur-Morges}
+\Commune[Morges]{Morges}
+\Commune[Préverenges]{Preverenges}
+\Commune[Romanel-sur-Morges]{Romanel-sur-Morges}
+\Commune[Saint-Prex]{Saint-Prex}
+\Commune[Saint-Sulpice (VD)]{Saint-Sulpice__VD_}
+\Commune[Tolochenaz]{Tolochenaz}
+\Commune[Vaux-sur-Morges]{Vaux-sur-Morges}
+\Commune[Villars-Sainte-Croix]{Villars-Sainte-Croix}
+\Commune[Villars-sous-Yens]{Villars-sous-Yens}
+\Commune[Vufflens-le-Château]{Vufflens-le-Chateau}
+\Commune[Vullierens]{Vullierens}
+\Commune[Yens]{Yens}
+\Commune[Hautemorges]{Hautemorges}
+\Commune[Boulens]{Boulens}
+\Commune[Bussy-sur-Moudon]{Bussy-sur-Moudon}
+\Commune[Chavannes-sur-Moudon]{Chavannes-sur-Moudon}
+\Commune[Curtilles]{Curtilles}
+\Commune[Dompierre (VD)]{Dompierre__VD_}
+\Commune[Hermenches]{Hermenches}
+\Commune[Lovatens]{Lovatens}
+\Commune[Lucens]{Lucens}
+\Commune[Moudon]{Moudon}
+\Commune[Ogens]{Ogens}
+\Commune[Prévonloup]{Prevonloup}
+\Commune[Rossenges]{Rossenges}
+\Commune[Syens]{Syens}
+\Commune[Villars-le-Comte]{Villars-le-Comte}
+\Commune[Vucherens]{Vucherens}
+\Commune[Montanaire]{Montanaire}
+\clearpage
+\Commune[Arnex-sur-Nyon]{Arnex-sur-Nyon}
+\Commune[Arzier-Le Muids]{Arzier-Le_Muids}
+\Commune[Bassins]{Bassins}
+\Commune[Begnins]{Begnins}
+\Commune[Bogis-Bossey]{Bogis-Bossey}
+\Commune[Borex]{Borex}
+\Commune[Chavannes-de-Bogis]{Chavannes-de-Bogis}
+\Commune[Chavannes-des-Bois]{Chavannes-des-Bois}
+\Commune[Chéserex]{Cheserex}
+\Commune[Coinsins]{Coinsins}
+\Commune[Commugny]{Commugny}
+\Commune[Coppet]{Coppet}
+\Commune[Crans (VD)]{Crans__VD_}
+\Commune[Crassier]{Crassier}
+\Commune[Duillier]{Duillier}
+\Commune[Eysins]{Eysins}
+\Commune[Founex]{Founex}
+\Commune[Genolier]{Genolier}
+\Commune[Gingins]{Gingins}
+\Commune[Givrins]{Givrins}
+\Commune[Gland]{Gland}
+\Commune[Grens]{Grens}
+\Commune[Mies]{Mies}
+\Commune[Nyon]{Nyon}
+\Commune[Prangins]{Prangins}
+\Commune[La Rippe]{La_Rippe}
+\Commune[Saint-Cergue]{Saint-Cergue}
+\Commune[Signy-Avenex]{Signy-Avenex}
+\Commune[Tannay]{Tannay}
+\Commune[Trélex]{Trelex}
+\Commune[Le Vaud]{Le_Vaud}
+\Commune[Vich]{Vich}
+\Commune[L'Abergement]{L_Abergement}
+\clearpage
+\Commune[Agiez]{Agiez}
+\Commune[Arnex-sur-Orbe]{Arnex-sur-Orbe}
+\Commune[Ballaigues]{Ballaigues}
+\Commune[Baulmes]{Baulmes}
+\Commune[Bavois]{Bavois}
+\Commune[Bofflens]{Bofflens}
+\Commune[Bretonnières]{Bretonnieres}
+\Commune[Chavornay]{Chavornay}
+\Commune[Les Clées]{Les_Clees}
+\Commune[Croy]{Croy}
+\Commune[Juriens]{Juriens}
+\Commune[Lignerolle]{Lignerolle}
+\Commune[Montcherand]{Montcherand}
+\Commune[Orbe]{Orbe}
+\Commune[La Praz]{La_Praz}
+\Commune[Premier]{Premier}
+\Commune[Rances]{Rances}
+\Commune[Romainmôtier-Envy]{Romainmotier-Envy}
+\Commune[Sergey]{Sergey}
+\Commune[Valeyres-sous-Rances]{Valeyres-sous-Rances}
+\Commune[Vallorbe]{Vallorbe}
+\Commune[Vaulion]{Vaulion}
+\Commune[Vuiteboeuf]{Vuiteboeuf}
+\Commune[Corcelles-le-Jorat]{Corcelles-le-Jorat}
+\Commune[Maracon]{Maracon}
+\Commune[Montpreveyres]{Montpreveyres}
+\Commune[Ropraz]{Ropraz}
+\Commune[Servion]{Servion}
+\Commune[Vulliens]{Vulliens}
+\Commune[Jorat-Menthue]{Jorat-Menthue}
+\Commune[Oron]{Oron}
+\Commune[Jorat-Mézières]{Jorat-Mezieres}
+\Commune[Champtauroz]{Champtauroz}
+\Commune[Chevroux]{Chevroux}
+\Commune[Corcelles-près-Payerne]{Corcelles-pres-Payerne}
+\Commune[Grandcour]{Grandcour}
+\Commune[Henniez]{Henniez}
+\Commune[Missy]{Missy}
+\Commune[Payerne]{Payerne}
+\Commune[Trey]{Trey}
+\Commune[Treytorrens (Payerne)]{Treytorrens__Payerne_}
+\Commune[Villarzel]{Villarzel}
+\Commune[Valbroye]{Valbroye}
+\Commune[Château-d'Oex]{Chateau-d_Oex}
+\Commune[Rossinière]{Rossiniere}
+\Commune[Rougemont]{Rougemont}
+\clearpage
+\Commune[Allaman]{Allaman}
+\Commune[Bursinel]{Bursinel}
+\Commune[Bursins]{Bursins}
+\Commune[Burtigny]{Burtigny}
+\Commune[Dully]{Dully}
+\Commune[Essertines-sur-Rolle]{Essertines-sur-Rolle}
+\Commune[Gilly]{Gilly}
+\Commune[Luins]{Luins}
+\Commune[Mont-sur-Rolle]{Mont-sur-Rolle}
+\Commune[Perroy]{Perroy}
+\Commune[Rolle]{Rolle}
+\Commune[Tartegnin]{Tartegnin}
+\Commune[Vinzel]{Vinzel}
+\clearpage
+\Commune[L'Abbaye]{L_Abbaye}
+\Commune[Le Chenit]{Le_Chenit}
+\Commune[Le Lieu]{Le_Lieu}
+\Commune[Chardonne]{Chardonne}
+\Commune[Corseaux]{Corseaux}
+\Commune[Corsier-sur-Vevey]{Corsier-sur-Vevey}
+\Commune[Jongny]{Jongny}
+\Commune[Montreux]{Montreux}
+\Commune[La Tour-de-Peilz]{La_Tour-de-Peilz}
+\Commune[Vevey]{Vevey}
+\Commune[Veytaux]{Veytaux}
+\Commune[Blonay - Saint-Légier]{Blonay_-_Saint-Legier}
+\clearpage
+\Commune[Belmont-sur-Yverdon]{Belmont-sur-Yverdon}
+\Commune[Bioley-Magnoux]{Bioley-Magnoux}
+\Commune[Chamblon]{Chamblon}
+\Commune[Champvent]{Champvent}
+\Commune[Chavannes-le-Chêne]{Chavannes-le-Chene}
+\Commune[Chêne-Pâquier]{Chene-Paquier}
+\Commune[Cheseaux-Noréaz]{Cheseaux-Noreaz}
+\Commune[Cronay]{Cronay}
+\Commune[Cuarny]{Cuarny}
+\Commune[Démoret]{Demoret}
+\Commune[Donneloye]{Donneloye}
+\Commune[Ependes (VD)]{Ependes__VD_}
+\Commune[Mathod]{Mathod}
+\Commune[Molondin]{Molondin}
+\Commune[Montagny-près-Yverdon]{Montagny-pres-Yverdon}
+\Commune[Oppens]{Oppens}
+\Commune[Orges]{Orges}
+\Commune[Orzens]{Orzens}
+\Commune[Pomy]{Pomy}
+\Commune[Rovray]{Rovray}
+\Commune[Suchy]{Suchy}
+\Commune[Suscévaz]{Suscevaz}
+\Commune[Treycovagnes]{Treycovagnes}
+\Commune[Ursins]{Ursins}
+\Commune[Valeyres-sous-Montagny]{Valeyres-sous-Montagny}
+\Commune[Valeyres-sous-Ursins]{Valeyres-sous-Ursins}
+\Commune[Villars-Epeney]{Villars-Epeney}
+\Commune[Vugelles-La Mothe]{Vugelles-La_Mothe}
+\Commune[Yverdon-les-Bains]{Yverdon-les-Bains}
+\Commune[Yvonand]{Yvonand}
+\Commune[VD-CH de l'étranger]{VD-CH_de_l_etranger}
+\end{document}
