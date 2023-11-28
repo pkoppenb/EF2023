@@ -21,7 +21,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\Liste}[2][NONE]{
 \IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
-\begin{figure}[t]\centering
+\begin{figure}[!h]\centering
 \includegraphics[width=\thewidth]{../pdf/Liste-Suffrages-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Liste-Bilan-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Liste-Suffrages-Par-Candidat-#2.pdf}
@@ -30,14 +30,14 @@
 \includegraphics[width=\thewidth]{../pdf/Liste-CandidatsParasite-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Liste-#2-Meilleures-Communes.pdf}
 \includegraphics[width=\thewidth]{../pdf/Liste-#2-Pires-Communes.pdf}
-\caption{Graphiques pour la Liste \leNom. Voir page~\pageref{Expl:Liste}.}\label{Fig:Liste:#2}
+\caption[Graphiques pour la Liste \leNom]{Graphiques pour la Liste \leNom. Explications en page~\pageref{Expl:Liste}.}\label{Fig:Liste:#2}
 \end{figure}
 \clearpage
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\Parti}[2][NONE]{
 \IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
-\begin{figure}[t]\centering
+\begin{figure}[!h]\centering
 \includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-Bilan-#2.pdf}
 %\includegraphics[width=\thewidth]{../pdf/Parti-SuffragesParCandidat-#2.pdf}
@@ -46,21 +46,21 @@
 \includegraphics[width=\thewidth]{../pdf/Parti-CandidatsParasite-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-#2-Meilleures-Communes.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-#2-Pires-Communes.pdf}
-\caption{Graphiques pour le Parti \leNom. Voir page~\pageref{Expl:Parti}.}\label{Fig:Parti:#2}
+\caption[Graphiques pour le parti \leNom]{Graphiques pour le Parti \leNom. Explications en page~\pageref{Expl:Parti}.}\label{Fig:Parti:#2}
 \end{figure}
 \clearpage
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\PartiNonOFS}[2][NONE]{  % parti inconnu de l'OFS
 \IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
-\begin{figure}[t]\centering
+\begin{figure}[!h]\centering
 \includegraphics[width=\thewidth]{../pdf/Parti-Bilan-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-#2.pdf}
 %\includegraphics[width=\thewidth]{../pdf/Parti-SuffragesParCandidat-#2.pdf}
 %\includegraphics[width=\thewidth]{../pdf/Parti-Biffages-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-Parasite-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-CandidatsParasite-#2.pdf}
-\caption{Graphiques pour le Parti \leNom. Ce parti n'est pas traîté par l'OFS et n'a donc pas tous les graphiques.  Voir page~\pageref{Expl:Parti}.}\label{Fig:Parti:#2}
+\caption[[Graphiques pour le parti \leNom]]{Graphiques pour le Parti \leNom. Ce parti n'est pas traîté par l'OFS et n'a donc pas tous les graphiques.  Explications en page~\pageref{Expl:Parti}.}\label{Fig:Parti:#2}
 \end{figure}
 \clearpage
 }
@@ -68,24 +68,24 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\Candidat}[2]{
 %\subsection{Résultats de #2}
-\begin{figure}[t]\centering
+\begin{figure}[!h]\centering
+\includegraphics[width=\thewidth]{../pdf/Candidat-Suffrages-#1.pdf}
 \includegraphics[width=\thewidth]{../pdf/Candidat-#1-Communes.pdf}
 %\includegraphics[width=\thewidth]{../pdf/Candidat-#1-Communes-relatif-a-la-liste.pdf}
-\includegraphics[width=\thewidth]{../pdf/Candidat-Suffrages-#1.pdf}
 \includegraphics[width=\thewidth]{../pdf/Candidat-Amis-#1.pdf}
 \includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-#1.pdf}
 %\includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-Unique-#1.pdf}
-\caption{Graphiques pour #2. Voir page~\pageref{Expl:Candidat}.}\label{Fig:Cand:#1}
+\caption[Graphiques pour #2]{Graphiques pour #2. Explications en page~\pageref{Expl:Candidat}.}\label{Fig:Cand:#1}
 \end{figure}
 %\clearpage
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\Commune}[2][NONE]{
 \IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
-\begin{figure}[t]\centering
-\includegraphics[width=\thewidth]{../pdf/Commune-#2-Listes.pdf}
+\begin{figure}[!h]\centering
 \includegraphics[width=\thewidth]{../pdf/Commune-#2-Partis.pdf}
-\caption{Graphiques pour la Commune \leNom. Voir page~\pageref{Expl:Commune}.}\label{Fig:Com:#2}
+\includegraphics[width=\thewidth]{../pdf/Commune-#2-Listes.pdf}
+\caption[Graphiques pour la commune \leNom]{Graphiques pour la commune \leNom. Explications en page~\pageref{Expl:Commune}.}\label{Fig:Com:#2}
 \end{figure}
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -93,7 +93,7 @@
 \begin{document}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{titlepage}
-\pagenumbering{roman}
+%\pagenumbering{roman}
 
 % Header ---------------------------------------------------
 \vspace*{-1.5cm}
@@ -178,28 +178,30 @@ Quelques définitions ne sont probablement pas inutiles
 19 suffrages à la liste.
 \item[Un bulletin modifié] est tout bulletin valable qui n'est pas compact. L'électeur peut avoir biffé des noms, ajouté d'autres, et doublé des candidats.
 \item[Un bulletin sans dénomination] est le bulletin vierge sur lequel l'électeur a composé sa propre liste de candidats. A noter que si l'électeur a y inscrit un nom de parti, cela devient un bulletin modifié et figure pas dans la catégorie ci-dessus.\\
-Je me suis permis une petite entorse: si un bulletin sans dénomination comporte 10 ou plus candidats du même parti,\footnote{C'est bien 10 du même parti. Je choisis ensuite la liste comme celle qui a reçu le plus de suffrages.} je le compte comme bulletin modifié et non comme sans dénomination. 
+Je me suis permis une petite entorse: si un bulletin sans dénomination comporte 10 ou plus candidats du même parti,\footnote{C'est bien 10 du même parti. Je choisis ensuite la liste comme celle qui a reçu le plus de suffrages.} je le compte comme bulletin modifié et non comme sans dénomination.
+\item[Un suffrage supplémentaire] va à une liste mais pas à un candidat. Cela advient pour les listes incomplètes (UDF par exmple), si un électeur biffe des candidats sans les remplacer, ou s'il met un nom de parti sur le bulletin vierge sans y mettre 19 candidats. 
 \end{description}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Répartition des sièges}
 La répartition des sièges se fait selon un algorithme qui permet de déterminer qui a eu quel siège.
 Le premier siège va a celui qui aurait pris le siège si un seul était en jeu, et ainsi de suite jusqu'à 19.
-La répartition est donnée en table~\ref{Tab:Sieges}.
+La répartition est donnée en table~\ref{Tab:Sieges}. 
+Les graphiques des élus sont en annexe~\ref{AutresElus}.
 
-Si en 2019 nous avions les 8ème et 19ème sièges, cette année nous obtenons le 11ème. Il aurait fallu 25 sièges pour en avoir un second, qui serait allé à Claire Richard, première de la liste 2.
+Si en 2019 nous avions les 8ème et 19ème sièges, cette année nous obtenons le 11ème. Il aurait fallu 25 sièges pour en avoir un second, qui serait allé à Claire Richard, première de la liste 2.\footnote{Claire n'est pas pour autant la vient-ensuite de Céline. Le siège reste à la liste 1.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}\centering
 \caption{Attribution des sièges.}\label{Tab:Sieges}
 \vskip 1em
 \begin{tabular}{r|l @{ (}r@{ )\ } l|l}
-Siège & Parti & nb. & Candidat  & vient-ensuite\\
+Siège & Parti & nb. & Candidat  & remplacé par\\
 \hline
 1 & PS & 1 & Pierre-Yves Maillard & Brenda Tuosto\\
 2 & PLR & 1& Jacqueline de Quattro  \\
 3 & Verts & 1& Sophie Michaud Gigon  \\
 4 & UDC &1 & Jacques Nicolet  \\
-5 & PS & 2&  Roger Normann \\
+5 & PS & 2&  Roger Nordmann \\
 6 & PLR & 2& Pascal Broulis & Daniel Ruch \\
 7 & PS & 3& Samuel Bendahan  \\
 8 & UDC & 2&  Michaël Buffat \\
@@ -215,14 +217,14 @@ Siège & Parti & nb. & Candidat  & vient-ensuite\\
 18 & UDC & 4&  Sylvain Freymond \\
 19 & PS & 6& Jessica Jaccoud  \\
 \hline
-20 & PLR & 5& Daniel Ruch & Alexandre Berthoud \\
+20 & PLR & 5& Daniel Ruch  \\
 25 & PVL & 2& Claire Richard  \\
 \end{tabular}
 \end{table}
 
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Résultats des listes et du  parti}
+\section{Résultats des listes et du  parti}\label{PVL}
 \label{Expl:Parti}
 Un parti est la somme de toutes ses listes. Ainsi, les résultats du PVL sont en
 Figure~\ref{Fig:Parti:PVL}, qui est la somme des graphiques des trois listes en Figures~\ref{Fig:Liste:VERT_LIBERAUX} à~\ref{Fig:Liste:JEUNES_VERT_LIBERAUX}.
@@ -232,18 +234,16 @@ Les graphiques que l'on trouvera pour le parti sont:
 \begin{description}
 \item[Suffrages:] Graphique des suffrages que les candidats des trois listes PVL obtiennent. Le plus grand nombre vient des listes non modifiées. Suivent les listes sans dénomination et les listes PVL modifiées. Ensuite 6000 suffrages viennent du PLR.
 
-
-Les listes sans dénomination dominent. Suivent les autres listes PVL. Ici, il s'agit de suffrages que ces candidats d'une liste PVL obtiennent sur une autres liste PVL. Suit le PLR puis le PS.
 \item[Bilan:] Pour tous les bulletins modifiés, je compte en positif les suffrages pour des candidats PVL obtenus sur des listes d'autres partis et en négatif les suffrages obtenus par des candidats d'autres partis obtenus sur les listes PVL. La barre remplie est la différence.
 Ainsi, en Fig.~\ref{Fig:Parti:PVL} on voit que les candidats PVL font 6000 suffrages sur des listes PLR, et des candidats PLR font 5000 suffrages sur nos listes. Le bilan est positif de près de 1000 suffrages.\\
 Au bas du graphique se trouve le total de tous les bilans. Le PVL a un bilan positif de 2000 suffrages. Ce sont autant de suffrages cherchés chez les électeurs d'autres partis. On peut aussi considérer que ce sont 2000 suffrages d'électeurs prêts à voter pour des vert'libéraux, mais sans mettre nos listes dans l'urne.
 \item[Parasitage:] Ventilation des suffrages de candidats d'autres partis obtenus sur les listes PVL. 5000 voix partent chez le PLR. C'est la même information que sur le graphique 'Bilan', mais classées par nombre décroissant de suffrages.
-\item[Candidats parasites:] Ce graphique montre les 25 premiers candidats d'autres paries qui font des voix sur les listes du parti. Jacqueline de Quattro cartonne chez nous, alors que Pierre-Yves Maillard pu Pascal Broulis gagnent généralement chez les autres partis.
-\item[Meilleures communes:] Le classement des communes où nous faisons le plus de suffrages en pourcent. Bravo à Vaux-sur-Morges et Trélex, qui mènent le bal bien que les locaux Claude-Alain Gebhard et David Vogel n'étaient pas candidats. Pour moi ça montre l'intérêt de s'investir dans le temps. Une campagne aux cantonales a des effets sur la campagne suivante.  
-\item[Pires communes:] Et la fin du classement. Nous avons 0 voix à Novalles.
+\item[Candidats parasites:] Ce graphique montre les 25 premiers candidats d'autres partis qui font des voix sur les listes du parti. Jacqueline de Quattro cartonne chez nous, alors que Pierre-Yves Maillard ou Pascal Broulis gagnent généralement chez les autres partis.
+\item[Meilleures communes:] Le classement des communes où nous faisons le plus de suffrages en pourcent. Bravo à Vaux-sur-Morges et Trélex, qui mènent le bal. Ceci bien que les locaux Claude-Alain Gebhard et David Vogel n'étaient pas candidats. Pour moi ça montre l'intérêt de s'investir dans le temps. Une campagne aux cantonales a des effets sur la campagne suivante.  
+\item[Pires communes:] Enfin, la fin du classement. Nous avons 0 voix à Novalles. Chez certains partis ce graphe est vide. C'est ce qui arrive s'il fait 0 suffrages dans plus de 25 communes. La liste des communes est alors aléatoire. 
 \end{description}
 \label{Expl:Liste}
-Les mêmes graphiques se trouvent aussi pour les listes, composés de manière analogue.
+Les mêmes graphiques se trouvent aussi pour les listes, composés de manière analogue. On notera que sur les deux graphes du haut figurent les autres listes en axe $y$. On y verra ainsi que la liste 1 perd des suffrages au bénéfice des listes 2 et de jeunes. C'est sans surprise: les électeurs PVL votent majoritairement pour la liste 1 mais ajoutent des noms d'autres listes.
 En plus il y a 
 \begin{description}
 \item[Candidats:] Suffrages par candidat de la liste, avec le détail des suffrages par liste complète, suffrages doublés, et suffrages complémentaires de bulletins modifiés auxquels sont soustraits les suffrages perdus parce que le candidat est biffé de la liste. Ces derniers sont aussi indiqués en négatif en rouge.
@@ -256,12 +256,16 @@ En plus il y a
 \Liste[Jeunes PVL]{JEUNES_VERT_LIBERAUX}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Matrice des bilans}
-Comme je détermine pour chaque parti (liste) le bilan des suffrages par rapport aux autres partis (listes),
+Comme je détermine pour chaque parti (liste) le bilan des suffrages par rapport aux autres partis (listes) (en section~\ref{PVL} et appendice~\ref{AutresPartis}),
 je peux représenter ces données sous forme de matrice en figure~\ref{Fig:Matrice}.
+A chaque ligne est indiqué le bilan du parti (liste) par rapport aux partis (listes) indiquées en bas.
 La taille du disque indique la valeur absolue du bilan et la couleur si c'est une perte ou un gain.
 Les valeurs sur la diagonale sont les sommes des bilans pour chaque parti (liste).
+La matrice est diagonale: à chaque disque vert correspond un disque rouge de l'autre côté de la diagonale.
+
+Mis à part la diagonale, les plus gros disques sont la perte de l'UDC vers le PLR, et Énergie libérale qui prend des suffrages à la liste PLR. 
 %%%%%%%
-\begin{figure}[t]\centering
+\begin{figure}[!h]\centering
 \includegraphics[width=0.6\textwidth]{../pdf/Bilans-des-Partis.pdf}
 \includegraphics[width=0.6\textwidth]{../pdf/Bilans-des-Listes.pdf}
 \caption{Matrice des bilans.}\label{Fig:Matrice}
@@ -274,11 +278,11 @@ Les valeurs sur la diagonale sont les sommes des bilans pour chaque parti (liste
 Pour les candidats individuels, les graphiques suivants sont inclus:
 \begin{description}
 \item[Meilleures communes:] Classement des 15 meilleures communes par pourcentages de suffrages obtenus.
-Le canton est listé en haut en comparaison. Les barres noires sont celles du candidat et les vertes la liste du candidat.\footnote{Je note que les suffrages que j'utilise correspondent aux suffrages utilisés par le canton, mais pas le pourcentage. La différence est minime, mais je n'en comprends pas l'origine.}
+Le canton est listé en haut en comparaison. Les barres noires sont celles du candidat et les vertes (dans le cas du PVL) la liste du candidat.\footnote{Je note que les suffrages que j'utilise correspondent aux suffrages utilisés par le canton, mais pas le pourcentage. La différence est minime, mais je n'en comprends pas l'origine.}
 %\item[Relatif à la liste:] Les suffrages du candidat dans chaque commune sont rapportées aux suffrages de la liste (divisées par 19).
-\item[Suffrages par liste:] Nombre de suffrages obtenues sur les différentes listes modifiées. La liste complète est en bas de graphe. Notez l'échelle logarithmique.
-\item[Candidats ajoutés en même temps que le candidat:] Je regarde les bulletins modifiées où le candidat est ajouté, c'est à dire les liste d'autres partis ou la liste du candidat s'il y est doublé. Ensuite, on compte les suffrages additionnels (selon la même définition) obtenus par d'autres candidats sur ces bulletins. C'est un peu la liste des ``meilleurs amis''.
-\item[Candidats ajoutés quand le candidat est biffé:] Ici, inversement, je regarde les bulletins dont le candidat est biffé. Qui en a profité?\footnote{On ne sait évidemment pas qui en a profité exactement. Si Céline Weber et François Pointet sont tous deux biffés pour mettre Broulis et Maillard à la place, je compte Broulis et Maillard dans le graphique de Céline et aussi dans le graphique de François.} La minuscule barre noire indique qui profite lorsque le candidat est le seul biffé de la lsite. C'est tellement rare que ça se voit à peine.
+\item[Suffrages par liste:] Nombre de suffrages obtenues sur les différentes listes modifiées. La liste complète (3965 suffrages pour la liste 1) est en bas de graphe. Notez l'échelle logarithmique.
+\item[Candidats ajoutés en même temps que le candidat:] Je regarde les bulletins modifiées où le candidat est ajouté, c'est à dire (i) les bulletins sane dénomaination, (ii) les listes d'autres partis, ou alors (iii) la liste du candidat s'il y est doublé. Ensuite, on compte les suffrages additionnels (selon la même définition) obtenus par d'autres candidats sur ces bulletins. C'est un peu le classement des candidats les plus similaires.
+\item[Candidats ajoutés quand le candidat est biffé:] Ici, inversement, je regarde les bulletins dont le candidat est biffé. Qui en a profité?\footnote{On ne sait évidemment pas qui en a profité exactement. Si Céline Weber et François Pointet sont tous deux biffés pour mettre Broulis et Maillard à la place, je compte Broulis et Maillard dans le graphique de Céline et aussi dans le graphique de François.} La minuscule barre noire indique qui profite lorsque le candidat est le seul biffé de la liste. C'est tellement rare que ça se voit à peine.%\footnote{On voit les stigmates des choix du candidat pour le Conseil des États au PS et au PLR. Regardez les graphes de Maillard (Fig.~\ref{Fig:Cand:Maillard_Pierre-Yves}) et Nordmann (Fig.~\ref{Fig:Cand:Nordmann_Roger}), et Broulis (Fig.~\ref{Fig:Cand:Broulis_Pasdcal}) et de Quattro (Fig.~\ref{Fig:Cand:de_Quattro_Jacqueline}).}
 %\item[Candidats ajoutés quand le candidat est le seul biffé:] Il y a des rares bulletins où le candidat considéré est biffé et lui seul. Qui alors en profite? C'est anecdotique, et c'est exactement le message de ce graphique. S'il y avait des campagnes de ``biffez X pour doubler Y'' ça se verrait ici.
 \end{description}
 Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
@@ -305,6 +309,7 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 \clearpage
 \section{Résultats des candidats de la liste 2}
 \Candidat{Richard_Claire}{Claire Richard}
+
 \Candidat{Bolomey_Olivier}{Olivier Bolomey}
 \Candidat{Longchamp_Nadege}{Nadège Longchamp}
 \Candidat{Chapuisat_Jean-Francois}{Jean-François Chapuisat}
@@ -350,6 +355,7 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Annexe}
 \section{Résultats des autres partis}\label{AutresPartis}
 %%%
 \Parti{PS}
@@ -392,32 +398,36 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 \section{Résultats des élus}\label{AutresElus}
-\Candidat{Mahaim_Raphael}{Mahaim Raphaël} % Les Vert·e·s
-\Candidat{Michaud_Gigon_Sophie}{Michaud Gigon Sophie} % Les Vert·e·s
-\Candidat{Porchet_Leonore}{Porchet Léonore} % Les Vert·e·s
 \Candidat{Maillard_Pierre-Yves}{Maillard Pierre-Yves} % PSV
-\Candidat{Crottaz_Brigitte}{Crottaz Brigitte} % PSV
-\Candidat{Bendahan_Samuel}{Bendahan Samuel} % PSV
 \Candidat{Nordmann_Roger}{Nordmann Roger} % PSV
-\Candidat{Tuosto_Brenda}{Tuosto Brenda} % PSV
+\Candidat{Bendahan_Samuel}{Bendahan Samuel} % PSV
+\Candidat{Crottaz_Brigitte}{Crottaz Brigitte} % PSV
 \Candidat{Tschopp_Jean}{Tschopp Jean} % PSV
 \Candidat{Jaccoud_Jessica}{Jaccoud Jessica} % PSV
-\Candidat{Broulis_Pascal}{Broulis Pascal} % PLR
+\Candidat{Tuosto_Brenda}{Tuosto Brenda} % PSV
+%
 \Candidat{de_Quattro_Jacqueline}{de Quattro Jacqueline} % PLR
+\Candidat{Broulis_Pascal}{Broulis Pascal} % PLR
 \Candidat{Feller_Olivier}{Feller Olivier} % PLR
-\Candidat{Ruch_Daniel}{Ruch Daniel} % PLR
 \Candidat{Wehrli_Laurent}{Wehrli Laurent} % PLR
-\Candidat{Chappuis_Isabelle}{Chappuis Isabelle} % Le Centre
-\Candidat{Buffat_Michael}{Buffat Michaël} % UDC
+\Candidat{Ruch_Daniel}{Ruch Daniel} % PLR
+%
 \Candidat{Nicolet_Jacques}{Nicolet Jacques} % UDC
+\Candidat{Buffat_Michael}{Buffat Michaël} % UDC
 \Candidat{Pahud_Yvan}{Pahud Yvan} % UDC
 \Candidat{Freymond_Sylvain}{Freymond Sylvain} % UDC
+%
+\Candidat{Michaud_Gigon_Sophie}{Michaud Gigon Sophie} % Les Vert·e·s
+\Candidat{Mahaim_Raphael}{Mahaim Raphaël} % Les Vert·e·s
+\Candidat{Porchet_Leonore}{Porchet Léonore} % Les Vert·e·s
+%
+\Candidat{Chappuis_Isabelle}{Chappuis Isabelle} % Le Centre
 
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Résultats des communes}
 \label{Expl:Commune}
-Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage de mettre les communes voisines sont ensemble.
+Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage de mettre les communes voisines ensemble.
 
 \begin{description}
 \item[Suffrages des partis:] Suffrages pour chaque parti. La barre solide sont les suffrages de liste complète.
@@ -439,7 +449,7 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Roche (VD)]{Roche__VD_}
 \Commune[Villeneuve (VD)]{Villeneuve__VD_}
 \Commune[Yvorne]{Yvorne}
-\clearpage
+%\clearpage
 \Commune[Aubonne]{Aubonne}
 \Commune[Ballens]{Ballens}
 \Commune[Berolle]{Berolle}
@@ -457,8 +467,8 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Avenches]{Avenches}
 \Commune[Cudrefin]{Cudrefin}
 \Commune[Faoug]{Faoug}
-\Commune[Vully-les-Lacs]{Vully-les-Lacs}
 \clearpage
+\Commune[Vully-les-Lacs]{Vully-les-Lacs}
 \Commune[Bettens]{Bettens}
 \Commune[Bournens]{Bournens}
 \Commune[Boussens]{Boussens}
@@ -547,8 +557,8 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Rivaz]{Rivaz}
 \Commune[Saint-Saphorin (Lavaux)]{Saint-Saphorin__Lavaux_}
 \Commune[Savigny]{Savigny}
-\Commune[Bourg-en-Lavaux]{Bourg-en-Lavaux}
 \clearpage
+\Commune[Bourg-en-Lavaux]{Bourg-en-Lavaux}
 \Commune[Aclens]{Aclens}
 \Commune[Bremblens]{Bremblens}
 \Commune[Buchillon]{Buchillon}
@@ -595,8 +605,8 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Villars-le-Comte]{Villars-le-Comte}
 \Commune[Vucherens]{Vucherens}
 \Commune[Montanaire]{Montanaire}
-\clearpage
 \Commune[Arnex-sur-Nyon]{Arnex-sur-Nyon}
+\clearpage
 \Commune[Arzier-Le Muids]{Arzier-Le_Muids}
 \Commune[Bassins]{Bassins}
 \Commune[Begnins]{Begnins}
@@ -675,8 +685,8 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Valbroye]{Valbroye}
 \Commune[Château-d'Oex]{Chateau-d_Oex}
 \Commune[Rossinière]{Rossiniere}
-\Commune[Rougemont]{Rougemont}
 \clearpage
+\Commune[Rougemont]{Rougemont}
 \Commune[Allaman]{Allaman}
 \Commune[Bursinel]{Bursinel}
 \Commune[Bursins]{Bursins}
@@ -690,8 +700,8 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Rolle]{Rolle}
 \Commune[Tartegnin]{Tartegnin}
 \Commune[Vinzel]{Vinzel}
-\clearpage
 \Commune[L'Abbaye]{L_Abbaye}
+\clearpage
 \Commune[Le Chenit]{Le_Chenit}
 \Commune[Le Lieu]{Le_Lieu}
 \Commune[Chardonne]{Chardonne}
@@ -735,4 +745,7 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Yverdon-les-Bains]{Yverdon-les-Bains}
 \Commune[Yvonand]{Yvonand}
 \Commune[VD-CH de l'étranger]{VD-CH_de_l_etranger}
+\clearpage
+\listoftables
+\listoffigures
 \end{document}

@@ -353,11 +353,12 @@ class Liste():
         y_pos = np.arange(len(doubles.values()))
         width = 0.4
         fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
-        plt.barh(y_pos-width/2,doubles.values(),width,color='green',label='Doublage')
-        plt.barh(y_pos+width/2,biffes.values(),width,color='red',label='Biffage')
+        plt.barh(y_pos-width/2,doubles.values(),width,color='green',label='Doublage',alpha=0.5)
+        plt.barh(y_pos+width/2,biffes.values(),width,color='red',label='Biffage',alpha=0.5)
         plt.yticks(y_pos, labels=(biffes.keys()))
         plt.xlabel('Doublages et biffages')
         plt.title("Doublages et biffages de candidats {0}".format(self.nom))
+        plt.legend()
         plt.gca().invert_yaxis()
         deuxPlots("{0}-DoublagesBiffages-{1}".format(self.classe,goodName(self.nom)))
         plt.clf()
@@ -1032,15 +1033,17 @@ def analyseBilans(bilans):
     colour = []
     # print("Bilans",bilans)
     # print("ordreDesPartis",ordreDesPartis)
-    for x in xy_pos:
-        for y in xy_pos:
+    for y in xy_pos:
+        for x in xy_pos:
             theX.append(x)
             theY.append(y)
             # print("bilans[ ordreDesPartis[x] ]",bilans[ ordreDesPartis[x] ])
-            b = bilans[ ordreDesPartis[x] ][ ordreDesPartis[y] ]
+            b = bilans[ ordreDesPartis[y] ][ ordreDesPartis[x] ]
             theVal.append( abs(b)/20. )
-            colour.append(b)
-            # print("Bilans {0} à {1} : {2}".format( ordreDesPartis[x].nom, ordreDesPartis[y].nom, theVal[-1]))
+            # colour.append(b)
+            if b>0: colour.append('green')
+            else: colour.append('red')
+            # print("Bilans {0} à {1} : {2}".format( ordreDesPartis[x].nom, ordreDesPartis[y].nom, b))
 
     ll = 0.15
     if  what == "Listes": ll = 0.25
@@ -1049,10 +1052,9 @@ def analyseBilans(bilans):
     plt.title("Bilans des {0}".format(what))
     plt.yticks(xy_pos, labels=[p.nomCourt for p in ordreDesPartis.values()])
     plt.xticks(xy_pos, labels=[p.nomCourt for p in ordreDesPartis.values()],rotation=90)
-    plt.colorbar()
+#    plt.colorbar() # pas utile
     deuxPlots("Bilans-des-{0}".format(what))
     plt.clf()
-    
     
 #############################################################################
 # main
@@ -1084,34 +1086,6 @@ print("#########################################################################
 for p in partis.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_liste.values()],p.suffrages))
 print("##################################################################################")
 
-# graphiques pour les candidats
-for c in candidats.values():
-    if c.liste.parti.nom == "PVL" or c.nom in _elus:
-#        print("Candidat {0} liste {1} parti {2}".format(c.nom,c.liste.nom,c.liste.parti.nom))
-        print("\\Candidat{{{0}}}{{{1}}} % {2}".format(goodName(c.nom),c.nom,c.liste.nom))
-        c.communes(communes)
-        c.communes(communes,False)
-        c.listes(listes)
-        c.amis(candidats,listes)
-        c.biffage(candidats,listes, unique=False)
-        c.biffage(candidats,listes, unique=True)
-        
-bilans = {}
-# graphiques pour les listes
-for l in listes.values():
-    print("Liste {0}".format(l.nom))
-    l.communes(communes)
-    l.communes(communes,True)  # pires
-    l.biffageDoublage()
-    l.suffragesParCandidat()
-    l.plotSuffrages(listes)
-    para = l.parasite(listes)
-    bilans[l] = l.bilan(para)
-#    if l.parti.nom == "PVL" :
-    l.candidatsParasites(candidats)
-
-analyseBilans(bilans)
-
 # graphiques pour les partis
 bilans = {}
 for p in partis.values():
@@ -1124,9 +1098,35 @@ for p in partis.values():
     p.communes(communes,True)  # pires
     p.communes(communes,False,True) # absolu
     p.communes(communes,True,True)  # pires, absolu
-
 analyseBilans(bilans)
 
+# graphiques pour les listes
+bilans = {}
+for l in listes.values():
+    print("Liste {0}".format(l.nom))
+    l.communes(communes)
+    l.communes(communes,True)  # pires
+    l.biffageDoublage()
+    l.suffragesParCandidat()
+    l.plotSuffrages(listes)
+    para = l.parasite(listes)
+    bilans[l] = l.bilan(para)
+#    if l.parti.nom == "PVL" :
+    l.candidatsParasites(candidats)
+analyseBilans(bilans)
+
+# graphiques pour les candidats
+for c in candidats.values():
+    if c.liste.parti.nom == "PVL" or c.nom in _elus:
+#        print("Candidat {0} liste {1} parti {2}".format(c.nom,c.liste.nom,c.liste.parti.nom))
+        print("\\Candidat{{{0}}}{{{1}}} % {2}".format(goodName(c.nom),c.nom,c.liste.nom))
+        c.communes(communes)
+        c.communes(communes,False)
+        c.listes(listes)
+        c.amis(candidats,listes)
+        c.biffage(candidats,listes, unique=False)
+        c.biffage(candidats,listes, unique=True)
+        
         
 
 # graphiques pour les communes
