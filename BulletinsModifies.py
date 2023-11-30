@@ -173,7 +173,29 @@ class Commune():
         plt.yticks(y_pos, labels=[partis[k].nom for k in total.keys()])
         deuxPlots("Commune-{0}-{1}s".format(goodName(self.nom),list(partis.values())[0].classe))
         plt.clf()
-        
+
+    def candidats(self,candidats):
+        """
+        Résultats par partis dans une commune
+        """
+        total = { k : sum(list(c.suffrages_par_commune[self.numero].values())) for k,c in candidats.items() }
+        total = dict(sorted(total.items(), key=lambda item: item[1], reverse=False))
+        # print(total)
+        kk = list(total.keys())[-_max:]
+        vv = list(total.values())[-_max:]
+        # print("{0}: compacts {1} autres {2} total {3}".format(self.nom, compacts, autres, total))
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
+        y_pos = np.arange(len(kk))
+        plt.barh(y_pos,vv,color=[candidats[k].liste.couleur for k in kk] )
+        off = +0.02*vv[0]
+        for i, v in enumerate(vv):
+            plt.text(off+v, i - .25, str(int(v)), color='black', ha='left') # horizontal alignment
+        plt.xlabel('Suffrages des Candidats')
+        plt.title(self.nom)
+        plt.yticks(y_pos, labels= [candidats[k].nom for k in kk] )
+        deuxPlots("Commune-{0}-Candidats".format(goodName(self.nom)))
+        plt.clf()
+
         
     
 #############################################################################
@@ -1086,6 +1108,14 @@ print("#########################################################################
 for p in partis.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_liste.values()],p.suffrages))
 print("##################################################################################")
 
+# graphiques pour les communes
+for c in communes.values():
+    print("\\Commune[{0}]{{{1}}}".format(c.nom,goodName(c.nom)))
+    c.partis(listes,normalise=False)
+    c.partis(partis,normalise=False)
+    c.candidats(candidats)
+
+
 # graphiques pour les partis
 bilans = {}
 for p in partis.values():
@@ -1128,12 +1158,6 @@ for c in candidats.values():
         c.biffage(candidats,listes, unique=True)
         
         
-
-# graphiques pour les communes
-for c in communes.values():
-    print("\\Commune[{0}]{{{1}}}".format(c.nom,goodName(c.nom)))
-    c.partis(listes,normalise=False)
-    c.partis(partis,normalise=False)
 
    
 """
