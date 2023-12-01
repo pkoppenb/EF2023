@@ -11,3 +11,7 @@ make
 Cela génère 1200 plots en png et autant en pdf, ainsi qu'un petit nombre de fichiers csv. Ça met bien 5 à 10 minutes.
 
 Ensuite, ça génère le rapport LaTeX/EF2023.pdf.
+
+# Changements
+
+01/12: Ajout de graphiques des candidats par commune
