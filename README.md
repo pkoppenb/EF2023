@@ -1,4 +1,7 @@
 # EF2023
+[Accès direct au rapport en pdf](https://github.com/pkoppenb/EF2023/blob/main/LaTeX/EF23.pdf). Attention, il fait 250 pages!
+
+# Code
 Analyse des elections fédérales de 2023, canton de Vaud
 
 Demande une installation récente de `python 3` et de `latex`. 
@@ -10,7 +13,7 @@ make
 
 Cela génère 1200 plots en png et autant en pdf, ainsi qu'un petit nombre de fichiers csv. Ça met bien 5 à 10 minutes.
 
-Ensuite, ça génère le rapport LaTeX/EF2023.pdf.
+Ensuite, ça génère le rapport.
 
 # Changements
 
