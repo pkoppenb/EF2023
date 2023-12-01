@@ -174,26 +174,39 @@ class Commune():
         deuxPlots("Commune-{0}-{1}s".format(goodName(self.nom),list(partis.values())[0].classe))
         plt.clf()
 
-    def candidats(self,candidats):
+    def candidats(self,candidats,parti=None):
         """
         Résultats par partis dans une commune
         """
-        total = { k : sum(list(c.suffrages_par_commune[self.numero].values())) for k,c in candidats.items() }
+        if parti:
+            total = {}
+            for k,c in candidats.items():
+                # print(candidats[k].nom,candidats[k].liste.parti)
+                if candidats[k].liste.parti.nom==parti:
+                    ss = sum(list(c.suffrages_par_commune[self.numero].values()))
+                    if ss>0: total[k] = ss 
+        else:
+            total = { k : sum(list(c.suffrages_par_commune[self.numero].values())) for k,c in candidats.items() }
         total = dict(sorted(total.items(), key=lambda item: item[1], reverse=False))
         # print(total)
-        kk = list(total.keys())[-_max:]
-        vv = list(total.values())[-_max:]
+        nmax = min(_max,len(list(total.values())))
+        kk = list(total.keys())[-nmax:]
+        vv = list(total.values())[-nmax:]
         # print("{0}: compacts {1} autres {2} total {3}".format(self.nom, compacts, autres, total))
         fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
         y_pos = np.arange(len(kk))
         plt.barh(y_pos,vv,color=[candidats[k].liste.couleur for k in kk] )
-        off = +0.02*vv[0]
-        for i, v in enumerate(vv):
-            plt.text(off+v, i - .25, str(int(v)), color='black', ha='left') # horizontal alignment
+        if len(vv)>0:
+            off = +0.02*vv[0]
+            for i, v in enumerate(vv):
+                plt.text(off+v, i - .25, str(int(v)), color='black', ha='left') # horizontal alignment
         plt.xlabel('Suffrages des Candidats')
         plt.title(self.nom)
         plt.yticks(y_pos, labels= [candidats[k].nom for k in kk] )
-        deuxPlots("Commune-{0}-Candidats".format(goodName(self.nom)))
+        if parti:
+            deuxPlots("Commune-{0}-{1}-Candidats".format(goodName(self.nom),parti))
+        else:
+            deuxPlots("Commune-{0}-Candidats".format(goodName(self.nom)))
         plt.clf()
 
         
@@ -1114,6 +1127,7 @@ for c in communes.values():
     c.partis(listes,normalise=False)
     c.partis(partis,normalise=False)
     c.candidats(candidats)
+    c.candidats(candidats,parti="PVL")
 
 
 # graphiques pour les partis
