@@ -51,8 +51,8 @@ def deuxPlots(nom):
     """
     Crée un pdf et un png
     """
-    plt.savefig("pdf/{0}.pdf".format(nom))
-    plt.savefig("png/{0}.png".format(nom))
+    plt.savefig("pdf/{0}.pdf".format(nom),transparent=True)
+    plt.savefig("png/{0}.png".format(nom),transparent=True)
 
 def tableau(nom,lignes,colonnes):
     """
@@ -371,6 +371,16 @@ class Liste():
             plt.text(1.02*v, i + .25, str(v), color='blue')
         plt.gca().invert_yaxis()
         deuxPlots("{0}-Suffrages-{1}".format(self.classe,goodName(self.nom)))
+        plt.clf()
+        plt.xscale('linear')
+
+        fig.subplots_adjust(top=0.90,right=0.90,bottom=0.03,left=0.03)
+        plt.title(self.nom)
+        _, _, autotexts= plt.pie(suffs.values(),labels=(suffs.keys()),colors=[colors[k] for k in list(suffs.keys())], autopct='%1.1f%%')
+        # https://stackoverflow.com/questions/27898830/python-how-to-change-autopct-text-color-to-be-white-in-a-pie-chart
+        if self.couleur!='grey':
+            for autotext in autotexts:  autotext.set_color('grey')
+        deuxPlots("{0}-Suffrages-Camembert-{1}".format(self.classe,goodName(self.nom)))
         plt.clf()
         plt.xscale('linear')
 
@@ -1120,16 +1130,6 @@ print("#########################################################################
 # print("Partis: {0}".format( partis.keys() ))
 for p in partis.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_liste.values()],p.suffrages))
 print("##################################################################################")
-
-# graphiques pour les communes
-for c in communes.values():
-    print("\\Commune[{0}]{{{1}}}".format(c.nom,goodName(c.nom)))
-    c.partis(listes,normalise=False)
-    c.partis(partis,normalise=False)
-    c.candidats(candidats)
-    c.candidats(candidats,parti="PVL")
-
-
 # graphiques pour les partis
 bilans = {}
 for p in partis.values():
@@ -1158,6 +1158,16 @@ for l in listes.values():
 #    if l.parti.nom == "PVL" :
     l.candidatsParasites(candidats)
 analyseBilans(bilans)
+
+# graphiques pour les communes
+for c in communes.values():
+    print("\\Commune[{0}]{{{1}}}".format(c.nom,goodName(c.nom)))
+    c.partis(listes,normalise=False)
+    c.partis(partis,normalise=False)
+    c.candidats(candidats)
+    c.candidats(candidats,parti="PVL")
+
+
 
 # graphiques pour les candidats
 for c in candidats.values():

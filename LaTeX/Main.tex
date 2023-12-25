@@ -22,6 +22,7 @@
 \newcommand{\Liste}[2][NONE]{
 \IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
 \begin{figure}[!h]\centering
+%\includegraphics[width=\thewidth]{../pdf/Liste-Suffrages-Camembert-#2.pdf}\\
 \includegraphics[width=\thewidth]{../pdf/Liste-Suffrages-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Liste-Bilan-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Liste-Suffrages-Par-Candidat-#2.pdf}
@@ -38,6 +39,7 @@
 \newcommand{\Parti}[2][NONE]{
 \IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
 \begin{figure}[!h]\centering
+\includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-Camembert-#2.pdf}\\
 \includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-Bilan-#2.pdf}
 %\includegraphics[width=\thewidth]{../pdf/Parti-SuffragesParCandidat-#2.pdf}
@@ -253,7 +255,7 @@ En plus il y a
 \Liste[Jeunes PVL]{JEUNES_VERT_LIBERAUX}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Matrice des bilans}
-Comme je détermine pour chaque parti (liste) le bilan des suffrages par rapport aux autres partis (listes) (en section~\ref{PVL} et appendice~\ref{AutresPartis}),
+Comme je détermine pour chaque parti (liste) le bilan des suffrages par rapport aux autres partis (listes) (en section~\ref{PVL} et annexe~\ref{AutresPartis}),
 je peux représenter ces données sous forme de matrice en figure~\ref{Fig:Matrice}.
 A chaque ligne est indiqué le bilan du parti (liste) par rapport aux partis (listes) indiquées en bas.
 La taille du disque indique la valeur absolue du bilan et la couleur si c'est une perte ou un gain.
