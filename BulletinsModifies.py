@@ -128,6 +128,16 @@ class Bulletin():
         if numero not in self.suffrages.keys(): return False
         else: return (self.suffrages[numero]==2)
 
+    def double_unique(self,numero):
+        """
+        A ete double?
+        """
+        if not self.double(numero): return False
+        for n,s in self.suffrages.items():
+            if s==2 and n!=numero : return False  # il y en a un autre doublé
+        return True                               # trouvé aucun autre
+        
+
     def pleine(self):
         """
         Liste pleine?
@@ -164,7 +174,7 @@ class Commune():
         plt.barh(y_pos,[autres[k] for k in total.keys()],left=[compacts[k] for k in total.keys()],edgecolor=[ partis[k].couleur for k in total.keys()], color=['white' for k in total.keys()] )
         off = -0.01*list(total.values())[0]
         for i, v in enumerate(list(total.values())):
-            plt.text(off+v, i - .25, str(int(v)), color='black', ha='left') # horizontal alignment
+            plt.text(off+v, i - .25, str(int(v)), color='black', ha='left', fontsize=9) # horizontal alignment
         if list(partis.values())[0].classe=='Liste':  what = "listes"
         else: what = "partis"
         if normalise: plt.xlabel('Pourcentages des {0}'.format(what))
@@ -199,7 +209,7 @@ class Commune():
         if len(vv)>0:
             off = +0.02*vv[0]
             for i, v in enumerate(vv):
-                plt.text(off+v, i - .25, str(int(v)), color='black', ha='left') # horizontal alignment
+                plt.text(off+v, i - .25, str(int(v)), color='black', ha='left', fontsize=9) # horizontal alignment
         plt.xlabel('Suffrages des Candidats')
         plt.title(self.nom)
         plt.yticks(y_pos, labels= [candidats[k].nom for k in kk] )
@@ -368,7 +378,7 @@ class Liste():
         plt.xscale('log')
         plt.xlim([1,10*suffs[_ll]])
         for i, v in enumerate(suffs.values()):
-            plt.text(1.02*v, i + .25, str(v), color='blue')
+            plt.text(1.02*v, i + .25, str(v), color='blue', fontsize=9)
         plt.gca().invert_yaxis()
         deuxPlots("{0}-Suffrages-{1}".format(self.classe,goodName(self.nom)))
         plt.clf()
@@ -421,6 +431,10 @@ class Liste():
         # les biffés je les mets à gauche
         biffes = [ -c.biffes for c in sorted_cands.keys() ]
         plt.barh(y_pos,biffes,color='red',label='Biffés')
+
+        # biffés uniques
+        uniques = [ -sum(c.biffe_pour_qui_unique.values()) for c in sorted_cands.keys() ]
+        plt.barh(y_pos,uniques,color='black',label='Biffés uniques')
         
         # listes complètes
         base = [ self.suffrages_liste_complete/_sieges for c in sorted_cands.keys() ]
@@ -431,6 +445,10 @@ class Liste():
         plt.barh(y_pos,doubles,left=base,color='green',label='Doublés')
         sums = [ int(b+d) for d,b in zip(base,doubles) ]
         
+        # par dessus les doublés uniques
+        doubles_uniques = [ c.doubles_uniques for c in sorted_cands.keys() ]
+        plt.barh(y_pos,doubles_uniques,left=base,color='salmon',label='Doublés uniques')
+        
         # les autres de fait contiennent les biffages
         suffs =  [ c.suffrages-c.doubles for c in sorted_cands.keys() ]  
         plt.barh(y_pos,suffs,left=sums,color='blue',label='Complémentaires')
@@ -439,9 +457,10 @@ class Liste():
         plt.xlabel('Suffrages')
         plt.title("Candidats de {0}".format(self.nom))
         plt.yticks(y_pos, labels=[c.nom for c in sorted_cands.keys()])
-        off = 0.01*sums[0]
+        off = 0.1*base[0]
         for i, v in enumerate(sums):
-            plt.text(off+v, i - .25, str(v), color='white', ha='right') # horizontal alignment
+#            plt.text(-off+v, i - .25, str(v), color='white', ha='right', fontsize=9) # horizontal alignment
+            plt.text(off, i - .25, str(v), color='black', ha='left', fontsize=9) # horizontal alignment
         plt.legend(loc="lower right")
         deuxPlots("{0}-Suffrages-Par-Candidat-{1}".format(self.classe,goodName(self.nom)))
         plt.clf()
@@ -682,6 +701,7 @@ class Candidat():
         self.suffrages_par_commune = {}
         self.biffes = 0
         self.doubles = 0
+        self.doubles_uniques = 0
         self.biffe_pour_qui = {}
         self.biffe_pour_qui_unique = {}
         self.ajoutes_aussi = {}
@@ -695,17 +715,20 @@ class Candidat():
         for b in bulletins:
             # print("b.suffrages[{0}] = {1}".format(self.numero,b.suffrages[self.numero]))
             nS = b.nombreDeSuffrages(self.numero)
-            if nS>0:
-                if b.liste: bn = b.liste.numero
+            if nS>0:                                              # le candidat a des suffrages
+                if b.liste: bn = b.liste.numero                   # numero de la liste
                 else: bn = 0
                 if bn in self.suffrages_par_liste.keys():
                     self.suffrages_par_liste[bn] += nS
-                    if b.double(self.numero): self.doubles_par_liste[bn] += b.poids
-                else:
+                    if b.double(self.numero):
+                        self.doubles_par_liste[bn] += b.poids
+                else:                                             # je rajoute une liste qui donne des voix
                     self.suffrages_par_liste[bn] = nS
-                    self.doubles_par_liste[bn] = 0   # create
+                    self.doubles_par_liste[bn] = 0                # create
                     if b.double(self.numero): self.doubles_par_liste[bn] = b.poids
                 self.suffrages += b.suffrages[self.numero]*b.poids
+                if b.double_unique(self.numero):
+                    self.doubles_uniques += b.poids
                 ### amis
                 if b.double(self.numero) or b.liste != self.liste:  # ajout sur une autre liste ou doubles
                     #LN = ""
@@ -827,7 +850,7 @@ class Candidat():
         plt.title("Suffrages de {0} par liste".format(self.nom))
         plt.xscale('log')
         for i, v in enumerate(s_listes.values()):
-            plt.text(1.02*v, i + .25, str(v), color='blue')
+            plt.text(1.02*v, i + .25, str(v), color='blue', fontsize=9)
         deuxPlots("Candidat-Suffrages-{0}".format(goodName(self.nom)))
         plt.clf()
         plt.xscale('linear')
@@ -1109,8 +1132,17 @@ candidats,bulletins = lisBulletins(listes)
 communes = lisPartis(partis)
 lisCommunes(communes,candidats,listes)
 attribueListes(candidats,listes)
+pd = sum([b.poids for b in bulletins])
+sf = sum([b.exprimes for b in bulletins])
+nm = sum([p.suffrages_liste_complete for p in listes.values()])
+tt = sf+nm
 
-print("J'ai {0} listes de {1} partis et {2} candidats pour {3} bulletins différents".format(len(listes),len(partis),len(candidats),len(bulletins)))
+print("#############################################################################")
+print("### J'ai {0} listes de {1} partis et {2} candidats".format(len(listes),len(partis),len(candidats)))
+print("### Il y a {0} bulletins modifiés ({1} différents) qui font {2} suffrages ({3:.1f}%)".format(pd,len(bulletins),sf,100.*sf/tt))
+print("### Et {0:.0f} bulletins non modifiés, soit {1} suffrages ({2:.1f}%)".format(nm/_sieges,nm,100.*nm/tt))
+print("#############################################################################")
+      
 
 # suffrages par candidats
 for c in candidats.values():
@@ -1130,20 +1162,6 @@ print("#########################################################################
 # print("Partis: {0}".format( partis.keys() ))
 for p in partis.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_liste.values()],p.suffrages))
 print("##################################################################################")
-# graphiques pour les partis
-bilans = {}
-for p in partis.values():
-    print("Parti {0}".format(p.nom))
-    p.plotSuffrages(partis)
-    para = p.parasite(partis)
-    bilans[p] = p.bilan(para)
-    p.candidatsParasites(candidats)
-    p.communes(communes)
-    p.communes(communes,True)  # pires
-    p.communes(communes,False,True) # absolu
-    p.communes(communes,True,True)  # pires, absolu
-analyseBilans(bilans)
-
 # graphiques pour les listes
 bilans = {}
 for l in listes.values():
@@ -1157,6 +1175,20 @@ for l in listes.values():
     bilans[l] = l.bilan(para)
 #    if l.parti.nom == "PVL" :
     l.candidatsParasites(candidats)
+analyseBilans(bilans)
+
+# graphiques pour les partis
+bilans = {}
+for p in partis.values():
+    print("Parti {0}".format(p.nom))
+    p.plotSuffrages(partis)
+    para = p.parasite(partis)
+    bilans[p] = p.bilan(para)
+    p.candidatsParasites(candidats)
+    p.communes(communes)
+    p.communes(communes,True)  # pires
+    p.communes(communes,False,True) # absolu
+    p.communes(communes,True,True)  # pires, absolu
 analyseBilans(bilans)
 
 # graphiques pour les communes
