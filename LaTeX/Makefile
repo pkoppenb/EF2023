@@ -11,3 +11,5 @@ Main.pdf: $(TEXSOURCES)
 
 clean:
 	rm -f *~ *.aux *.log *.bbl *.blg *.dvi *.tmp *.out *.blg *.bbl Main.pdf
+
+update: clean all

@@ -1,0 +1,47 @@
+\documentclass[aspectratio=32]{beamer}
+\mode<presentation>
+% packages
+\usepackage{BeamerUsualSuspects}
+\SetColor{PVL}
+\def\zoom{1}
+%\def\showOverlayNumber{1}
+\usetheme{Amsterdam}
+\def\conference{1}                                                      
+\date{}
+\author[Patrick Koppenburg]{Patrick~Koppenburg}
+\institute[Nikhef]{Nikhef, Amsterdam}
+\def\meetingurl{\indico{}}
+\logo{\WhiteScaleBox{\PVLLogo[0.055]}}
+\def\thetitlecolor{\textcommon} % change that
+\def\contactdetails{\bf\scriptsize{\citationblue[\bluesky{pkoppenburg.bsky.social}]~\citationblue[\twitter{pkoppenburg}]~[\mailto{patrick@koppenburg.ch}]}}
+\renewcommand{\TheLogo}{\href{https://www.koppenburg.ch}{\ExpLogo[0.12]{QR-koppenburg.pdf}}\ \ \PVLLogo[0.12]}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\InputFrame[1]{.}{Title}
+\InputBody[1-5]{.}
+\InputFrame[1]{.}{Celine}
+\InputFrame[1]{.}{Uniques}
+\InputFrame[5]{.}{Commune}
+\InputFrame{.}{Communes}
+\Conclusion{\black
+  \Enumerate{\black On va chercher plus de voix chez les autres partis qu'on n'en perd.
+    \Itemize[ \MidArrow ]{\black Il faut aller chercher ces électeurs.}
+  \item J'espère que ces graphiques serviront aux sections pour établir des listes
+    lors des prochaines élections cantonales.
+  }
+  \skipx[2]
+  Le code, un document de 250 pages, et ces transparents sont à \showhref{https://github.com/pkoppenb/EF2023}.
+}
+\Backup
+%\Input{AllPlots}
+\InputFrame{.}{Voc}
+\InputBody[4,6]{.} % autres partis
+\InputBody[5]{.} % autres partis
+\InputFrame{.}{Matrice}
+%\InputFrame[2]{.}{Celine}
+\InputFrame{.}{Liste}
+\InputFrame{.}{Parti}
+\InputFrame{.}{Candidat}
+\InputFrame{.}{Commune}
+\end{document}

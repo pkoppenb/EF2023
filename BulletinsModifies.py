@@ -230,15 +230,15 @@ class Commune():
             for i, v in enumerate(vv):
                 plt.text(off+v, i - .25, str(int(v)), color='black', ha='left', fontsize=9) # horizontal alignment
         plt.xlabel('Suffrages des Candidats')
-        if parti: plt.title("{0}: {1}".format(self.nom,parti))
-        else: plt.title(self.nom)
+        if parti: plt.title("{0}: candidats du {1}".format(self.nom,parti))
+        else: plt.title("{0}: candidats".format(self.nom))
         if len(vv)>0: plt.xlim([0.,1.15*vv[-1]])
         plt.yticks(y_pos, labels= [candidats[k].nom for k in kk] )
         plt.legend()
         textBase = ""
         if avecBase: textBase = "-avecBase"
         if parti:
-            deuxPlots("Commune-{0}-{1}-Candidats{2}".format(goodName(self.nom),parti,textBase))
+            deuxPlots("Commune-{0}-{1}-Candidats{2}".format(goodName(self.nom),goodName(parti),textBase))
         else:
             deuxPlots("Commune-{0}-Candidats{1}".format(goodName(self.nom),textBase))
         plt.clf()
@@ -420,7 +420,9 @@ class Liste():
 
         fig.subplots_adjust(top=0.90,right=0.90,bottom=0.03,left=0.03)
         plt.title(self.nom)
-        _, _, autotexts= plt.pie(suffs.values(),labels=(suffs.keys()),colors=[colors[k] for k in list(suffs.keys())], autopct='%1.1f%%')
+        explode = [0]*len(suffs)
+        explode[0] = 0.1
+        _, _, autotexts= plt.pie(suffs.values(),explode=explode,labels=(suffs.keys()),colors=[colors[k] for k in list(suffs.keys())], autopct='%1.1f%%')
         # https://stackoverflow.com/questions/27898830/python-how-to-change-autopct-text-color-to-be-white-in-a-pie-chart
         if self.couleur!='grey':
             for autotext in autotexts:  autotext.set_color('grey')
@@ -459,6 +461,19 @@ class Liste():
         deuxPlots("{0}-DoublagesBiffages-{1}".format(self.classe,goodName(self.nom)))
         plt.clf()
 
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.12)
+        plt.title("Doublages et biffages des candidats {0}".format(self.nom))
+        offx = 0.01*list(doubles.values())[0]
+        offy = 0.01*list(biffes.values())[0]
+        plt.plot([d-offx for d in doubles.values()], [ biffes[n]-offy for n in doubles.keys()], 'o', color=self.parti.couleur)
+        for k,v in doubles.items(): plt.text(v,biffes[k],k)
+        plt.xlabel('Doublages')
+        plt.ylabel('Biffages')
+        
+        deuxPlots("{0}-DoublagesBiffages-Scatter-{1}".format(self.classe,goodName(self.nom)))
+        plt.clf()
+       
+
     def suffragesParCandidat(self):
         """
         Graphique des suffrages par candidat
@@ -496,7 +511,7 @@ class Liste():
         sums = [ int(b+d) for d,b in zip(sums,suffs) ]
 
         # on remet les biffes
-        plt.barh(y_pos,[-b for b in biffes],left=sums,color='white',edgecolor='red',height=0.75)
+        # plt.barh(y_pos,[-b for b in biffes],left=sums,color='white',edgecolor='red',height=0.75)
          
         plt.xlabel('Suffrages')
         plt.title("Candidats de {0}".format(self.nom))
@@ -922,7 +937,7 @@ class Candidat():
         top25 = [ communes[c].nom for c in tt ]
         pc25 = list(cand.values())[-_max:]
         pa25 = list(parti.values())[-_max:]
-        top25.append("Vaud")
+        top25.append("Canton de Vaud")
         fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
         y_pos = np.arange(len(top25))
         plt.yticks(y_pos, labels=top25)
@@ -1098,7 +1113,7 @@ def lisOFS(partis):
     Lis le fichier suisse des communes et partis
     """
     communes = {}
-    Vaud = Commune(-1,"Vaud")
+    Vaud = Commune(-1,"Canton de Vaud")
     with open(_partis) as f:
         ff = csv.reader(f,delimiter=';')
         nL = 0  # ligne
@@ -1237,22 +1252,6 @@ Vaud.partis(listes,normalise=False)
 Vaud.partis(partis,normalise=False)
 Vaud.candidats(candidats)
 Vaud.candidats(candidats,avecBase=True)
-Vaud.candidats(candidats,parti="PVL")
-Vaud.candidats(candidats,parti="PVL",avecBase=True)
-
-# graphiques pour les communes
-chi2 = {}
-for c in communes.values():
-    chi2[c] = c.chi2(Vaud)
-    print("\\Commune[{0}]{{{1}}} % {2}".format(c.nom,goodName(c.nom),len(chi2)))
-    c.partis(listes,normalise=False)
-    c.partis(partis,normalise=False)
-    c.candidats(candidats)
-    c.candidats(candidats,avecBase=True)
-    c.candidats(candidats,parti="PVL")
-    c.candidats(candidats,parti="PVL",avecBase=True)
-    # if len(chi2)==25: analyseChi2(chi2)
-analyseChi2(chi2)
 
 # graphiques pour les listes
 bilans = {}
@@ -1281,7 +1280,25 @@ for p in partis.values():
     p.communes(communes,True)  # pires
     p.communes(communes,False,True) # absolu
     p.communes(communes,True,True)  # pires, absolu
+    Vaud.candidats(candidats,parti=p.nom)
+    Vaud.candidats(candidats,parti=p.nom,avecBase=True)
+
 analyseBilans(bilans)
+
+
+# graphiques pour les communes
+chi2 = {}
+for c in communes.values():
+    chi2[c] = c.chi2(Vaud)
+    print("\\Commune[{0}]{{{1}}} % {2}".format(c.nom,goodName(c.nom),len(chi2)))
+    c.partis(listes,normalise=False)
+    c.partis(partis,normalise=False)
+    c.candidats(candidats)
+    c.candidats(candidats,avecBase=True)
+    c.candidats(candidats,parti="PVL")
+    c.candidats(candidats,parti="PVL",avecBase=True)
+    # if len(chi2)==25: analyseChi2(chi2)
+analyseChi2(chi2)
 
 
 # graphiques pour les candidats

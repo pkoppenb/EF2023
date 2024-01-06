@@ -39,11 +39,12 @@
 \newcommand{\Parti}[2][NONE]{
 \IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
 \begin{figure}[!h]\centering
-\includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-Camembert-#2.pdf}\\
+\includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-Camembert-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-Bilan-#2.pdf}
 %\includegraphics[width=\thewidth]{../pdf/Parti-SuffragesParCandidat-#2.pdf}
 %\includegraphics[width=\thewidth]{../pdf/Parti-Biffages-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Commune-Canton_de_Vaud-#2-Candidats-avecBase.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-Parasite-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-CandidatsParasite-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-#2-Meilleures-Communes.pdf}
@@ -87,8 +88,8 @@
 \begin{figure}[!h]\centering
 \includegraphics[width=\thewidth]{../pdf/Commune-#2-Partis.pdf}
 \includegraphics[width=\thewidth]{../pdf/Commune-#2-Listes.pdf}
-\includegraphics[width=\thewidth]{../pdf/Commune-#2-Candidats.pdf}
-\includegraphics[width=\thewidth]{../pdf/Commune-#2-PVL-Candidats.pdf}
+\includegraphics[width=\thewidth]{../pdf/Commune-#2-Candidats-avecBase.pdf}
+\includegraphics[width=\thewidth]{../pdf/Commune-#2-PVL-Candidats-avecBase.pdf}
 \caption[Graphiques pour \leNom]{Graphiques pour \leNom. Explications en page~\pageref{Expl:Commune}.}\label{Fig:Com:#2}
 \end{figure}
 }
@@ -167,7 +168,8 @@ d'une catégorie.
 Le lecteur comprendra bien que tous les graphiques ainsi que ce document sont générés automatiquement, ce qui peut avoir un effet sur la grammaire. Je vous prie de m'en excuser.
 %%%%%%%%
 \subsection*{Accès au code}
-Le code est dans le dépôt {\tt github} \href{https://github.com/pkoppenb/EF2023}{https://github.com/pkoppenb/EF2023}. Demandez-moi l'accès si besoin. Le code a besoin de {\tt python3}, {\tt latex} et {\tt make}.
+Le code est dans le dépôt {\tt github} \href{https://github.com/pkoppenb/EF2023}{https://github.com/pkoppenb/EF2023}.
+Demandez-moi l'accès si besoin. Le code a besoin de {\tt python3}, {\tt latex} et {\tt make}.
 %%%%%%%%
 \subsection{Vocabulaire}
 Quelques définitions ne sont probablement pas inutiles
@@ -180,8 +182,23 @@ Quelques définitions ne sont probablement pas inutiles
 Je me suis permis une petite entorse: si un bulletin sans dénomination comporte 10 ou plus candidats du même parti,\footnote{C'est bien 10 du même parti. Je choisis ensuite la liste comme celle qui a reçu le plus de suffrages.} je le compte comme bulletin modifié et non comme sans dénomination.
 \item[Un suffrage supplémentaire] va à une liste mais pas à un candidat. Cela advient pour les listes incomplètes (UDF par exemple), si un électeur biffe des candidats sans les remplacer, ou s'il met un nom de parti sur le bulletin vierge sans y mettre 19 candidats. 
 \end{description}
+
+\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Répartition des sièges}
+\section{Résultats}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Les résultats du Canton sont en Figure~\ref{Fig:Com:Canton_de_Vaud}. \label{Expl:Commune}
+\begin{description}
+\item[Suffrages des partis:] Suffrages pour chaque parti. La barre solide sont les suffrages de liste complète.
+\item[Suffrages des listes:] La même chose pour les listes.
+\item[Suffrages des candidats:] La même chose pour les candidats. Évidemment, il n'y a pas souvent des PVL dans les 25 premiers d'une commune (ni du Canton).
+\item[Suffrages des candidats PVL:] Classement des meilleurs résultats des PVL. 
+\end{description}
+\Commune[le Canton de Vaud]{Canton_de_Vaud}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Répartition des sièges}
 La répartition des sièges se fait selon un algorithme qui permet de déterminer qui a eu quel siège.
 Le premier siège va a celui qui aurait pris le siège si un seul était en jeu, et ainsi de suite jusqu'à 19.
 La répartition est donnée en table~\ref{Tab:Sieges}. 
@@ -231,11 +248,11 @@ Les autres partis sont dans l'annexe~\ref{AutresPartis}.
 
 Les graphiques que l'on trouvera pour le parti sont:
 \begin{description}
-\item[Suffrages:] Graphique des suffrages que les candidats des trois listes PVL obtiennent. Le plus grand nombre vient des listes non modifiées. Suivent les listes sans dénomination et les listes PVL modifiées. Ensuite 6000 suffrages viennent du PLR.
-
+\item[Suffrages:] Graphique des suffrages que les candidats des trois listes PVL obtiennent. Le plus grand nombre vient des listes non modifiées. Suivent les listes sans dénomination et les listes PVL modifiées. Ensuite 6000 suffrages viennent du PLR. Les mêmes données sont montrées sou forme de camembert, et comme barres avec une échelle logarithmique.
 \item[Bilan:] Pour tous les bulletins modifiés, je compte en positif les suffrages pour des candidats PVL obtenus sur des listes d'autres partis et en négatif les suffrages obtenus par des candidats d'autres partis obtenus sur les listes PVL. La barre remplie est la différence.
 Ainsi, en Fig.~\ref{Fig:Parti:PVL} on voit que les candidats PVL font 6000 suffrages sur des listes PLR, et des candidats PLR font 5000 suffrages sur nos listes. Le bilan est positif de près de 1000 suffrages.\\
 Au bas du graphique se trouve le total de tous les bilans. Le PVL a un bilan positif de 2000 suffrages. Ce sont autant de suffrages cherchés chez les électeurs d'autres partis. On peut aussi considérer que ce sont 2000 suffrages d'électeurs prêts à voter pour des vert'libéraux, mais sans mettre nos listes dans l'urne.
+\item[Canton de Vaud Candidats:] Résultats des candidats du parti dans le canton (pour le PVL c'est le même graphique que celui en Fig.~\ref{Fig:Com:Canton_de_Vaud}).
 \item[Parasitage:] Ventilation des suffrages de candidats d'autres partis obtenus sur les listes PVL. 5000 voix partent chez le PLR. C'est la même information que sur le graphique 'Bilan', mais classées par nombre décroissant de suffrages.
 \item[Candidats parasites:] Ce graphique montre les 25 premiers candidats d'autres partis qui font des voix sur les listes du parti. Jacqueline de Quattro cartonne chez nous, alors que Pierre-Yves Maillard ou Pascal Broulis gagnent généralement chez les autres partis.
 \item[Meilleures communes:] Le classement des communes où nous faisons le plus de suffrages en pourcent. Bravo à Vaux-sur-Morges et Trélex, qui mènent le bal. Ceci bien que les locaux Claude-Alain Gebhard et David Vogel n'étaient pas candidats. Pour moi ça montre l'intérêt de s'investir dans le temps. Une campagne aux cantonales a des effets sur la campagne suivante.  
@@ -245,8 +262,9 @@ Au bas du graphique se trouve le total de tous les bilans. Le PVL a un bilan pos
 Les mêmes graphiques se trouvent aussi pour les listes, composés de manière analogue. On notera que sur les deux graphes du haut figurent les autres listes en axe $y$. On y verra ainsi que la liste 1 perd des suffrages au bénéfice des listes 2 et de jeunes. C'est sans surprise: les électeurs PVL votent majoritairement pour la liste 1 mais ajoutent des noms d'autres listes.
 En plus il y a 
 \begin{description}
-\item[Candidats:] Suffrages par candidat de la liste, avec le détail des suffrages par liste complète, suffrages doublés, et suffrages complémentaires de bulletins modifiés auxquels sont soustraits les suffrages perdus parce que le candidat est biffé de la liste. Ces derniers sont aussi indiqués en négatif en rouge.
-\item[Doublages et Biffages:] Classement des candidats par nombre de fois qu'ils sont doublés. On indique aussi le nombre de fois qu'ils sont biffés.
+\item[Candidats:] Suffrages par candidat de la liste, avec le détail des suffrages par liste complète, suffrages doublés, et suffrages complémentaires de bulletins modifiés auxquels sont soustraits les suffrages perdus parce que le candidat est biffé de la liste (indiqués en blanc à cadre rouge). Ces derniers sont aussi indiqués en négatif en rouge. Des minuscules (souvent invisibles) barres noires et orange indiquent
+le nombre de biffages et doublages uniques, respectivement. Voir ci-dessous.
+\item[Doublages et Biffages:] Classement des candidats par nombre de fois qu'ils sont doublés ou biffés. Les doublages et biffages uniques dénombrent les bulletins modifiés uniquement pour biffer ou doubler le candidat considéré. 
 \end{description}
 %%%
 \Parti{PVL}
@@ -276,11 +294,11 @@ Mis à part la diagonale, les plus gros disques sont la perte de l'UDC vers le PL
 \label{Expl:Candidat}
 Pour les candidats individuels, les graphiques suivants sont inclus:
 \begin{description}
-\item[Meilleures communes:] Classement des 15 meilleures communes par pourcentages de suffrages obtenus.
+\item[Meilleures communes:] Classement des 25 meilleures communes par pourcentages de suffrages obtenus.
 Le canton est listé en haut en comparaison. Les barres noires sont celles du candidat et les vertes (dans le cas du PVL) la liste du candidat.\footnote{Je note que les suffrages que j'utilise correspondent aux suffrages utilisés par le canton, mais pas le pourcentage. La différence est minime, mais je n'en comprends pas l'origine.}
 %\item[Relatif à la liste:] Les suffrages du candidat dans chaque commune sont rapportées aux suffrages de la liste (divisées par 19).
 \item[Suffrages par liste:] Nombre de suffrages obtenues sur les différentes listes modifiées. La liste complète (3965 suffrages pour la liste 1) est en bas de graphe. Notez l'échelle logarithmique.
-\item[Candidats ajoutés en même temps que le candidat:] Je regarde les bulletins modifiées où le candidat est ajouté, c'est à dire (i) les bulletins sane dénomaination, (ii) les listes d'autres partis, ou alors (iii) la liste du candidat s'il y est doublé. Ensuite, on compte les suffrages additionnels (selon la même définition) obtenus par d'autres candidats sur ces bulletins. C'est un peu le classement des candidats les plus similaires.
+\item[Candidats ajoutés en même temps que le candidat:] Je regarde les bulletins modifiées où le candidat est ajouté, c'est à dire (i) les bulletins sane dénomaination, (ii) les listes d'autres partis, ou alors (iii) la liste du candidat s'il y est doublé. Ensuite, je compte les suffrages additionnels (selon la même définition) obtenus par d'autres candidats sur ces bulletins. C'est un peu le classement des candidats les plus similaires.
 \item[Candidats ajoutés quand le candidat est biffé:] Ici, inversement, je regarde les bulletins dont le candidat est biffé. Qui en a profité?\footnote{On ne sait évidemment pas qui en a profité exactement. Si Céline Weber et François Pointet sont tous deux biffés pour mettre Broulis et Maillard à la place, je compte Broulis et Maillard dans le graphique de Céline et aussi dans le graphique de François.} La minuscule barre noire indique qui profite lorsque le candidat est le seul biffé de la liste. C'est tellement rare que ça se voit à peine.%\footnote{On voit les stigmates des choix du candidat pour le Conseil des États au PS et au PLR. Regardez les graphes de Maillard (Fig.~\ref{Fig:Cand:Maillard_Pierre-Yves}) et Nordmann (Fig.~\ref{Fig:Cand:Nordmann_Roger}), et Broulis (Fig.~\ref{Fig:Cand:Broulis_Pasdcal}) et de Quattro (Fig.~\ref{Fig:Cand:de_Quattro_Jacqueline}).}
 %\item[Candidats ajoutés quand le candidat est le seul biffé:] Il y a des rares bulletins où le candidat considéré est biffé et lui seul. Qui alors en profite? C'est anecdotique, et c'est exactement le message de ce graphique. S'il y avait des campagnes de ``biffez X pour doubler Y'' ça se verrait ici.
 \end{description}
@@ -425,15 +443,19 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Résultats des communes}
-\label{Expl:Commune}
 Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage de mettre les communes voisines ensemble.
 
-\begin{description}
-\item[Suffrages des partis:] Suffrages pour chaque parti. La barre solide sont les suffrages de liste complète.
-\item[Suffrages des listes:] La même chose pour les listes.
-\item[Suffrages des candidats:] La même chose pour les candidats. Évidemment, il n'y a pas souvent des PVL dans les 25 premiers.
-\item[Suffrages des candidats PVL:] Classement des meilleurs résultats des PVL. A noter que les suffrages de liste ne sont pas considérés dans ce graphique.
-\end{description}
+En comparant les résultats (en pourcent) des partis dans chaque commune avec ceux du canton (via un test du $\chi^2$),
+j'établis un classement des communes les plus typiques, en Fig.~\ref{Fig:typique}. Nombre d'entre-elles sont dans le Gros-de-Vaud.
+Cette information sera utile à l'équipe data lorsque les premières communes publieront leurs résultats. Le PV d'Étagnières
+a été validé à 11h45.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}\centering
+\includegraphics[width=0.5\textwidth]{../pdf/Communes-Typiques.pdf}
+\caption{Communes les plus similaires au Canton.}\label{Fig:typique}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \Commune[Aigle]{Aigle}
 \Commune[Bex]{Bex}
@@ -447,8 +469,8 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Ormont-Dessous]{Ormont-Dessous}
 \Commune[Ormont-Dessus]{Ormont-Dessus}
 \Commune[Rennaz]{Rennaz}
-\Commune[Roche (VD)]{Roche__VD_}
-\Commune[Villeneuve (VD)]{Villeneuve__VD_}
+\Commune[Roche (VD)]{Roche_VD_}
+\Commune[Villeneuve (VD)]{Villeneuve_VD_}
 \Commune[Yvorne]{Yvorne}
 %\clearpage
 \Commune[Aubonne]{Aubonne}
@@ -460,7 +482,7 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Gimel]{Gimel}
 \Commune[Longirod]{Longirod}
 \Commune[Marchissy]{Marchissy}
-\Commune[Mollens (VD)]{Mollens__VD_}
+\Commune[Mollens (VD)]{Mollens_VD_}
 \Commune[Saint-George]{Saint-George}
 \Commune[Saint-Livres]{Saint-Livres}
 \Commune[Saint-Oyens]{Saint-Oyens}
@@ -473,7 +495,7 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Bettens]{Bettens}
 \Commune[Bournens]{Bournens}
 \Commune[Boussens]{Boussens}
-\Commune[La Chaux (Cossonay)]{La_Chaux__Cossonay_}
+\Commune[La Chaux (Cossonay)]{La_Chaux_Cossonay_}
 \Commune[Chavannes-le-Veyron]{Chavannes-le-Veyron}
 \Commune[Chevilly]{Chevilly}
 \Commune[Cossonay]{Cossonay}
@@ -487,7 +509,7 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[L'Isle]{L_Isle}
 \Commune[Lussery-Villars]{Lussery-Villars}
 \Commune[Mauraz]{Mauraz}
-\Commune[Mex (VD)]{Mex__VD_}
+\Commune[Mex (VD)]{Mex_VD_}
 \Commune[Moiry]{Moiry}
 \Commune[Mont-la-Ville]{Mont-la-Ville}
 \Commune[Montricher]{Montricher}
@@ -504,19 +526,19 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Bercher]{Bercher}
 \Commune[Bottens]{Bottens}
 \Commune[Bretigny-sur-Morrens]{Bretigny-sur-Morrens}
-\Commune[Cugy (VD)]{Cugy__VD_}
+\Commune[Cugy (VD)]{Cugy_VD_}
 \Commune[Echallens]{Echallens}
 \Commune[Essertines-sur-Yverdon]{Essertines-sur-Yverdon}
 \Commune[Etagnières]{Etagnieres}
 \Commune[Fey]{Fey}
 \Commune[Froideville]{Froideville}
-\Commune[Morrens (VD)]{Morrens__VD_}
+\Commune[Morrens (VD)]{Morrens_VD_}
 \Commune[Oulens-sous-Echallens]{Oulens-sous-Echallens}
 \Commune[Pailly]{Pailly}
 \Commune[Penthéréaz]{Penthereaz}
 \Commune[Poliez-Pittet]{Poliez-Pittet}
 \Commune[Rueyres]{Rueyres}
-\Commune[Saint-Barthélemy (VD)]{Saint-Barthelemy__VD_}
+\Commune[Saint-Barthélemy (VD)]{Saint-Barthelemy_VD_}
 \Commune[Villars-le-Terroir]{Villars-le-Terroir}
 \Commune[Vuarrens]{Vuarrens}
 \Commune[Montilliez]{Montilliez}
@@ -535,7 +557,7 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Mauborget]{Mauborget}
 \Commune[Mutrux]{Mutrux}
 \Commune[Novalles]{Novalles}
-\Commune[Onnens (VD)]{Onnens__VD_}
+\Commune[Onnens (VD)]{Onnens_VD_}
 \Commune[Provence]{Provence}
 \Commune[Sainte-Croix]{Sainte-Croix}
 \Commune[Tévenon]{Tevenon}
@@ -549,14 +571,14 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Paudex]{Paudex}
 \Commune[Prilly]{Prilly}
 \Commune[Pully]{Pully}
-\Commune[Renens (VD)]{Renens__VD_}
+\Commune[Renens (VD)]{Renens_VD_}
 \Commune[Romanel-sur-Lausanne]{Romanel-sur-Lausanne}
 \Commune[Chexbres]{Chexbres}
-\Commune[Forel (Lavaux)]{Forel__Lavaux_}
+\Commune[Forel (Lavaux)]{Forel_Lavaux_}
 \Commune[Lutry]{Lutry}
 \Commune[Puidoux]{Puidoux}
 \Commune[Rivaz]{Rivaz}
-\Commune[Saint-Saphorin (Lavaux)]{Saint-Saphorin__Lavaux_}
+\Commune[Saint-Saphorin (Lavaux)]{Saint-Saphorin_Lavaux_}
 \Commune[Savigny]{Savigny}
 \clearpage
 \Commune[Bourg-en-Lavaux]{Bourg-en-Lavaux}
@@ -571,17 +593,17 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Denges]{Denges}
 \Commune[Echandens]{Echandens}
 \Commune[Echichens]{Echichens}
-\Commune[Ecublens (VD)]{Ecublens__VD_}
+\Commune[Ecublens (VD)]{Ecublens_VD_}
 \Commune[Etoy]{Etoy}
 \Commune[Lavigny]{Lavigny}
 \Commune[Lonay]{Lonay}
-\Commune[Lully (VD)]{Lully__VD_}
+\Commune[Lully (VD)]{Lully_VD_}
 \Commune[Lussy-sur-Morges]{Lussy-sur-Morges}
 \Commune[Morges]{Morges}
 \Commune[Préverenges]{Preverenges}
 \Commune[Romanel-sur-Morges]{Romanel-sur-Morges}
 \Commune[Saint-Prex]{Saint-Prex}
-\Commune[Saint-Sulpice (VD)]{Saint-Sulpice__VD_}
+\Commune[Saint-Sulpice (VD)]{Saint-Sulpice_VD_}
 \Commune[Tolochenaz]{Tolochenaz}
 \Commune[Vaux-sur-Morges]{Vaux-sur-Morges}
 \Commune[Villars-Sainte-Croix]{Villars-Sainte-Croix}
@@ -594,7 +616,7 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Bussy-sur-Moudon]{Bussy-sur-Moudon}
 \Commune[Chavannes-sur-Moudon]{Chavannes-sur-Moudon}
 \Commune[Curtilles]{Curtilles}
-\Commune[Dompierre (VD)]{Dompierre__VD_}
+\Commune[Dompierre (VD)]{Dompierre_VD_}
 \Commune[Hermenches]{Hermenches}
 \Commune[Lovatens]{Lovatens}
 \Commune[Lucens]{Lucens}
@@ -619,7 +641,7 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Coinsins]{Coinsins}
 \Commune[Commugny]{Commugny}
 \Commune[Coppet]{Coppet}
-\Commune[Crans (VD)]{Crans__VD_}
+\Commune[Crans (VD)]{Crans_VD_}
 \Commune[Crassier]{Crassier}
 \Commune[Duillier]{Duillier}
 \Commune[Eysins]{Eysins}
@@ -681,7 +703,7 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Missy]{Missy}
 \Commune[Payerne]{Payerne}
 \Commune[Trey]{Trey}
-\Commune[Treytorrens (Payerne)]{Treytorrens__Payerne_}
+\Commune[Treytorrens (Payerne)]{Treytorrens_Payerne_}
 \Commune[Villarzel]{Villarzel}
 \Commune[Valbroye]{Valbroye}
 \Commune[Château-d'Oex]{Chateau-d_Oex}
@@ -726,7 +748,7 @@ Les communes ci-dessous sont classées selon leur numéro OFS, ce qui a l'avantage
 \Commune[Cuarny]{Cuarny}
 \Commune[Démoret]{Demoret}
 \Commune[Donneloye]{Donneloye}
-\Commune[Ependes (VD)]{Ependes__VD_}
+\Commune[Ependes (VD)]{Ependes_VD_}
 \Commune[Mathod]{Mathod}
 \Commune[Molondin]{Molondin}
 \Commune[Montagny-près-Yverdon]{Montagny-pres-Yverdon}
