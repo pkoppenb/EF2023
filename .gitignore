@@ -1,5 +1,5 @@
-pdf/*.pdf
-png/*.png
+# pdf/*.pdf
+# png/*.png
 csv/*.csv
 *.aux
 *.log
