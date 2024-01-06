@@ -1,6 +1,6 @@
 # pdf/*.pdf
 # png/*.png
-csv/*.csv
+# csv/*.csv
 *.aux
 *.log
 *.out
