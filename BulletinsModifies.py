@@ -40,7 +40,7 @@ plt.figure(figsize=(7,5))
 fig, ax = plt.subplots()
 
 def goodName(name):
-    name2 = name.replace("VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN","ENGAGÉS POUR DEMAIN").replace("VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX","JEUNES VERT'LIBÉRAUX").replace(" ","_").replace("(","_").replace(")","_").replace("/","_").replace(">","_g_").replace("<","_l_").replace("*","_times_").replace(".","_").replace("[","_").replace("]","_").replace("{","_").replace("}","_").replace("||","_or_").replace("&&","_and_").replace("&","_").replace("|","_").replace(":","_vs_").replace("'","_").replace("#","N").replace('·','_').replace('É','E').replace('à','a').replace('é','e').replace('è','e').replace('ë','e').replace('ä','a').replace('ç','c').replace('ï','i').replace('â','a').replace('ô','o').replace('ê','e').replace('ë','e')
+    name2 = name.replace("VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN","ENGAGÉS POUR DEMAIN").replace("VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX","JEUNES VERT'LIBÉRAUX").replace(" ","_").replace("(","_").replace(")","_").replace("/","_").replace(">","_g_").replace("<","_l_").replace("*","_times_").replace(".","_").replace("[","_").replace("]","_").replace("{","_").replace("}","_").replace("||","_or_").replace("&&","_and_").replace("&","_").replace("|","_").replace(":","_vs_").replace("'","_").replace("#","N").replace('·','_').replace('É','E').replace('à','a').replace('é','e').replace('è','e').replace('ë','e').replace('ä','a').replace('ç','c').replace('ï','i').replace('â','a').replace('ô','o').replace('ê','e').replace('ë','e').replace('__','_')
     return name2
 
 def incrementeOuCree(dico,cle,valeur):
@@ -163,16 +163,22 @@ class Commune():
         #                                  partis["PVL"].compacts_par_commune[self.numero],partis["PVL"].autres_suffrages_par_commune[self.numero])
         if normalise: facteur = 100./self.suffrages
         else: facteur = 1.0
-        compacts = { k: facteur*partis[k].compacts_par_commune[self.numero] for k in partis.keys() }
-        autres   = { k: facteur*sum(partis[k].autres_suffrages_par_commune[self.numero].values()) for k in partis.keys() }
-        total    = { k: compacts[k]+autres[k] for k in partis.keys() }
+        if -1==self.numero :
+            #Vaud
+            compacts = { k: facteur*sum(list(partis[k].compacts_par_commune.values())) for k in partis.keys() }
+            total    = { k: partis[k].suffrages for k in partis.keys() }
+            autres   = { k: total[k]-compacts[k] for k in total.keys() } 
+        else:
+            compacts = { k: facteur*partis[k].compacts_par_commune[self.numero] for k in partis.keys() }
+            autres   = { k: facteur*sum(partis[k].autres_suffrages_par_commune[self.numero].values()) for k in partis.keys() }
+            total    = { k: compacts[k]+autres[k] for k in partis.keys() }
         total = dict(sorted(total.items(), key=lambda item: item[1], reverse=False))
         # print("{0}: compacts {1} autres {2} total {3}".format(self.nom, compacts, autres, total))
         fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
-        y_pos = np.arange(len(compacts))
-        plt.barh(y_pos,[compacts[k] for k in total.keys()],color=[ partis[k].couleur for k in total.keys()],edgecolor=[ partis[k].couleur for k in total.keys()] )
-        plt.barh(y_pos,[autres[k] for k in total.keys()],left=[compacts[k] for k in total.keys()],edgecolor=[ partis[k].couleur for k in total.keys()], color=['white' for k in total.keys()] )
-        off = -0.01*list(total.values())[0]
+        y_pos = np.arange(len(total))
+        plt.barh(y_pos,[compacts[k] for k in total.keys()],color=[ partis[k].couleur for k in total.keys()],edgecolor=[ partis[k].couleur for k in total.keys()], label='Compacts' )
+        plt.barh(y_pos,[autres[k] for k in total.keys()],left=[compacts[k] for k in total.keys()],edgecolor=[ partis[k].couleur for k in total.keys()], color=['white' for k in total.keys()], label='Modifiés' )
+        off = 0.01*list(total.values())[-1]
         for i, v in enumerate(list(total.values())):
             plt.text(off+v, i - .25, str(int(v)), color='black', ha='left', fontsize=9) # horizontal alignment
         if list(partis.values())[0].classe=='Liste':  what = "listes"
@@ -180,45 +186,73 @@ class Commune():
         if normalise: plt.xlabel('Pourcentages des {0}'.format(what))
         else: plt.xlabel('Suffrages des {0}'.format(what))
         plt.title(self.nom)
+        plt.xlim([0.,1.15*list(total.values())[-1]])
         plt.yticks(y_pos, labels=[partis[k].nom for k in total.keys()])
+        plt.legend()
         deuxPlots("Commune-{0}-{1}s".format(goodName(self.nom),list(partis.values())[0].classe))
         plt.clf()
 
-    def candidats(self,candidats,parti=None):
+    def candidats(self,candidats,parti=None,avecBase=False):
         """
         Résultats par partis dans une commune
         """
-        if parti:
-            total = {}
-            for k,c in candidats.items():
-                # print(candidats[k].nom,candidats[k].liste.parti)
-                if candidats[k].liste.parti.nom==parti:
+        modifies = {}
+        base = {}
+        total = {}
+        sl = 0
+        for k,c in candidats.items():
+            # print(candidats[k].nom,candidats[k].liste.parti.nom,self.numero,c.suffrages,c.liste.suffrages_liste_complete,Parti)
+            if (not parti) or (candidats[k].liste.parti.nom==parti):
+                if -1==self.numero: # Vaud
+                    ss = c.suffrages
+                    if avecBase: sl = c.liste.suffrages_liste_complete/_sieges
+                    # print("Vaud {0}+{1}".format(ss,sl))
+                else:
                     ss = sum(list(c.suffrages_par_commune[self.numero].values()))
-                    if ss>0: total[k] = ss 
-        else:
-            total = { k : sum(list(c.suffrages_par_commune[self.numero].values())) for k,c in candidats.items() }
+                    if avecBase: sl = c.liste.compacts_par_commune[self.numero]/_sieges
+                    # print("{2}: {0}+{1}".format(self.nom,ss,sl))
+                if sl+ss>0:
+                    modifies[k] = ss 
+                    base[k] = sl
+                    total[k] = sl+ss
         total = dict(sorted(total.items(), key=lambda item: item[1], reverse=False))
-        # print(total)
+        # print(modifies)
         nmax = min(_max,len(list(total.values())))
         kk = list(total.keys())[-nmax:]
         vv = list(total.values())[-nmax:]
-        # print("{0}: compacts {1} autres {2} total {3}".format(self.nom, compacts, autres, total))
+        
         fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
         y_pos = np.arange(len(kk))
-        plt.barh(y_pos,vv,color=[candidats[k].liste.couleur for k in kk] )
+        if avecBase: plt.barh(y_pos,[base[k] for k in kk ],color='white',edgecolor=[candidats[k].liste.couleur for k in kk],height=0.75, label="Listes compactes" )
+        plt.barh(y_pos,[modifies[k] for k in kk ],left=[base[k] for k in kk ],color=[candidats[k].liste.couleur for k in kk], label="Listes modifiées" )
         if len(vv)>0:
-            off = +0.02*vv[0]
+            off = +0.02*vv[-1]
             for i, v in enumerate(vv):
                 plt.text(off+v, i - .25, str(int(v)), color='black', ha='left', fontsize=9) # horizontal alignment
         plt.xlabel('Suffrages des Candidats')
-        plt.title(self.nom)
+        if parti: plt.title("{0}: {1}".format(self.nom,parti))
+        else: plt.title(self.nom)
+        if len(vv)>0: plt.xlim([0.,1.15*vv[-1]])
         plt.yticks(y_pos, labels= [candidats[k].nom for k in kk] )
+        plt.legend()
+        textBase = ""
+        if avecBase: textBase = "-avecBase"
         if parti:
-            deuxPlots("Commune-{0}-{1}-Candidats".format(goodName(self.nom),parti))
+            deuxPlots("Commune-{0}-{1}-Candidats{2}".format(goodName(self.nom),parti,textBase))
         else:
-            deuxPlots("Commune-{0}-Candidats".format(goodName(self.nom)))
+            deuxPlots("Commune-{0}-Candidats{1}".format(goodName(self.nom),textBase))
         plt.clf()
 
+    def chi2(self,Vaud):
+        """
+        chi2 par rapport au canton
+        """
+        chi2 = 0.
+        # print(self.suffrages_par_parti,Vaud.suffrages_par_parti,self.suffrages,Vaud.suffrages)
+        for p,v in self.suffrages_par_parti.items():
+            chi2 += (100.*v/self.suffrages-100.*Vaud.suffrages_par_parti[p]/Vaud.suffrages)**2
+        # print("% Le chi2 de {0} est {1:.1f}".format(self.nom,chi2))
+        return chi2
         
     
 #############################################################################
@@ -401,18 +435,25 @@ class Liste():
         doubles = {}
         for c in self.candidats: doubles[c.nom] = c.doubles
         doubles = dict(sorted(doubles.items(), key=lambda item: item[1], reverse=True))
-        biff_1 = {}
-        for c in self.candidats: biff_1[c.nom] = c.biffes
         biffes = {}
-        for n in doubles.keys(): biffes[n] = biff_1[n] # reorder
+        for c in self.candidats: biffes[c.nom] = c.biffes
+        biffes_uniques = {}
+        for c in self.candidats: biffes_uniques[c.nom] = sum(c.biffe_pour_qui_unique.values())
+        doubles_uniques = {}
+        for c in self.candidats: doubles_uniques[c.nom] = c.doubles_uniques
+       
         y_pos = np.arange(len(doubles.values()))
         width = 0.4
         fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
-        plt.barh(y_pos-width/2,doubles.values(),width,color='green',label='Doublage',alpha=0.5)
-        plt.barh(y_pos+width/2,biffes.values(),width,color='red',label='Biffage',alpha=0.5)
-        plt.yticks(y_pos, labels=(biffes.keys()))
+        # this is ordered
+        plt.barh(y_pos-width/2,doubles.values(),width,color='green',label='Doublage',alpha=1)
+        # these ones are not ordered
+        plt.barh(y_pos-width/2,[ doubles_uniques[n] for n in doubles.keys()] ,width,color='salmon',label='Doublage Unique',alpha=1)
+        plt.barh(y_pos+width/2,[ biffes[n] for n in doubles.keys()] ,width,color='red',label='Biffage',alpha=1)
+        plt.barh(y_pos+width/2,[ biffes_uniques[n] for n in doubles.keys()] ,width,color='black',label='Biffage Unique',alpha=1)
+        plt.yticks(y_pos, labels=(doubles.keys()))
         plt.xlabel('Doublages et biffages')
-        plt.title("Doublages et biffages de candidats {0}".format(self.nom))
+        plt.title("Doublages et biffages des candidats {0}".format(self.nom))
         plt.legend()
         plt.gca().invert_yaxis()
         deuxPlots("{0}-DoublagesBiffages-{1}".format(self.classe,goodName(self.nom)))
@@ -453,7 +494,10 @@ class Liste():
         suffs =  [ c.suffrages-c.doubles for c in sorted_cands.keys() ]  
         plt.barh(y_pos,suffs,left=sums,color='blue',label='Complémentaires')
         sums = [ int(b+d) for d,b in zip(sums,suffs) ]
-        
+
+        # on remet les biffes
+        plt.barh(y_pos,[-b for b in biffes],left=sums,color='white',edgecolor='red',height=0.75)
+         
         plt.xlabel('Suffrages')
         plt.title("Candidats de {0}".format(self.nom))
         plt.yticks(y_pos, labels=[c.nom for c in sorted_cands.keys()])
@@ -922,7 +966,7 @@ def lisBulletins(listes):
                 try:
                     a = int(row[0]) # marche pas sur la dernière ligne
                 except:
-                    print("Fin du fichier")
+                    # print("Fin du fichier")
                     break
                 b = Bulletin(row,candidats)
                 b.assigneParti(listes,partis)
@@ -1049,29 +1093,32 @@ def lisCommunes(communes,candidats,listes):
     return 
 
 #############################################################################
-def lisPartis(partis):
+def lisOFS(partis):
     """
     Lis le fichier suisse des communes et partis
     """
     communes = {}
+    Vaud = Commune(-1,"Vaud")
     with open(_partis) as f:
         ff = csv.reader(f,delimiter=';')
         nL = 0  # ligne
         for row in ff:
             nL += 1
-            if row[0]=='Gemeinde' and row[4]=='Vaud':
+ #           if row[0]=='Gemeinde' and row[4]=='Vaud':
+            if row[4]=='Vaud':
                 # print(row)
                 nom = row[2]
-                num = int(row[5])
-                if num not in communes.keys():
-                    c = Commune(num,nom)
-                    communes[num] = c
-                    # print("Crée commune {0} {1}".format(num,nom))
+                if row[5]:
+                    num = int(row[5])
+               	    if num not in communes.keys():
+                        c = Commune(num,nom)
+                        communes[num] = c
+                else: c = Vaud
                 parti = row[9]
                 if row[12]=='': suffrages = 0
                 else: suffrages = int(row[12])
                 c.suffrages_par_parti[parti] = suffrages
-                if parti in partis.keys():
+                if c!=Vaud and parti in partis.keys():
                     partis[parti].total_par_commune[num] = suffrages
                     # print("Ajouté commune {0} parti {1} suffrages {2}".format(nom,parti,suffrages))
                 elif 0==suffrages:  # ne participe pas
@@ -1080,9 +1127,10 @@ def lisPartis(partis):
                     pass
 
     for c in communes.values(): c.suffrages = sum(list(c.suffrages_par_parti.values()))
+    Vaud.suffrages = sum(list(Vaud.suffrages_par_parti.values()))
                                           
     # print('Vaux sur Morges {0} de {1}'.format(communes[5650].suffrages , communes[5650].suffrages_par_parti))
-    return communes
+    return Vaud, communes
 #############################################################################
 def analyseBilans(bilans):
     """
@@ -1123,13 +1171,34 @@ def analyseBilans(bilans):
 #    plt.colorbar() # pas utile
     deuxPlots("Bilans-des-{0}".format(what))
     plt.clf()
+
+#############################################################################
+def analyseChi2(chi2):
+    """
+    Analyse le chi2 des communes
+    """
+    best = min(chi2, key=chi2.get)
+    worst = max(chi2, key=chi2.get)
+    print("La commune la plus typique est {0} (chi2={1:.1f}) et la moins {2} (chi2={3:.1f})".format(best.nom,chi2[best],worst.nom,chi2[worst]))
+    
+    chi2s = dict(sorted(chi2.items(), key=lambda item: item[1], reverse=True))
+    top25 = list(chi2s.keys())[-_max:]
+    pc25 = list(chi2s.values())[-_max:]
+    y_pos = np.arange(len(top25))
+    fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
+    plt.barh(y_pos,pc25,color="green")
+    plt.title("Communes qui votent comme le Canton")
+    plt.yticks(y_pos, labels=[c.nom for c in top25])
+    plt.xlabel('$\chi^2$')
+    deuxPlots("Communes-Typiques")
+    plt.clf()
     
 #############################################################################
 # main
 #############################################################################
 listes,partis = lisScrutin()
 candidats,bulletins = lisBulletins(listes)
-communes = lisPartis(partis)
+Vaud,communes = lisOFS(partis)
 lisCommunes(communes,candidats,listes)
 attribueListes(candidats,listes)
 pd = sum([b.poids for b in bulletins])
@@ -1162,6 +1231,29 @@ print("#########################################################################
 # print("Partis: {0}".format( partis.keys() ))
 for p in partis.values(): print("{0} a {1} suffrages dont {2} mod. de {3}".format(p.nom,p.suffrages,p.suffrages-p.suffrages_liste_complete-p.suffrages_comp_liste_modifiee,[v for v in p.suffrages_par_liste.values()],p.suffrages))
 print("##################################################################################")
+
+# graphiques pour Vaud
+Vaud.partis(listes,normalise=False)
+Vaud.partis(partis,normalise=False)
+Vaud.candidats(candidats)
+Vaud.candidats(candidats,avecBase=True)
+Vaud.candidats(candidats,parti="PVL")
+Vaud.candidats(candidats,parti="PVL",avecBase=True)
+
+# graphiques pour les communes
+chi2 = {}
+for c in communes.values():
+    chi2[c] = c.chi2(Vaud)
+    print("\\Commune[{0}]{{{1}}} % {2}".format(c.nom,goodName(c.nom),len(chi2)))
+    c.partis(listes,normalise=False)
+    c.partis(partis,normalise=False)
+    c.candidats(candidats)
+    c.candidats(candidats,avecBase=True)
+    c.candidats(candidats,parti="PVL")
+    c.candidats(candidats,parti="PVL",avecBase=True)
+    # if len(chi2)==25: analyseChi2(chi2)
+analyseChi2(chi2)
+
 # graphiques pour les listes
 bilans = {}
 for l in listes.values():
@@ -1191,15 +1283,6 @@ for p in partis.values():
     p.communes(communes,True,True)  # pires, absolu
 analyseBilans(bilans)
 
-# graphiques pour les communes
-for c in communes.values():
-    print("\\Commune[{0}]{{{1}}}".format(c.nom,goodName(c.nom)))
-    c.partis(listes,normalise=False)
-    c.partis(partis,normalise=False)
-    c.candidats(candidats)
-    c.candidats(candidats,parti="PVL")
-
-
 
 # graphiques pour les candidats
 for c in candidats.values():
@@ -1212,10 +1295,7 @@ for c in candidats.values():
         c.amis(candidats,listes)
         c.biffage(candidats,listes, unique=False)
         c.biffage(candidats,listes, unique=True)
-        
-        
-
-   
+           
 """
 Questions auxquelles je veux répondre pour le PVL:
 Nos listes:
