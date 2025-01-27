@@ -6,6 +6,7 @@
 \usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{ifthen}
+\usepackage{placeins}
 
 \usepackage{hyperref}
 \usepackage{charter}
@@ -17,7 +18,8 @@
 \def\paperlicenceurl{https://creativecommons.org/licenses/by/4.0/}
 
 
-\def\thewidth{0.45\textwidth}
+\def\thewidth{0.49\textwidth}
+\def\thewidthS{0.33\textwidth}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\Liste}[2][NONE]{
 \IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
@@ -88,9 +90,26 @@
 \begin{figure}[!h]\centering
 \includegraphics[width=\thewidth]{../pdf/Commune-#2-Partis.pdf}
 \includegraphics[width=\thewidth]{../pdf/Commune-#2-Listes.pdf}
-\includegraphics[width=\thewidth]{../pdf/Commune-#2-Candidats-avecBase.pdf}
-\includegraphics[width=\thewidth]{../pdf/Commune-#2-PVL-Candidats-avecBase.pdf}
+\includegraphics[width=\thewidthS]{../pdf/Commune-#2-Candidats-avecBase.pdf}%
+\includegraphics[width=\thewidthS]{../pdf/Commune-#2-PVL-Candidats-avecBase.pdf}%
+\includegraphics[width=\thewidthS]{../pdf/Commune-#2-Centres-Candidats.pdf}
 \caption[Graphiques pour \leNom]{Graphiques pour \leNom. Explications en page~\pageref{Expl:Commune}.}\label{Fig:Com:#2}
+\end{figure}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Correlation}[2][NONE]{
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\begin{figure}[!h]\centering
+\IF{#2}{PVL}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PVL.pdf}}
+\IF{#2}{PLR}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PLR.pdf}}
+\IF{#2}{PS}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PS.pdf}}
+\IF{#2}{UDC}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-UDC.pdf}}
+\IF{#2}{Centre}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-Centre.pdf}}
+\IF{#2}{VERT-E-S}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-VERT-E-S.pdf}}
+\IF{#2}{PEV}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PEV.pdf}}
+\IF{#2}{PST_Sol_}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PST_Sol_.pdf}}
+\IF{#2}{UDF}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-UDF.pdf}}
+\caption[Corrélations des résulats dans toutes les communes entre le parti \leNom\ et les autres partis.]{Corrélations des résulats dans toutes les communes entre le parti \leNom\ et les autres partis. Explications en page~\pageref{Expl:Corr}.}\label{Fig:Corr:#2}
 \end{figure}
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -192,8 +211,9 @@ Les résultats du Canton sont en Figure~\ref{Fig:Com:Canton_de_Vaud}. \label{Expl
 \begin{description}
 \item[Suffrages des partis:] Suffrages pour chaque parti. La barre solide sont les suffrages de liste complète.
 \item[Suffrages des listes:] La même chose pour les listes.
-\item[Suffrages des candidats:] La même chose pour les candidats. Évidemment, il n'y a pas souvent des PVL dans les 25 premiers d'une commune (ni du Canton).
+\item[Suffrages des candidats:] La même chose pour les candidats. Ici la barre blanche sont les suffrages venant de listes non-modifiées et la barre plein ceux de bulletins modifiés. 
 \item[Suffrages des candidats PVL:] Classement des meilleurs résultats des PVL. 
+\item[Suffrages des candidats des Centres:] Classement des meilleurs résultats des candidats PVL, Centre et Libres. Uniquement les bulletins modifiés sont pris en compte. Ce graphique permet de voir quels candidats d'une éventuelle Alliance du Centre sont populaires.
 \end{description}
 \Commune[le Canton de Vaud]{Canton_de_Vaud}
 
@@ -290,6 +310,14 @@ Mis à part la diagonale, les plus gros disques sont la perte de l'UDC vers le PL
 %%%%%%%
 \pagebreak
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Corrélations avec d'autres partis}\label{Expl:Corr}
+\Correlation{PVL}
+Les résulats des listes PVL sont comparés commune-par-commune à ceux des autres partis en Figure~\ref{Fig:Corr:PVL}. Prenons le graphique ``PVL et Centre par commune''. Sur l'axe horizontal est représenté le résultat du PVL dans chaque commune et sur l'axe vertical celui du Centre. La taille des cercles et leur couleur indique la taille de la commune.
+Les lignes verticale et horizontale sont les résultats cantonaux respectifs. La ligne grise est une régression linéaire des résultats. Si elle monte ça veut dire que plus le PVL est fort dans une commune, plus le Centre y est fort aussi. Une ligne décroissante indique une anti-corrélation. Ici la ligne est essentiellement horizontale, et il n'y a donc pas de corrélation. Il y a par contre une forte anti-corrélation avec l'UDC. 
+%%%%%%%
+\FloatBarrier
+\pagebreak
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Résultats des candidats de la liste 1}
 \label{Expl:Candidat}
 Pour les candidats individuels, les graphiques suivants sont inclus:
@@ -375,29 +403,40 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 \section*{Annexe}
 \section{Résultats des autres partis}\label{AutresPartis}
 %%%
-\Parti{PS}
-\Liste{PSV}
-\Liste{JSV}
-%%%
-\Parti{PEV}
-\Liste{PEV}
-%%%
 \Parti{PLR}
+\Correlation{PLR}
 \Liste{PLR}
 \Liste[PLR Energie libérale]{PLR_Energie_liberale}
 \Liste{JLRV}
 %%%
+\Parti{PS}
+\Correlation{PS}
+\Liste{PSV}
+\Liste{JSV}
+%%%
 \Parti{UDC}
+\Correlation{UDC}
 \Liste{UDC}
 \Liste[UDC Liberté et Mobilité]{UDC_Liberte_et_Mobilite}
 \Liste[Jeunes UDC]{Jeunes_UDC}
 %%%
-\Parti{UDF}
-\Liste{UDF}
+\Parti{VERT-E-S}
+\Correlation{VERT-E-S}
+\Liste[Les Vertes]{Les_Vert_e_s}
+\Liste{JVVD}
 %%%
 \Parti{Centre}
+\Correlation{Centre}
 \Liste[Le Centre]{Le_Centre}
 \Liste[La Terre au Centre]{La_Terre_au_Centre}
+%%%
+\Parti{PEV}
+\Correlation{PEV}
+\Liste{PEV}
+%%%
+\Parti{UDF}
+\Correlation{UDF}
+\Liste{UDF}
 %%%
 \PartiNonOFS{Libres}
 \Liste[Les Libres]{Les_Libres}
@@ -406,12 +445,9 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 \Liste{PPVD}
 %%%
 \Parti[POP/EàG]{PST_Sol_}
+\Correlation[POP/EàG]{PST_Sol_}
 \Liste{POP}
 \Liste[EàG]{EaG}
-%%%
-\Parti{VERT-E-S}
-\Liste[Les Vertes]{Les_Vert_e_s}
-\Liste{JVVD}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 \section{Résultats des élus}\label{AutresElus}

@@ -33,8 +33,40 @@ _elus = ['Maillard Pierre-Yves',
          'Weber Céline',
          'Chappuis Isabelle' ]
 
+grandesCommunes = {  # de wikipedia
+    'Lausanne' : 5586, # 	Lausanne 	141 418 	41,38 	3418
+    'Yverdon-les-Bains' :  	5938, # 	Jura-Nord vaudois 	29 827 	11,28 	2644
+    'Montreux' :  	5886, # 	Riviera-Pays-d'Enhaut 	26 230 	33,37 	786
+    'Nyon' :  	5724, # 	Nyon 	22 465 	6,79 	3309
+    'Renens' :  	5591, # 	Ouest lausannois 	21 086 	2,96 	7124
+    'Vevey' :  	5890, # 	Riviera-Pays-d'Enhaut 	19 738 	2,38 	8293
+    'Pully' :  	5590, # 	Lavaux-Oron 	18 984 	5,85 	3245
+    'Morges' :  	5642, # 	Morges 	17 529 	3,85 	4553
+    'Gland' :  	5721, # 	Nyon 	13 664 	8,32 	1642
+    'Écublens' :  	5635, # 	Ouest lausannois 	13 118 	5,71 	2297
+    'La Tour-de-Peilz' :  	5889, # 	Riviera-Pays-d'Enhaut 	12 382 	3,24 	3822
+    'Prilly' :  	5589, # 	Ouest lausannois 	12 294 	2,19 	5614
+    'Blonay Saint-Légier' : 	5892, # 	Riviera-Pays-d'Enhaut 	12 117 	31,24 	388
+    'Aigle' :  	5401 , #	Aigle 	10 913 	16,41 	665
+    'Lutry' :  	5606, # 	Lavaux-Oron 	10 718 	8,45 	1268
+    'Bussigny' :  	5624, # 	Ouest lausannois 	10 365 	4,82 	2150
+    'Payerne' :  	5822, # 	Broye-Vully 	10 342 	24,19 	428
+    'Épalinges' :  	5584, # 	Lausanne 	9 822 	4,57 	2149
+    'Le Mont-sur-Lausanne' :  	5587, # 	Lausanne 	9 291 	9,82 	946
+    'Crissier' :  	5583, # 	Ouest lausannois 	9 181 	5,51 	1666
+    'Chavannes-près-Renens' :  	5627, # 	Ouest lausannois 	8 737 	1,65 	5295
+    'Bex' :  	5402, # 	Aigle 	8 167 	96,56 	85
+    'Ollon' :  	5409, # 	Aigle 	7 968 	59,56 	134
+    'Orbe' :  	5757, # 	Jura-Nord vaudois 	7 613 	12,02 	633
+    'Rolle' :  	5861, # 	Nyon 	6 322 	2,74 	2307
+    'Moudon' :  	5678, # 	Broye-Vully 	6 124 	15,69 	390
+    'Oron':  5805, # 	Lavaux-Oron 	6 114 	26,28 	233
+    }
+    
+
          
 import matplotlib.pyplot as plt
+import matplotlib
 import numpy as np
 plt.figure(figsize=(7,5))
 fig, ax = plt.subplots()
@@ -88,7 +120,7 @@ class Bulletin():
         for l in range(len(c_id)):   # 
             v = int(row[3+l])        # nombre de voix du candidat l
             if int(v)>0: self.suffrages[ c_id[l] ] = v
-        self.exprimes = sum(self.suffrages.values())
+        self.exprimes = sum(self.suffrages.values()) # +self.complementaires
 #        print(u'Créé bulletin avec poids {0}, liste {1}, complémentaires {2}, suffrages {3}'.format(self.poids,self.liste,self.complementaires,self.suffrages[0:20]))
 
     def assigneParti(self,listes,partis):
@@ -163,10 +195,12 @@ class Commune():
         #                                  partis["PVL"].compacts_par_commune[self.numero],partis["PVL"].autres_suffrages_par_commune[self.numero])
         if normalise: facteur = 100./self.suffrages
         else: facteur = 1.0
+        if list(partis.values())[0].classe=='Liste':  what = "listes"
+        else: what = "partis"
         if -1==self.numero :
             #Vaud
             compacts = { k: facteur*sum(list(partis[k].compacts_par_commune.values())) for k in partis.keys() }
-            total    = { k: partis[k].suffrages for k in partis.keys() }
+            total    = { k: facteur*partis[k].suffrages for k in partis.keys() }
             autres   = { k: total[k]-compacts[k] for k in total.keys() } 
         else:
             compacts = { k: facteur*partis[k].compacts_par_commune[self.numero] for k in partis.keys() }
@@ -174,16 +208,19 @@ class Commune():
             total    = { k: compacts[k]+autres[k] for k in partis.keys() }
         total = dict(sorted(total.items(), key=lambda item: item[1], reverse=False))
         # print("{0}: compacts {1} autres {2} total {3}".format(self.nom, compacts, autres, total))
-        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
+        
+        if "listes"==what: fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
+        else: fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.12)
         y_pos = np.arange(len(total))
         plt.barh(y_pos,[compacts[k] for k in total.keys()],color=[ partis[k].couleur for k in total.keys()],edgecolor=[ partis[k].couleur for k in total.keys()], label='Compacts' )
         plt.barh(y_pos,[autres[k] for k in total.keys()],left=[compacts[k] for k in total.keys()],edgecolor=[ partis[k].couleur for k in total.keys()], color=['white' for k in total.keys()], label='Modifiés' )
         off = 0.01*list(total.values())[-1]
         for i, v in enumerate(list(total.values())):
-            plt.text(off+v, i - .25, str(int(v)), color='black', ha='left', fontsize=9) # horizontal alignment
-        if list(partis.values())[0].classe=='Liste':  what = "listes"
-        else: what = "partis"
-        if normalise: plt.xlabel('Pourcentages des {0}'.format(what))
+            if normalise: plt.text(off+v, i - .25, "{0:.1f}%".format(v), color='black', ha='left', fontsize=9) # horizontal alignment
+            else: plt.text(off+v, i - .25, str(int(v)), color='black', ha='left', fontsize=9) # horizontal alignment
+        if normalise:
+            plt.axvline(x = 5., color = 'b')
+            plt.xlabel('Pourcentages des {0}'.format(what))
         else: plt.xlabel('Suffrages des {0}'.format(what))
         plt.title(self.nom)
         plt.xlim([0.,1.15*list(total.values())[-1]])
@@ -202,7 +239,8 @@ class Commune():
         sl = 0
         for k,c in candidats.items():
             # print(candidats[k].nom,candidats[k].liste.parti.nom,self.numero,c.suffrages,c.liste.suffrages_liste_complete,Parti)
-            if (not parti) or (candidats[k].liste.parti.nom==parti):
+            if ((not parti) or (candidats[k].liste.parti.nom==parti) or
+                (parti=="Centres" and (candidats[k].liste.parti.nom in [ "PVL", "Centre", "Libres"]))):
                 if -1==self.numero: # Vaud
                     ss = c.suffrages
                     if avecBase: sl = c.liste.suffrages_liste_complete/_sieges
@@ -230,7 +268,9 @@ class Commune():
             for i, v in enumerate(vv):
                 plt.text(off+v, i - .25, str(int(v)), color='black', ha='left', fontsize=9) # horizontal alignment
         plt.xlabel('Suffrages des Candidats')
-        if parti: plt.title("{0}: candidats du {1}".format(self.nom,parti))
+        if parti:
+            if "Centres"==parti: plt.title("{0}: candidats des {1}".format(self.nom,parti))
+            else: plt.title("{0}: candidats du {1}".format(self.nom,parti))
         else: plt.title("{0}: candidats".format(self.nom))
         if len(vv)>0: plt.xlim([0.,1.15*vv[-1]])
         plt.yticks(y_pos, labels= [candidats[k].nom for k in kk] )
@@ -270,6 +310,7 @@ class Liste():
         self.suffrages_autres_listes = int(row[7])
         self.suffrages_sans_denom = int(row[8])
         self.suffrages = self.suffrages_liste_complete+self.suffrages_nom_liste_modifiee+self.suffrages_comp_liste_modifiee+self.suffrages_autres_listes+self.suffrages_sans_denom
+        print("{0} reçoit {1}+{2}+{3}+{4}+{5} = {6} suffrages".format(self.nom,self.suffrages_liste_complete,self.suffrages_nom_liste_modifiee,self.suffrages_comp_liste_modifiee,self.suffrages_autres_listes,self.suffrages_sans_denom,self.suffrages))
         self.classe = "Liste"
         self.parti = None  # lien vers parti
         self.suffrages_par_liste = {}
@@ -278,7 +319,8 @@ class Liste():
         self.compacts_par_commune = {}           # structure: {commune_id : suffrages }
         self.autres_suffrages_par_commune = {}   # structure: {commune_id : { liste: suffrages}}
         self.total_par_commune = {}              # structure: {commune_id : suffrages }
-        print("Nouvelle liste {0:2} {1} a {2} suffrages".format(self.numero,self.nom,self.suffrages))
+        # print("Nouvelle liste {0:2} {1} a {2} suffrages".format(self.numero,self.nom,self.suffrages))
+        self.pourcentage = 0
         
         if 'Sans' in self.nom:
             self.nom_parti = None
@@ -621,7 +663,7 @@ class Liste():
         return diff
         
 
-    def communes(self,communes,pires=False,absolu=False):
+    def communes(self,communes,pires=False,absolu=False,grandes=False):
         """
         Meilleures et pires communes de la liste
 
@@ -630,16 +672,30 @@ class Liste():
         pourcents = {}
         quoi = "Meilleures"
         if pires: quoi = "Pires"
+        elif grandes : quoi = "Grandes"
         if len(self.total_par_commune)<1: return # pas pour pirates et libres
-        if not absolu:
+        if grandes:
+            for k in list(grandesCommunes.values())[::-1] :
+                pourcents[k] = 100.*self.total_par_commune[k]/communes[k].suffrages
+                # print(" Grandes {0} {1} : {2} ".format(k,communes[k],pourcents[k]))
+        elif not absolu:
             for c in communes.keys(): pourcents[c] = 100.*self.total_par_commune[c]/communes[c].suffrages
             pourcents = dict(sorted(pourcents.items(), key=lambda item: item[1], reverse=pires))
             # print("{0} parti {1} total {2} pourcents {3}".format(self.nom,self.total_par_commune[5650],communes[5650].suffrages,pourcents[5650])) # Vaux sur Morges
         else:
             pourcents = dict(sorted(self.total_par_commune.items(), key=lambda item: item[1], reverse=pires))
-        
-        top25 = list(pourcents.keys())[-_max:]
-        pc25 = list(pourcents.values())[-_max:]
+        if not grandes:
+            top25 = list(pourcents.keys())[-_max:]
+            pc25 = list(pourcents.values())[-_max:]
+            noms = [communes[c].nom for c in top25]
+        else:
+            top25 = list(pourcents.keys())
+            pc25 = list(pourcents.values())
+            noms = [communes[c].nom for c in top25]
+            top25.insert(0,0)
+            pc25.insert(0,self.pourcentage)
+            noms.insert(0,"Canton de Vaud")
+            
         # print(pourcents,top25,pc25)
         y_pos = np.arange(len(top25))
         fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
@@ -647,14 +703,13 @@ class Liste():
         if absolu:  plt.xlabel('Suffrages dans la commune')
         else: plt.xlabel('Pourcentage dans la commune')
         plt.title("{1}: {0} communes".format(quoi,self.nom))
-        plt.yticks(y_pos, labels=[communes[c].nom for c in top25])
-        if absolu and not pires:
+        plt.yticks(y_pos, labels=noms)
+        if grandes: plt.axvline(x = self.pourcentage, color = 'b')
+        if absolu and not pires and not grandes:
             if communes[top25[-1]].nom=='Lausanne' and 1.5*pc25[-2]<pc25[-1]: plt.xlim(0,1.5*pc25[-2]) # couper Lausanne
             deuxPlots("{0}-{1}-Suffrages-{2}-Communes".format(self.classe,goodName(self.nom),quoi))
         else: deuxPlots("{0}-{1}-{2}-Communes".format(self.classe,goodName(self.nom),quoi))
         plt.clf()
-            
-            
         
         
 #############################################################################
@@ -1207,6 +1262,75 @@ def analyseChi2(chi2):
     plt.xlabel('$\chi^2$')
     deuxPlots("Communes-Typiques")
     plt.clf()
+
+
+def correlations(p1,p2,communes,Vaud):
+    """
+    correlations de deux partis par commune
+    """
+    if len(p1.total_par_commune)==0 or len(p2.total_par_commune)==0: return
+    pourcents1 = [ 100.*p1.total_par_commune[c]/communes[c].suffrages for c in communes.keys() ]
+    pourcents2 = [ 100.*p2.total_par_commune[c]/communes[c].suffrages for c in communes.keys() ]
+#    bulletins = [ 10*(np.log(communes[c].suffrages)/np.log(2.)-9) for c in communes.keys() ]
+    bulletins = [ communes[c].suffrages/_sieges/40 for c in communes.keys() ]
+    vaud1 = [ 100.*p1.suffrages/Vaud.suffrages ]
+    vaud2 = [ 100.*p2.suffrages/Vaud.suffrages ]
+    t = [ b/max(bulletins) for b in bulletins ]
+#    print(min(bulletins),max(bulletins))
+#    weights = [ communes[c].suffrages/_sieges for c in communes.keys() ]
+#    c, b, a = np.polyfit(pourcents1, pourcents2, w=weights,deg=2)
+#    c, b, a = np.polyfit(pourcents1, pourcents2, deg=2)
+    b, a = np.polyfit(pourcents1, pourcents2, deg=1)
+
+    fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.08)
+    plt.scatter(vaud1,vaud2,s=[1000],c='g',alpha=0.2)
+    plt.annotate("Canton",(vaud1[0],vaud2[0]),c='g')
+
+    plt.title("{0} et {1} par commune".format(p1.nom,p2.nom))
+    xseq = np.linspace(0, 1.05*max(pourcents1), num=100)
+    
+    # plt.axvline(x = vaud1[0], color = p1.couleur )
+    # plt.axhline(y = vaud2[0], color = p2.couleur )
+    # quorum
+    if max(pourcents1)>2.5: plt.axvline(x = 5., color = "cyan" )
+    if max(pourcents2)>2.5: plt.axhline(y = 5., color = "cyan" )
+    
+#    plt.plot(xseq, [a + b * x + c *x**2 for x in xseq] , color="silver", lw=1)
+    plt.plot(xseq, [a + b * x for x in xseq] , color="silver", lw=1)
+    sc = plt.scatter(pourcents1,pourcents2,s=bulletins,alpha=0.5,c=t,
+                     norm=matplotlib.colors.LogNorm(), cmap='cool')
+#    plt.colorbar(sc, label="Taille")
+    plt.xlabel("Poucentage du parti {0}".format(p1.nom))
+    plt.ylabel("Poucentage du parti {0}".format(p2.nom))
+    plt.xlim(0,1.05*min(max(pourcents1),2*vaud1[0]))
+    plt.ylim(0,1.05*min(max(pourcents2),2*vaud2[0]))
+    for n in list(grandesCommunes.keys())[:10]:
+        c=grandesCommunes[n]
+        plt.annotate(n, (100.*p1.total_par_commune[c]/communes[c].suffrages,
+                         100.*p2.total_par_commune[c]/communes[c].suffrages))
+    deuxPlots("Correlation-{0}-{1}".format(goodName(p1.nom),goodName(p2.nom)))
+    plt.clf()
+
+    """
+    Plus grosses communes selon quorum centre PVL
+    """
+    QuatreCas = {"++":None, "+-":None, "--": None, "-+": None}
+    if "PVL"==p1.nom and "Centre"==p2.nom:
+        for c in communes.keys():
+            res = ""
+            if p1.total_par_commune[c]/communes[c].suffrages > 0.05:
+                res = "+"
+            else: res = "-"
+            if p2.total_par_commune[c]/communes[c].suffrages > 0.05:
+                res += "+"
+            else: res += "-"
+            if (not QuatreCas[res]) or (communes[c].suffrages>communes[QuatreCas[res]].suffrages):
+                QuatreCas[res] = c
+        for r,c in QuatreCas.items():
+            print("Plus grosse commune {0} : {1} avec {2:.1f}% et {3:.1f}%".format(r,communes[c].nom,
+                                                                                   100.*p1.total_par_commune[c]/communes[c].suffrages,
+                                                                                   100.*p2.total_par_commune[c]/communes[c].suffrages))
+    
     
 #############################################################################
 # main
@@ -1217,14 +1341,16 @@ Vaud,communes = lisOFS(partis)
 lisCommunes(communes,candidats,listes)
 attribueListes(candidats,listes)
 pd = sum([b.poids for b in bulletins])
-sf = sum([b.exprimes for b in bulletins])
-nm = sum([p.suffrages_liste_complete for p in listes.values()])
-tt = sf+nm
+sf = sum([b.exprimes*b.poids for b in bulletins])
+# le nombre de complémentaires ne correspond pas à ce que je trouve dans le fichier
+# des bulletins modifiés. Si je l'ajoute ici ça marche.
+nm = sum([p.suffrages_liste_complete+p.suffrages_comp_liste_modifiee for p in listes.values()])
+total_des_suffrages = sf+nm
 
 print("#############################################################################")
 print("### J'ai {0} listes de {1} partis et {2} candidats".format(len(listes),len(partis),len(candidats)))
-print("### Il y a {0} bulletins modifiés ({1} différents) qui font {2} suffrages ({3:.1f}%)".format(pd,len(bulletins),sf,100.*sf/tt))
-print("### Et {0:.0f} bulletins non modifiés, soit {1} suffrages ({2:.1f}%)".format(nm/_sieges,nm,100.*nm/tt))
+print("### Il y a {0} bulletins modifiés ({1} différents) qui font {2} suffrages ({3:.1f}%)".format(pd,len(bulletins),sf,100.*sf/total_des_suffrages))
+print("### Et {0:.0f} bulletins non modifiés, soit {1} suffrages ({2:.1f}%)".format(nm/_sieges,nm,100.*nm/total_des_suffrages))
 print("#############################################################################")
       
 
@@ -1249,14 +1375,48 @@ print("#########################################################################
 
 # graphiques pour Vaud
 Vaud.partis(listes,normalise=False)
-Vaud.partis(partis,normalise=False)
+Vaud.partis(partis,normalise=True)
 Vaud.candidats(candidats)
 Vaud.candidats(candidats,avecBase=True)
+Vaud.candidats(candidats,parti="Centres")
+
+# graphiques pour les partis
+bilans = {}
+somme = 0.
+for p in partis.values():
+    p.pourcentage = 100.*p.suffrages/total_des_suffrages
+    print("Parti {0} : {1:0.1f}% ({2})".format(p.nom,p.pourcentage,p.suffrages))
+    somme+= p.suffrages
+    p.plotSuffrages(partis)
+    para = p.parasite(partis)
+    bilans[p] = p.bilan(para)
+    p.candidatsParasites(candidats)
+    p.communes(communes)
+    p.communes(communes,True)  # pires
+    p.communes(communes,False,True) # absolu
+    p.communes(communes,True,True)  # pires, absolu
+    p.communes(communes,grandes=True)  # pires, absolu
+    Vaud.candidats(candidats,parti=p.nom)
+    Vaud.candidats(candidats,parti=p.nom,avecBase=True)
+
+
+print("Total des suffrages {0:.0f} au lieu de {1:.0f}. Différence {2}.".format(somme,total_des_suffrages,somme-total_des_suffrages))
+
+analyseBilans(bilans)
+
+for p in partis.values():
+    for q in partis.values():
+        if p==q : continue
+        correlations(p,q,communes,Vaud)
+
 
 # graphiques pour les listes
 bilans = {}
+somme = 0.
 for l in listes.values():
-    print("Liste {0}".format(l.nom))
+    l.pourcentage = 100.*l.suffrages/total_des_suffrages
+    print("Liste {0} : {1:0.1f}% ({2})".format(l.nom,l.pourcentage,l.suffrages))
+    somme += l.suffrages
     l.communes(communes)
     l.communes(communes,True)  # pires
     l.biffageDoublage()
@@ -1266,25 +1426,10 @@ for l in listes.values():
     bilans[l] = l.bilan(para)
 #    if l.parti.nom == "PVL" :
     l.candidatsParasites(candidats)
-analyseBilans(bilans)
 
-# graphiques pour les partis
-bilans = {}
-for p in partis.values():
-    print("Parti {0}".format(p.nom))
-    p.plotSuffrages(partis)
-    para = p.parasite(partis)
-    bilans[p] = p.bilan(para)
-    p.candidatsParasites(candidats)
-    p.communes(communes)
-    p.communes(communes,True)  # pires
-    p.communes(communes,False,True) # absolu
-    p.communes(communes,True,True)  # pires, absolu
-    Vaud.candidats(candidats,parti=p.nom)
-    Vaud.candidats(candidats,parti=p.nom,avecBase=True)
+print("Total des suffrages {0:.0f} au lieu de {1:.0f}. Différence {2}.".format(somme,total_des_suffrages,somme-total_des_suffrages))
 
 analyseBilans(bilans)
-
 
 # graphiques pour les communes
 chi2 = {}
@@ -1292,11 +1437,12 @@ for c in communes.values():
     chi2[c] = c.chi2(Vaud)
     print("\\Commune[{0}]{{{1}}} % {2}".format(c.nom,goodName(c.nom),len(chi2)))
     c.partis(listes,normalise=False)
-    c.partis(partis,normalise=False)
+    c.partis(partis,normalise=True)
     c.candidats(candidats)
     c.candidats(candidats,avecBase=True)
     c.candidats(candidats,parti="PVL")
     c.candidats(candidats,parti="PVL",avecBase=True)
+    c.candidats(candidats,parti="Centres")
     # if len(chi2)==25: analyseChi2(chi2)
 analyseChi2(chi2)
 

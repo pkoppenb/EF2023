@@ -1,0 +1,43 @@
+\def\ww{0.49}
+\def\LL{Vaux-sur-Morges}
+\Frame<\shownframes>[\shortpaperID]{Exemple de graphes pour Communes}{
+\ExperimentSlide% CMS, Atlas... \ExpSlide{\IGH[\DefaultExpSize]{\thedir/Logo.png}}%
+%\reinsertTitle% if covered by Logo
+\ontop{\theCitation}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\LL{Vaux-sur-Morges}
+\Body<1>{
+\IGH[\ww]{../pdf/Commune-\LL-Partis.pdf}%
+\IGH[\ww]{../pdf/Commune-\LL-Listes.pdf} %
+\IGH[\ww]{../pdf/Commune-\LL-Candidats-avecBase.pdf}%
+\IGH[\ww]{../pdf/Commune-\LL-PVL-Candidats-avecBase.pdf}%
+}
+\def\LL{Lausanne}
+\Body<2>{
+\IGH[\ww]{../pdf/Commune-\LL-Partis.pdf}%
+\IGH[\ww]{../pdf/Commune-\LL-Listes.pdf} %
+\IGH[\ww]{../pdf/Commune-\LL-Candidats-avecBase.pdf}%
+\IGH[\ww]{../pdf/Commune-\LL-PVL-Candidats-avecBase.pdf}%
+}
+\def\LL{Etagnieres}
+\topright<3>{\smallpage{0.25}{Etagnieres est la commune qui vote le plus comme le Canton.}}
+\ontheright<3>[0.4]{\IG[0.25]{../pdf/Communes-Typiques.pdf}}
+\Body<3>{
+\IGH[\ww]{../pdf/Commune-\LL-Partis.pdf}%
+\IGH[\ww]{../pdf/Commune-\LL-Listes.pdf} %
+\IGH[\ww]{../pdf/Commune-\LL-Candidats-avecBase.pdf}%
+\IGH[\ww]{../pdf/Commune-\LL-PVL-Candidats-avecBase.pdf}%
+}
+\def\LL{Echallens}
+\topright<4->{\smallpage{0.25}{Echallens est la $5^\text{ème}$ commune qui vote le plus comme le Canton.}}
+\ontheright<3-5>[0.4]{\IG[0.25]{../pdf/Communes-Typiques.pdf}}
+\Body<4->{
+\IGH[\ww]{../pdf/Commune-\LL-Partis.pdf}%
+\IGH<4>[\ww]{../pdf/Commune-\LL-Listes.pdf}%
+\IGH<5>[\ww]{../pdf/Commune-Canton_de_Vaud-Partis.pdf}%
+\\
+\IGH[\ww]{../pdf/Commune-\LL-Candidats-avecBase.pdf}%
+\IGH[\ww]{../pdf/Commune-\LL-PVL-Candidats-avecBase.pdf}%
+}
+%  Etagnières (chi2=8.7) et la moins Villars-Epeney (chi2=2083.3)
+} % end frame

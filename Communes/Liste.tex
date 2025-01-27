@@ -1,0 +1,29 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifdefined\LISTE
+\else
+\newcommand<>{\LISTE}[1]{
+\Body#2{
+\IGH[\ww]{../pdf/Liste-Suffrages-#1.pdf}%%
+\IGH[\ww]{../pdf/Liste-Bilan-#1.pdf}\\%
+\IGH[\ww]{../pdf/Liste-Suffrages-Par-Candidat-#1.pdf} %
+\IGH[\ww]{../pdf/Liste-DoublagesBiffages-#1.pdf}%
+}
+\topright#2{\smallpage[r]{0.3}{
+\IGH[\www]{../pdf/Liste-Parasite-#1.pdf} %
+\IGH[\www]{../pdf/Liste-CandidatsParasite-#1.pdf} %
+\IGH[\www]{../pdf/Liste-#1-Meilleures-Communes.pdf} %
+\IGH[\www]{../pdf/Liste-#1-Pires-Communes.pdf} %
+}}
+}
+\fi
+\def\ww{0.5}
+\def\www{0.25}
+\Frame<\shownframes>[\shortpaperID]{Exemple de graphes pour Listes}{
+\ExperimentSlide% CMS, Atlas... \ExpSlide{\IGH[\DefaultExpSize]{\thedir/Logo.png}}%
+%\reinsertTitle% if covered by Logo
+\ontop{\theCitation}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\LISTE<1>{VERT_LIBERAUX}
+\LISTE<2>{ENGAGES_POUR_DEMAIN}
+\LISTE<3>{JEUNES_VERT_LIBERAUX}
+} % end frame

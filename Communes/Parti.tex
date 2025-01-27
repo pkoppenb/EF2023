@@ -1,0 +1,20 @@
+\def\ww{0.24}
+\def\www{0.4}
+\def\LL{PVL}
+\Frame<\shownframes>[\shortpaperID]{Exemple de graphes pour Partis}{
+\ExperimentSlide% CMS, Atlas... \ExpSlide{\IGH[\DefaultExpSize]{\thedir/Logo.png}}%
+%\reinsertTitle% if covered by Logo
+\ontop{\theCitation}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\onthetop[-0.05]{\IG[\www]{../pdf/Parti-Suffrages-Camembert-\LL.pdf}}%
+\onthetop[0.25]{\IG[\www]{../pdf/Parti-Suffrages-\LL.pdf}}%
+\topright{\IG[\www]{../pdf/Parti-Bilan-\LL.pdf}}%
+%\IG[\ww]{../pdf/Parti-SuffragesParCandidat-\LL.pdf}
+%\IG[\ww]{../pdf/Parti-Biffages-\LL.pdf}
+\ontheleft[0.6]{\fullpage{
+\IG[\ww]{../pdf/Parti-Parasite-\LL.pdf}
+\IG[\ww]{../pdf/Parti-CandidatsParasite-\LL.pdf}
+\IG[\ww]{../pdf/Parti-\LL-Meilleures-Communes.pdf}
+\IG[\ww]{../pdf/Parti-\LL-Pires-Communes.pdf}
+}}
+} % end frame
