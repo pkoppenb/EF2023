@@ -3,7 +3,7 @@
 % packages
 \usepackage{BeamerUsualSuspects}
 \SetColor{PVL}
-\def\zoom{1}
+\def\zoom{0}
 \def\showOverlayNumber{0}
 \usetheme{Amsterdam}
 \def\conference{1}                                                      
@@ -19,13 +19,14 @@
 \newcommand{\Commune}[3][NONE]{
   \IF{#1}{NONE}{\def\LL{#2}}{\def\LL{#1}}
   \def\ww{0.49}
-\Frame<\shownframes>[\shortpaperID-#2]{Partis du Centre: \LL}{
+\Frame[\shortpaperID-#2]{Partis du Centre: \LL}{
 \ontop{\theCitation}%
-\Body<1>{
+\Body{
 \IG[\ww]{../pdf/Commune-#2-Partis.pdf}%
 \IG[\ww]{../pdf/Commune-#2-Centres-Candidats.pdf}%
 }
 \ontheright[0.7]{\SP{#3}}
+\bottomright{\tiny\hyperlink{Beamer-Lausanne}{\nolinkurl{[retour]}}}
 }
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -50,7 +51,15 @@
 %
 % Nous au-dessus du quorum, pas eux.
 %
-\GoodBad
+\def\stamp{
+  \Resultats{PVL\,$>5\%$\\ \red Centre\,$<5\%$}%
+  \anywhere<2->[c]{0.35}{0.25}{\NewBox{0.25}{\black On passe le quorum, pas le Centre}}
+  \anywhere<2->[c]{0.35}{0.55}{\NewBox[redbox]{0.25}{\warningsign\ National $\neq$ Communal}}
+  \anywhere<3->[c]{0.9}{0.25}{\NewBox[midbox]{0.25}{\black Qui sont les candidats populaires?}}
+  \anywhere<3->[c]{0.85}{0.55}{\NewBox[redbox]{0.3}{\warningsign\  Ce ne sont que rarement des locaux}}
+  \anywhere<3->[c]{0.7}{0.9}{\NewBox[redbox]{0.6}{\warningsign\ Il y a plus de listes modifiées PVL que Centre \Arrow Ça favorise les nôtres.}}
+  \anywhere<4>[c]{0.5}{0.5}{\rotatebox{20}{\NewBox[textbox]{0.5}{Prenez ces chiffres avec précaution. C'est votre expertise locale qui compte.}}}
+}
 \Commune{Lausanne}{A Lausanne on est proportionnellement plus forts que le Centre. Leurs candidats font de mauvais scores individuels.\skipx
   La barre verticales indique le quorum à 5\%.
   \skipx
@@ -58,14 +67,16 @@
 \GoodBad
 \Commune{Pully}{Similaire à Lausanne.
   \skipx
-  Lutry, Epalinges, Le Mont sont similaires
+  \hyperlink{BACKUP-Beamer-Lutry}{[Lutry]},
+  \hyperlink{BACKUP-Beamer-Epalinges}{[Epalinges]}, et
+  \hyperlink{BACKUP-Beamer-Le_Mont-sur-Lausanne}{[Le Mont]} sont similaires
 } %  	5590, # 	Lavaux-Oron 	18 984 	5,85 	3245
 %\GoodBad
 %\Commune{Lutry}{} %  	5606, # 	Lavaux-Oron 	10 718 	8,45 	1268
 \GoodBad
 \Commune{Belmont-sur-Lausanne}{On m'a demandé Belmont. Le Centre est très près du quorum.} %
-\GoodBad
-\Commune{Rolle}{Rolle est dans une situation similaire.} %  	5861, # 	Nyon 	6 322 	2,74 	2307
+%\GoodBad
+%\Commune{Rolle}{Rolle est dans une situation similaire.} %  	5861, # 	Nyon 	6 322 	2,74 	2307
 \GoodBad
 \Commune{Bussigny}{Exemple de l'Ouest Lausannois} %  	5624, # 	Ouest lausannois 	10 365 	4,82 	2150
 %\GoodBad
@@ -77,7 +88,8 @@
 \GoodBad
 %\Commune{Montreux}{A Montreux ce sont les libres qui sortent du lot.} %  	5886, # 	Riviera-Pays-d'Enhaut 	26 230 	33,37 	786
 \GoodBad
-\Commune{Vevey}{Les candidats libres sont populaires. La liste ne l'est pas.\skipx Montreux est similaire. } %  	5890, # 	Riviera-Pays-d'Enhaut 	19 738 	2,38 	8293
+\Commune{Montreux}{Les candidats libres sont populaires. La liste ne l'est pas.\skipx
+  \hyperlink{BACKUP-Beamer-Vevey}{[Vevey]} est similaire. } %  	5890, # 	Riviera-Pays-d'Enhaut 	19 738 	2,38 	8293
 
 \GoodBad
 \Commune{Bex}{Exemple du district d'Aigle} %  	5402, # 	Aigle 	8 167 	96,56 	85
@@ -87,10 +99,11 @@
 %
 \InputFrame[1]{.}{PVLCentre}
 \GoodGood
-\Commune{Nyon}{On fait près de 10\% à Nyon, et ce sont les locaux (non candidats aux communales) qui tirent la liste.
-  \\  Plus grosse commune où PVL et Centre passent le quorum.} %  	5724, # 	Nyon 	22 465 	6,79 	330
-\GoodGood
 \Commune{Echallens}{Exemple du Gros-de-Vaud}
+\GoodGood
+\Commune{Nyon}{On fait près de 10\% à Nyon, et ce sont les locaux (non candidats aux communales) qui tirent la liste.
+  \\ ~ \\
+  Plus grosse commune où PVL et Centre passent le quorum.} %  	5724, # 	Nyon 	22 465 	6,79 	330
 %
 % Les deux en dessous
 %
@@ -98,7 +111,8 @@
 \BadBad
 \Commune{Yverdon-les-Bains}{A Yverdon le Centre est fort (mais moins que nous) et leurs candidats populaires.\\ %\skipx 
   Plus grosse commune où ni PVL ni Centre ne passent le quorum.\skipx
-  Renens et Chavannes-près-Renens sont similaires.
+  \hyperlink{BACKUP-Beamer-Renens_VD_}{[Renens]} et
+  \hyperlink{BACKUP-Beamer-Chavannes-pres-Renens}{[Chavannes-près-Renens]} sont similaires.
 } %  	5938, # 	Jura-Nord vaudois 	29 827 	11,28 	2644
 %\BadBad
 %\Commune[Renens]{Renens_VD_}{Le PVL et le Centre sont également faibles.} %  	5591, # 	Ouest lausannois 	21 086 	2,96 	7124
@@ -107,12 +121,15 @@
 %\Commune[La Tour-de-Peilz]{La_Tour-de-Peilz}{} %  	5889, # 	Riviera-Pays-d'Enhaut 	12 382 	3,24 	3822
 %\BadBad
 %\Commune[Chavannes-près-Renens]{Chavannes-pres-Renens}{} %  	5627, # 	Ouest lausannois 	8 737 	1,65 	5295
-\BadBad
-\Commune{Prilly}{Le Centre est plus fort.} %  	5589, # 	Ouest lausannois 	12 294 	2,19 	5614
+%\BadBad
+%\Commune{Prilly}{Le Centre est plus fort.} %  	5589, # 	Ouest lausannois 	12 294 	2,19 	5614
 %\BadBad
 %\Commune{Aigle}{Attention on quorum. Et Michael ne tirera pas la liste.} %  	5401 , #	Aigle 	10 913 	16,41 	665
 \BadBad
-\Commune{Payerne}{Attention au quorum. On est derrière le Centre!} %  	5822, # 	Broye-Vully 	10 342 	24,19 	428
+\Commune{Payerne}{On est derrière le Centre!
+  \skipx
+  \hyperlink{BACKUP-Beamer-Prilly}{[Prilly]} est similaire.
+} %  	5822, # 	Broye-Vully 	10 342 	24,19 	428
 
 %\Commune[Blonay Saint-Légier]{Blonay_-_Saint-Legier}{} % 	5892, # 	Riviera-Pays-d'Enhaut 	12 117 	31,24 	388
 %\Commune{Crissier}{} %  	5583, # 	Ouest lausannois 	9 181 	5,51 	1666
@@ -126,7 +143,9 @@
 \Commune{Valbroye}{ (Granges-Marnand) Plus grosse commune où le Centre passe le quorum mais pas le PVL. 3300 habitants.} %  	5822, # 	Broye-Vully 	10 342 	24,19 	428
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\def\aVeil{\SlideVeil<2>[0.5]}
+\InputFrame{.}{TOC}
+%%%%%%%%%%%%%%%%%%%%%%%%
+\def\aVeil{\SlideVeil<2>[0.7]}
 \Conclusion[LeCentre.png]{\black
   \Enumerate<2>{\black Il y a de nombreuses villes où nous passons le quorum, mais pas le Centre
     \Itemize[ \Arrow ]{\black La question d'une liste commune se pose (surtout pour le Centre et les Libres).
@@ -139,17 +158,6 @@
   Le code, un document de 290 pages, 3000 graphiques, et ces transparents sont à \showhref{https://github.com/pkoppenb/EF2023/}}.
 }
 \Backup
-\InputFrame{.}{TOC}
 \input{Toutes}
 %%%%%%%%%%%%%%%%%%%%%%%
-\putPKFrameLL
-\InputFrame{.}{Modifies}
-\InputFrame[1-4]{.}{Analyse}
-\InputFrame{.}{Voc}
-\InputFrame[5-]{.}{Analyse} % Doublages
-\InputFrame{.}{Matrice}
-%\InputFrame[2]{.}{Celine}
-\InputFrame{.}{Liste}
-\InputFrame{.}{Parti}
-\InputFrame{.}{Commune}
 \end{document}
