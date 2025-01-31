@@ -1,6 +1,6 @@
 % ls -1 ../pdf/Commune-*-Partis.pdf | awk -F"Commune-" '{print $2}' | awk -F"-Partis" '{print "\\hyperlink{BACKUP-Beamer-"$1"}{\\nolinkurl{"$1"}}"}'
 \putPKFrameD
-\Frame<\shownframes>{Toutes les communes}{
+\Frame<\shownframes>[TOC]{Toutes les communes}{
   \Body[2]{\textcommon
 \hyperlink{BACKUP-Beamer-Aclens}{\nolinkurl{Aclens}}
 \hyperlink{BACKUP-Beamer-Agiez}{\nolinkurl{Agiez}}

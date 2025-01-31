@@ -26,7 +26,7 @@
 \IG[\ww]{../pdf/Commune-#2-Centres-Candidats.pdf}%
 }
 \ontheright[0.7]{\SP{#3}}
-\bottomright{\tiny\hyperlink{Beamer-Lausanne}{\nolinkurl{[retour]}}}
+\IF{\inBackup}{1}{\bottomright{\tiny\hyperlink{BACKUP-TOC}{\nolinkurl{[retour]}}}}{}
 }
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -145,8 +145,6 @@
 \Commune{Valbroye}{ (Granges-Marnand) Plus grosse commune où le Centre passe le quorum mais pas le PVL. 3300 habitants.} %  	5822, # 	Broye-Vully 	10 342 	24,19 	428
 
 %%%%%%%%%%%%%%%%%%%%%%%%
-\InputFrame{.}{TOC}
-%%%%%%%%%%%%%%%%%%%%%%%%
 \def\aVeil{\SlideVeil<2>[0.7]}
 \Conclusion[LeCentre.png]{\black
   \Enumerate<2>{\black Il y a de nombreuses villes où nous passons le quorum, mais pas le Centre
@@ -160,6 +158,8 @@
   Le code, un document de 290 pages, 3000 graphiques, et ces transparents sont à \showhref{https://github.com/pkoppenb/EF2023/}}.
 }
 \Backup
+%%%%%%%%%%%%%%%%%%%%%%%%
+\InputFrame{.}{TOC}
 \input{Toutes}
 %%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
