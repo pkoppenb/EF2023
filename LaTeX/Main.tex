@@ -76,7 +76,7 @@
 \begin{figure}[!h]\centering
 \includegraphics[width=\thewidth]{../pdf/Candidat-Suffrages-#1.pdf}
 \includegraphics[width=\thewidth]{../pdf/Candidat-#1-Communes.pdf}
-%\includegraphics[width=\thewidth]{../pdf/Candidat-#1-Communes-relatif-a-la-liste.pdf}
+%\includegraphics[width=\thewidth]{../pdf/Candidat-#1-Meilleures-Communes-relatif-a-la-liste.pdf}
 \includegraphics[width=\thewidth]{../pdf/Candidat-Amis-#1.pdf}
 \includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-#1.pdf}
 %\includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-Unique-#1.pdf}
@@ -107,7 +107,7 @@
 \IF{#2}{Centre}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-Centre.pdf}}
 \IF{#2}{VERT-E-S}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-VERT-E-S.pdf}}
 \IF{#2}{PEV}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PEV.pdf}}
-\IF{#2}{PST_Sol_}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PST_Sol_.pdf}}
+\IF{#2}{PST_Sol}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PST_Sol.pdf}}
 \IF{#2}{UDF}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-UDF.pdf}}
 \caption[Corrélations des résulats dans toutes les communes entre le parti \leNom\ et les autres partis.]{Corrélations des résulats dans toutes les communes entre le parti \leNom\ et les autres partis. Explications en page~\pageref{Expl:Corr}.}\label{Fig:Corr:#2}
 \end{figure}
@@ -444,8 +444,8 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 \PartiNonOFS{Pirates}
 \Liste{PPVD}
 %%%
-\Parti[POP/EàG]{PST_Sol_}
-\Correlation[POP/EàG]{PST_Sol_}
+\Parti[POP/EàG]{PST_Sol}
+\Correlation[POP/EàG]{PST_Sol}
 \Liste{POP}
 \Liste[EàG]{EaG}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -505,8 +505,8 @@ a été validé à 11h45.
 \Commune[Ormont-Dessous]{Ormont-Dessous}
 \Commune[Ormont-Dessus]{Ormont-Dessus}
 \Commune[Rennaz]{Rennaz}
-\Commune[Roche (VD)]{Roche_VD_}
-\Commune[Villeneuve (VD)]{Villeneuve_VD_}
+\Commune[Roche (VD)]{Roche_VD}
+\Commune[Villeneuve (VD)]{Villeneuve_VD}
 \Commune[Yvorne]{Yvorne}
 %\clearpage
 \Commune[Aubonne]{Aubonne}
@@ -518,7 +518,7 @@ a été validé à 11h45.
 \Commune[Gimel]{Gimel}
 \Commune[Longirod]{Longirod}
 \Commune[Marchissy]{Marchissy}
-\Commune[Mollens (VD)]{Mollens_VD_}
+\Commune[Mollens (VD)]{Mollens_VD}
 \Commune[Saint-George]{Saint-George}
 \Commune[Saint-Livres]{Saint-Livres}
 \Commune[Saint-Oyens]{Saint-Oyens}
@@ -531,7 +531,7 @@ a été validé à 11h45.
 \Commune[Bettens]{Bettens}
 \Commune[Bournens]{Bournens}
 \Commune[Boussens]{Boussens}
-\Commune[La Chaux (Cossonay)]{La_Chaux_Cossonay_}
+\Commune[La Chaux (Cossonay)]{La_Chaux_Cossonay}
 \Commune[Chavannes-le-Veyron]{Chavannes-le-Veyron}
 \Commune[Chevilly]{Chevilly}
 \Commune[Cossonay]{Cossonay}
@@ -545,7 +545,7 @@ a été validé à 11h45.
 \Commune[L'Isle]{L_Isle}
 \Commune[Lussery-Villars]{Lussery-Villars}
 \Commune[Mauraz]{Mauraz}
-\Commune[Mex (VD)]{Mex_VD_}
+\Commune[Mex (VD)]{Mex_VD}
 \Commune[Moiry]{Moiry}
 \Commune[Mont-la-Ville]{Mont-la-Ville}
 \Commune[Montricher]{Montricher}
@@ -562,19 +562,19 @@ a été validé à 11h45.
 \Commune[Bercher]{Bercher}
 \Commune[Bottens]{Bottens}
 \Commune[Bretigny-sur-Morrens]{Bretigny-sur-Morrens}
-\Commune[Cugy (VD)]{Cugy_VD_}
+\Commune[Cugy (VD)]{Cugy_VD}
 \Commune[Echallens]{Echallens}
 \Commune[Essertines-sur-Yverdon]{Essertines-sur-Yverdon}
 \Commune[Etagnières]{Etagnieres}
 \Commune[Fey]{Fey}
 \Commune[Froideville]{Froideville}
-\Commune[Morrens (VD)]{Morrens_VD_}
+\Commune[Morrens (VD)]{Morrens_VD}
 \Commune[Oulens-sous-Echallens]{Oulens-sous-Echallens}
 \Commune[Pailly]{Pailly}
 \Commune[Penthéréaz]{Penthereaz}
 \Commune[Poliez-Pittet]{Poliez-Pittet}
 \Commune[Rueyres]{Rueyres}
-\Commune[Saint-Barthélemy (VD)]{Saint-Barthelemy_VD_}
+\Commune[Saint-Barthélemy (VD)]{Saint-Barthelemy_VD}
 \Commune[Villars-le-Terroir]{Villars-le-Terroir}
 \Commune[Vuarrens]{Vuarrens}
 \Commune[Montilliez]{Montilliez}
@@ -593,7 +593,7 @@ a été validé à 11h45.
 \Commune[Mauborget]{Mauborget}
 \Commune[Mutrux]{Mutrux}
 \Commune[Novalles]{Novalles}
-\Commune[Onnens (VD)]{Onnens_VD_}
+\Commune[Onnens (VD)]{Onnens_VD}
 \Commune[Provence]{Provence}
 \Commune[Sainte-Croix]{Sainte-Croix}
 \Commune[Tévenon]{Tevenon}
@@ -607,14 +607,14 @@ a été validé à 11h45.
 \Commune[Paudex]{Paudex}
 \Commune[Prilly]{Prilly}
 \Commune[Pully]{Pully}
-\Commune[Renens (VD)]{Renens_VD_}
+\Commune[Renens (VD)]{Renens_VD}
 \Commune[Romanel-sur-Lausanne]{Romanel-sur-Lausanne}
 \Commune[Chexbres]{Chexbres}
-\Commune[Forel (Lavaux)]{Forel_Lavaux_}
+\Commune[Forel (Lavaux)]{Forel_Lavaux}
 \Commune[Lutry]{Lutry}
 \Commune[Puidoux]{Puidoux}
 \Commune[Rivaz]{Rivaz}
-\Commune[Saint-Saphorin (Lavaux)]{Saint-Saphorin_Lavaux_}
+\Commune[Saint-Saphorin (Lavaux)]{Saint-Saphorin_Lavaux}
 \Commune[Savigny]{Savigny}
 \clearpage
 \Commune[Bourg-en-Lavaux]{Bourg-en-Lavaux}
@@ -629,17 +629,17 @@ a été validé à 11h45.
 \Commune[Denges]{Denges}
 \Commune[Echandens]{Echandens}
 \Commune[Echichens]{Echichens}
-\Commune[Ecublens (VD)]{Ecublens_VD_}
+\Commune[Ecublens (VD)]{Ecublens_VD}
 \Commune[Etoy]{Etoy}
 \Commune[Lavigny]{Lavigny}
 \Commune[Lonay]{Lonay}
-\Commune[Lully (VD)]{Lully_VD_}
+\Commune[Lully (VD)]{Lully_VD}
 \Commune[Lussy-sur-Morges]{Lussy-sur-Morges}
 \Commune[Morges]{Morges}
 \Commune[Préverenges]{Preverenges}
 \Commune[Romanel-sur-Morges]{Romanel-sur-Morges}
 \Commune[Saint-Prex]{Saint-Prex}
-\Commune[Saint-Sulpice (VD)]{Saint-Sulpice_VD_}
+\Commune[Saint-Sulpice (VD)]{Saint-Sulpice_VD}
 \Commune[Tolochenaz]{Tolochenaz}
 \Commune[Vaux-sur-Morges]{Vaux-sur-Morges}
 \Commune[Villars-Sainte-Croix]{Villars-Sainte-Croix}
@@ -652,7 +652,7 @@ a été validé à 11h45.
 \Commune[Bussy-sur-Moudon]{Bussy-sur-Moudon}
 \Commune[Chavannes-sur-Moudon]{Chavannes-sur-Moudon}
 \Commune[Curtilles]{Curtilles}
-\Commune[Dompierre (VD)]{Dompierre_VD_}
+\Commune[Dompierre (VD)]{Dompierre_VD}
 \Commune[Hermenches]{Hermenches}
 \Commune[Lovatens]{Lovatens}
 \Commune[Lucens]{Lucens}
@@ -677,7 +677,7 @@ a été validé à 11h45.
 \Commune[Coinsins]{Coinsins}
 \Commune[Commugny]{Commugny}
 \Commune[Coppet]{Coppet}
-\Commune[Crans (VD)]{Crans_VD_}
+\Commune[Crans (VD)]{Crans_VD}
 \Commune[Crassier]{Crassier}
 \Commune[Duillier]{Duillier}
 \Commune[Eysins]{Eysins}
@@ -739,7 +739,7 @@ a été validé à 11h45.
 \Commune[Missy]{Missy}
 \Commune[Payerne]{Payerne}
 \Commune[Trey]{Trey}
-\Commune[Treytorrens (Payerne)]{Treytorrens_Payerne_}
+\Commune[Treytorrens (Payerne)]{Treytorrens_Payerne}
 \Commune[Villarzel]{Villarzel}
 \Commune[Valbroye]{Valbroye}
 \Commune[Château-d'Oex]{Chateau-d_Oex}
@@ -771,7 +771,7 @@ a été validé à 11h45.
 \Commune[La Tour-de-Peilz]{La_Tour-de-Peilz}
 \Commune[Vevey]{Vevey}
 \Commune[Veytaux]{Veytaux}
-\Commune[Blonay - Saint-Légier]{Blonay_-_Saint-Legier}
+\Commune[Blonay - Saint-Légier]{Blonay-Saint-Legier}
 \clearpage
 \Commune[Belmont-sur-Yverdon]{Belmont-sur-Yverdon}
 \Commune[Bioley-Magnoux]{Bioley-Magnoux}
@@ -784,7 +784,7 @@ a été validé à 11h45.
 \Commune[Cuarny]{Cuarny}
 \Commune[Démoret]{Demoret}
 \Commune[Donneloye]{Donneloye}
-\Commune[Ependes (VD)]{Ependes_VD_}
+\Commune[Ependes (VD)]{Ependes_VD}
 \Commune[Mathod]{Mathod}
 \Commune[Molondin]{Molondin}
 \Commune[Montagny-près-Yverdon]{Montagny-pres-Yverdon}

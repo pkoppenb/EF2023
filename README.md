@@ -19,6 +19,14 @@ Cela génère 1200 plots en png et autant en pdf, ainsi qu'un petit nombre de fi
 
 Ensuite, ça génère le rapport.
 
-# Changements
+## Fichiers
+`CHCN20231022.csv` : voix par commune pour chaque candidat et d'où les voix viennent. Attention ne liste pas les voix de listes.
+`sd-t-17_02-NRW2023-parteien-appendix.csv`: fichier OFS des voix de chaque parti pour chaque commune. Attention ne distingue pas les listes, et ne connait pas lis libres et les pirates.
+`LibresEtPirates.csv`: Voix des libres et pirates par arrondissement de vote, obtenus du site du canton
+`export-bulletins-PR-CHCN-20231022.csv`: Toutes les combinaisons de bulletins modifés. Permet de savoir qui aime qui. Mais ce distingue pas les communes.
+`2021_2026_Communes_vaudoises_et_arrondissements_Liste_des_communes_avec_districts.csv`: Liste des communes et arronsissements basée sur `2021_2026_Communes_vaudoises_et_districts_Liste_des_communes_avec_districts_2_.csv`.
 
-01/12: Ajout de graphiques des candidats par commune
+## Changements
+
+01/12/24: Ajout de graphiques des candidats par commune
+
