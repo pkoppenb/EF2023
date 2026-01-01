@@ -11,3 +11,4 @@
 *.snm
 log
 *~
+__pycache__
