@@ -1,4 +1,10 @@
 import csv
+import sys
+import copy
+import matplotlib.pyplot as plt
+import matplotlib
+import numpy as np
+import collections
 
 _file = 'export-bulletins-PR-CHCN-20231022.csv'
 _summary = 'ScrutinsParListe.csv'
@@ -36,7 +42,7 @@ _elus = ['Maillard Pierre-Yves',
          'Chappuis Isabelle',
          'Tuosto Brenda',
          'Gaillard Benoît']
-_suffragesExprimes = 3432235
+_suffragesExprimes = 3432901
 
 grandesCommunes = {  # de wikipedia https://de.wikipedia.org/wiki/Gemeinden_des_Kantons_Waadt
     'Lausanne' : 5586, # 	Lausanne 	141 418 	41,38 	3418
@@ -69,11 +75,6 @@ grandesCommunes = {  # de wikipedia https://de.wikipedia.org/wiki/Gemeinden_des_
     }
     
 
-import sys
-import copy
-import matplotlib.pyplot as plt
-import matplotlib
-import numpy as np
 plt.figure(figsize=(7,5))
 fig, ax = plt.subplots()
 
@@ -283,10 +284,12 @@ class Commune():
             for i, v in enumerate(vv):
                 plt.text(off+v, i - .25, str(int(v)), color='black', ha='left', fontsize=9) # horizontal alignment
         plt.xlabel('Suffrages des Candidats')
+        constit2 = "{0} de ".format(constit)
+        if "Canton" in self.nom: constit2 = ""
         if parti:
-            if "Centres"==parti: plt.title("{0}: candidats des {1}".format(self.nom,parti))
-            else: plt.title("{0}: candidats du {1}".format(self.nom,parti))
-        else: plt.title("{0}: candidats".format(self.nom))
+            if "Centres"==parti: plt.title("{2}{0}: candidats des {1}".format(self.nom,parti,constit2))
+            else: plt.title("{2}{0}: candidats du {1}".format(self.nom,parti,constit2))
+        else: plt.title("{1}{0}: candidats".format(self.nom,constit2))
         if len(vv)>0: plt.xlim([0.,1.15*vv[-1]])
         plt.yticks(y_pos, labels= [candidats[k].nom for k in kk] )
         plt.legend()
@@ -688,29 +691,39 @@ class Liste():
         return diff
         
 
-    def communes(self,communes,pires=False,absolu=False,grandes=False):
+    def communes(self,communes,pires=False,absolu=False,grandes=False,constit="Commune"):
         """
         Meilleures et pires communes de la liste
 
         Attention: je n'ai pas le détail des suffrages non-nominatifs par liste
+
+        Je ne suis pas sûr de ce que fait absolu
         """
+        # print("Communes pires: {0} absolu: {1} grandes: {2} constit: {3}".format(  pires,absolu,grandes,constit))
+        
         pourcents = {}
-        quoi = "Meilleures"
-        if pires: quoi = "Pires"
-        elif grandes : quoi = "Grandes"
+        if "Commune"==constit:
+            quoi = "Meilleures"
+            if pires: quoi = "Pires"
+            elif grandes : quoi = "Grandes"
+        else:
+            quoi = ""
+            
         if len(self.total_par_commune)<1: return # pas pour pirates et libres
         if grandes:
             for k in list(grandesCommunes.values())[::-1] :
                 pourcents[k] = 100.*self.total_par_commune[k]/communes[k].suffrages
                 # print(" Grandes {0} {1} : {2} ".format(k,communes[k],pourcents[k]))
-        elif not absolu:
-            for c in communes.keys(): pourcents[c] = 100.*self.total_par_commune[c]/communes[c].suffrages
-            pourcents = dict(sorted(pourcents.items(), key=lambda item: item[1], reverse=pires))
-            # print("{0} parti {1} total {2} pourcents {3}".format(self.nom,self.total_par_commune[5650],communes[5650].suffrages,pourcents[5650])) # Vaux sur Morges
+        elif quoi == "": 
+            for k in reversed(communes.keys()): pourcents[k] = 100.*self.total_par_commune[k]/communes[k].suffrages
         else:
-            pourcents = dict(sorted(self.total_par_commune.items(), key=lambda item: item[1], reverse=pires))
-        if not grandes:
+            pourcents = { k: 100.*self.total_par_commune[k]/communes[k].suffrages for k in communes.keys() }
+            # print("Pourcent is now {0}".format(pourcents))
+            pourcents = dict(sorted(pourcents.items(), key=lambda item: item[1], reverse=pires))
+            
+        if (not grandes) and (not ""==quoi):
             top25 = list(pourcents.keys())[-_max:]
+            # print("Top25 is now {0}".format(top25))
             pc25 = list(pourcents.values())[-_max:]
             noms = [communes[c].nom for c in top25]
         else:
@@ -724,16 +737,27 @@ class Liste():
         # print(pourcents,top25,pc25)
         y_pos = np.arange(len(top25))
         fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
+        # print("y_pos",len(y_pos),y_pos)
+        # print("pc25",len(pc25),pc25)
         plt.barh(y_pos,pc25,color=self.couleur)
-        if absolu:  plt.xlabel('Suffrages dans la commune')
-        else: plt.xlabel('Pourcentage dans la commune')
-        plt.title("{1}: {0} communes".format(quoi,self.nom))
+        if "Commune"==constit:
+            if absolu:  plt.xlabel('Suffrages dans la commune')
+            else: plt.xlabel('Pourcentage dans la commune')
+        elif "Arrondissement"==constit:
+            if absolu:  plt.xlabel("Suffrages dans l'arrondissement")
+            else: plt.xlabel("Pourcentage dans l'arrondissement")
+        else:
+            print("Inconnu {0}".format(constit))
+            sys.exit()
+        plt.title("{1}: {0} {2}s".format(quoi,self.nom,constit))
         plt.yticks(y_pos, labels=noms)
-        if grandes: plt.axvline(x = self.pourcentage, color = 'b')
+        if grandes or ""==quoi: plt.axvline(x = self.pourcentage, color = 'b')
+        if quoi=="": quoi2 = ""
+        else: quoi2 = quoi+"-"
         if absolu and not pires and not grandes:
             if communes[top25[-1]].nom=='Lausanne' and 1.5*pc25[-2]<pc25[-1]: plt.xlim(0,1.5*pc25[-2]) # couper Lausanne
-            deuxPlots("{0}-{1}-Suffrages-{2}-Communes".format(self.classe,goodName(self.nom),quoi))
-        else: deuxPlots("{0}-{1}-{2}-Communes".format(self.classe,goodName(self.nom),quoi))
+            deuxPlots("{0}-{1}-Suffrages-{2}{3}s".format(self.classe,goodName(self.nom),quoi2,constit))
+        else: deuxPlots("{0}-{1}-{2}{3}s".format(self.classe,goodName(self.nom),quoi2,constit))
         plt.clf()
         
         
@@ -848,6 +872,7 @@ class Candidat():
         self.biffe_pour_qui_unique = {}
         self.ajoutes_aussi = {}
         self.suffrages = 0
+        self.suffrages_total = 0
         self.classe = "Candidat"
 
     def analyse(self,bulletins):
@@ -908,6 +933,8 @@ class Candidat():
 #        print("Le candidat {0} a des suffrages de {1}".format(self.nom, self.suffrages_par_liste))
         self.doubles = sum(self.doubles_par_liste.values())
         self.liste.miseAjour(self)
+        self.suffrages_total = self.suffrages + self.liste.suffrages_liste_complete/_sieges
+        if "Weber" in self.nom: print(self.nom,self.suffrages,self.liste.suffrages_liste_complete)
 
     def biffage(self,candidats,listes,unique=True):
         """
@@ -1006,28 +1033,37 @@ class Candidat():
         isCommune = len(list(communes))>_max
         
         for k in self.suffrages_par_commune.keys():
+            # candidat
             if k in communes.keys():
-                if relatif:
-                    if (self.liste.total_par_commune[k]>0): cand[k] = _sieges*1.0*sum(list(self.suffrages_par_commune[k].values()))/self.liste.total_par_commune[k]
-                else:
-                    cand[k] = 100.*(_sieges*sum(list(self.suffrages_par_commune[k].values()))+self.liste.compacts_par_commune[k])/communes[k].suffrages
-                # if k==5726: print("{0} suffrages {1}+{4} / {2} = {3}".format(self.nom, sum(list(self.suffrages_par_commune[k].values())),communes[k].suffrages,cand[k],self.liste.compacts_par_commune[k]))
-                    
-        cand = dict(sorted(cand.items(), key=lambda item: item[1], reverse=False))
-        if not relatif: # parti dans le même ordre
-            for k in cand.keys():
+                # somme des voix individuelles et ed celles de la liste/19. Ensuit je multiplie par 19 et divise par le grand total.
+                cand[k] = 100.*_sieges*(sum(list(self.suffrages_par_commune[k].values()))+(self.liste.compacts_par_commune[k]/_sieges))/communes[k].suffrages
                 parti[k] = 100.*self.liste.total_par_commune[k]/communes[k].suffrages
-
+                if "Weber" in self.nom and "Nyon"==k:
+                    print("Nyon 19 * {0} / {1} = {2}".format((sum(list(self.suffrages_par_commune[k].values()))+(self.liste.compacts_par_commune[k]/_sieges)),communes[k].suffrages,cand[k]))
+                    print("Nyon {0} / {1} = {2}".format(self.liste.total_par_commune[k],communes[k].suffrages,parti[k]))  # ceci est approximatif. Le total oublie les voix pour la liste
+                if relatif:
+                    if parti[k]>0: cand[k] = cand[k]/parti[k]
+                    else: cand[k] = 0
+        # sort
+        cand = dict(sorted(cand.items(), key=lambda item: item[1], reverse=False))
         tt = list(cand.keys())[-_max:]
         top25 = [ communes[c].nom for c in tt ]
         pc25 = list(cand.values())[-_max:]
-        pa25 = list(parti.values())[-_max:]
+        pa25 = [ parti[k] for k in tt ]
+        # ajoute le canton
         top25.append("Canton de Vaud")
+        if relatif:
+            pc25.append(_sieges*self.suffrages_total/self.liste.suffrages)
+            if "Weber" in self.nom: print("Canton 19 * {0} / {1} = {2}".format(self.suffrages_total,self.liste.suffrages,_sieges*self.suffrages_total/self.liste.suffrages)) 
+        else:
+            pc25.append(_sieges*100.*self.suffrages_total/_suffragesExprimes)
+            pa25.append(100.*self.liste.suffrages/_suffragesExprimes)
+
+        # graphe
         fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
         y_pos = np.arange(len(top25))
         plt.yticks(y_pos, labels=top25)
         if relatif:
-            pc25.append(1.0*_sieges*self.suffrages/self.liste.suffrages)
             plt.barh(y_pos,pc25,color=self.liste.parti.couleur)
             plt.xlabel('Suffrages relatif à la liste')
             plt.title("{0}: relatif à la liste".format(self.nom))
@@ -1037,9 +1073,8 @@ class Candidat():
                 deuxPlots("Candidat-{0}-Arrondissements-relatif-a-la-liste".format(goodName(self.nom)))
                 
         else:
-            # 
-            pc25.append(_sieges*100.*self.suffrages/_suffragesExprimes)
-            pa25.append(100.*self.liste.suffrages/_suffragesExprimes)
+            #
+            # if "Weber" in self.nom: print(self.nom,self.suffrages_total,self.liste.suffrages,_suffragesExprimes)
             # print("{0} : {1} suffrages -> {2:.2f}%".format(self.liste.nom,self.liste.suffrages,100.*self.liste.suffrages/_suffragesExprimes))
             width = 0.4
             plt.barh(y_pos+width/2,pc25,width,color='Black',label=self.nom)
@@ -1244,7 +1279,7 @@ def lisArrondissements(communes):
 
     for d in arrondissements.values(): print("Arrondissement {0} suffrages {1}, partis {2}".format(d.numero,d.suffrages,d.suffrages_par_parti))
 
-    return arrondissements
+    return collections.OrderedDict(sorted(arrondissements.items())) 
         
 #############################################################################
 def fixArrondissements(arrondissements,Vaud):
@@ -1280,26 +1315,30 @@ def fixArrondissements(arrondissements,Vaud):
         # print("{0} a maintenant {1} suffrages pour les Libres, {2} pour les Pirates et {3} pour les autres".format("Vaud",Vaud.suffrages_par_parti["Libres"],Vaud.suffrages_par_parti["Pirates"],Vaud.suffrages_par_parti["Autres"]))
 
 #############################################################################
-def ajouteArrondissements(partis,arrondissements,communes,candidats):
+def ajouteArrondissements(listes,partis,arrondissements,communes,candidats):
     """
     Ajoute les résulats par arrondissement aux partis
     """
     for n,c in communes.items():
         a = c.arrondissement
         print("Commune {0} {1} arrondissement {2}".format(n,c.nom,c.arrondissement))
-        for p in partis.values():
-#            print(p.nom,p.autres_suffrages_par_commune)
-            if a in p.compacts_par_commune.keys():
-                p.compacts_par_commune[a] += p.compacts_par_commune[n] 
-                for k in p.autres_suffrages_par_commune[n].keys():
-                    if k in p.autres_suffrages_par_commune[a].keys(): p.autres_suffrages_par_commune[a][k] += p.autres_suffrages_par_commune[n][k]
-                    else: p.autres_suffrages_par_commune[a][k] = p.autres_suffrages_par_commune[n][k]
-                p.total_par_commune[a] += p.total_par_commune[n]
-            else:
-                p.compacts_par_commune[a] = p.compacts_par_commune[n] 
-                p.autres_suffrages_par_commune[a] = {}
-                for k in p.autres_suffrages_par_commune[n].keys(): p.autres_suffrages_par_commune[a][k] = p.autres_suffrages_par_commune[n][k]
-                p.total_par_commune[a] = p.total_par_commune[n]
+        for LouP in [ listes, partis ]:
+            for p in LouP.values():
+                #            print(p.nom,p.autres_suffrages_par_commune)
+                if len(p.total_par_commune.keys())==0: continue  # pirates et Libres
+                if a in p.total_par_commune.keys():
+                    p.total_par_commune[a] += p.total_par_commune[n]
+                    if "Liste"==p.classe:
+                        p.compacts_par_commune[a] += p.compacts_par_commune[n] 
+                        for k in p.autres_suffrages_par_commune[n].keys():
+                            if k in p.autres_suffrages_par_commune[a].keys(): p.autres_suffrages_par_commune[a][k] += p.autres_suffrages_par_commune[n][k]
+                            else: p.autres_suffrages_par_commune[a][k] = p.autres_suffrages_par_commune[n][k]
+                else:
+                    p.total_par_commune[a] = p.total_par_commune[n]
+                    if "Liste"==p.classe:
+                        p.compacts_par_commune[a] = p.compacts_par_commune[n] 
+                        p.autres_suffrages_par_commune[a] = {}
+                        for k in p.autres_suffrages_par_commune[n].keys(): p.autres_suffrages_par_commune[a][k] = p.autres_suffrages_par_commune[n][k]
         # Maintenant les candidats
         for cd in candidats.values():
             if a in cd.suffrages_par_commune.keys():

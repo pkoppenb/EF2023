@@ -44,8 +44,6 @@
 \includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-Camembert-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-Bilan-#2.pdf}
-%\includegraphics[width=\thewidth]{../pdf/Parti-SuffragesParCandidat-#2.pdf}
-%\includegraphics[width=\thewidth]{../pdf/Parti-Biffages-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Commune-Canton_de_Vaud-#2-Candidats-avecBase.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-Parasite-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-CandidatsParasite-#2.pdf}
@@ -79,7 +77,8 @@
 %\includegraphics[width=\thewidth]{../pdf/Candidat-#1-Meilleures-Communes-relatif-a-la-liste.pdf}
 \includegraphics[width=\thewidth]{../pdf/Candidat-Amis-#1.pdf}
 \includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-#1.pdf}
-%\includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-Unique-#1.pdf}
+\includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-Unique-#1.pdf}
+\includegraphics[width=\thewidth]{../pdf/Candidat-#1-Arrondissements.pdf}
 \caption[Graphiques pour #2]{Graphiques pour #2. Explications en page~\pageref{Expl:Candidat}.}\label{Fig:Cand:#1}
 \end{figure}
 %\clearpage
@@ -237,7 +236,7 @@ Siège & Parti & nb. & Candidat  & remplacé par\\
 2 & PLR & 1& Jacqueline de Quattro  \\
 3 & Verts & 1& Sophie Michaud Gigon  \\
 4 & UDC &1 & Jacques Nicolet  \\
-5 & PS & 2&  Roger Nordmann \\
+5 & PS & 2&  Roger Nordmann & Benoît Gaillard\\
 6 & PLR & 2& Pascal Broulis & Daniel Ruch \\
 7 & PS & 3& Samuel Bendahan  \\
 8 & UDC & 2&  Michaël Buffat \\
@@ -328,14 +327,15 @@ Le canton est listé en haut en comparaison. Les barres noires sont celles du can
 \item[Suffrages par liste:] Nombre de suffrages obtenues sur les différentes listes modifiées. La liste complète (3965 suffrages pour la liste 1) est en bas de graphe. Notez l'échelle logarithmique.
 \item[Candidats ajoutés en même temps que le candidat:] Je regarde les bulletins modifiées où le candidat est ajouté, c'est à dire (i) les bulletins sane dénomaination, (ii) les listes d'autres partis, ou alors (iii) la liste du candidat s'il y est doublé. Ensuite, je compte les suffrages additionnels (selon la même définition) obtenus par d'autres candidats sur ces bulletins. C'est un peu le classement des candidats les plus similaires.
 \item[Candidats ajoutés quand le candidat est biffé:] Ici, inversement, je regarde les bulletins dont le candidat est biffé. Qui en a profité?\footnote{On ne sait évidemment pas qui en a profité exactement. Si Céline Weber et François Pointet sont tous deux biffés pour mettre Broulis et Maillard à la place, je compte Broulis et Maillard dans le graphique de Céline et aussi dans le graphique de François.} La minuscule barre noire indique qui profite lorsque le candidat est le seul biffé de la liste. C'est tellement rare que ça se voit à peine.%\footnote{On voit les stigmates des choix du candidat pour le Conseil des États au PS et au PLR. Regardez les graphes de Maillard (Fig.~\ref{Fig:Cand:Maillard_Pierre-Yves}) et Nordmann (Fig.~\ref{Fig:Cand:Nordmann_Roger}), et Broulis (Fig.~\ref{Fig:Cand:Broulis_Pasdcal}) et de Quattro (Fig.~\ref{Fig:Cand:de_Quattro_Jacqueline}).}
-%\item[Candidats ajoutés quand le candidat est le seul biffé:] Il y a des rares bulletins où le candidat considéré est biffé et lui seul. Qui alors en profite? C'est anecdotique, et c'est exactement le message de ce graphique. S'il y avait des campagnes de ``biffez X pour doubler Y'' ça se verrait ici.
+\item[Candidats ajoutés quand le candidat est le seul biffé:] Il y a des rares bulletins où le candidat considéré est biffé et lui seul. Qui alors en profite? C'est anecdotique, et c'est exactement le message de ce graphique. S'il y avait des campagnes de ``biffez X pour doubler Y'' ça se verrait ici.
+\item[Arrondissements:] Résultats par arrondissement électoral ainsi que défini pour le Grand Conseil.
 \end{description}
 Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 
-\Candidat{Weber_Celine}{Celine Weber}
+\Candidat{Weber_Celine}{Céline Weber}
 \Candidat{Pointet_Francois}{François Pointet}
 \Candidat{Schaller_Graziella}{Graziella Schaller}
-\Candidat{Mieville_Laurent}{Laurent Mieville}
+\Candidat{Mieville_Laurent}{Laurent Miéville}
 \Candidat{Morandi-Bettex_Laetitia}{L{\ae}titia Morandi-Bettex}
 \Candidat{Vionnet_Blaise}{Blaise Vionnet}
 \Candidat{Cavalli_Virginie}{Virginie Cavalli}
@@ -368,7 +368,7 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 \Candidat{Bourgeois_Olivier}{Olivier Bourgeois}
 \Candidat{Quaglia_Brigitte}{Brigitte Quaglia}
 \Candidat{Reymond_Pierre-Antoine}{Pierre-Antoine Reymond}
-\Candidat{Plagellat_Cecile}{Cecile Plagellat}
+\Candidat{Plagellat_Cecile}{Cécile Plagellat}
 \Candidat{Roch_Maxime}{Maxime Roch}
 \Candidat{Tinguely_Carine}{Carine Tinguely}
 \Candidat{Jan_Dominique-Alain}{Dominique-Alain Jan}
@@ -387,7 +387,7 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 \Candidat{Mader_Michael}{Michael Mäder}
 \Candidat{Wasilewski-Rasca_Laureline}{Laureline Wasilewski-Rasca}
 \Candidat{Bonjour_Thomas}{Thomas Bonjour}
-\Candidat{Dind_Celine}{Celine Dind}
+\Candidat{Dind_Celine}{Céline Dind}
 \Candidat{Jotti_Hadrien}{Hadrien Jotti}
 \Candidat{Kaufmann_Leila}{Leïla Kaufmann}
 \Candidat{Milliet_Alexandre}{Alexandre Milliet}
@@ -397,6 +397,11 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 \Candidat{Vidoz_Mattia}{Mattia Vidoz}
 \Candidat{Lechot_Julien}{Julien Lechot}
 \clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Arrondissements}\label{Arrondissements}
+Afin de planifier les cantonales de 2027, les résultats sont présentés
+par arrondissement électroral pour le Grand Conseil.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -451,30 +456,31 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 \section{Résultats des élus}\label{AutresElus}
-\Candidat{Maillard_Pierre-Yves}{Maillard Pierre-Yves} % PSV
-\Candidat{Nordmann_Roger}{Nordmann Roger} % PSV
-\Candidat{Bendahan_Samuel}{Bendahan Samuel} % PSV
-\Candidat{Crottaz_Brigitte}{Crottaz Brigitte} % PSV
-\Candidat{Tschopp_Jean}{Tschopp Jean} % PSV
-\Candidat{Jaccoud_Jessica}{Jaccoud Jessica} % PSV
-\Candidat{Tuosto_Brenda}{Tuosto Brenda} % PSV
+\Candidat{Maillard_Pierre-Yves}{Pierre-Yves Maillard} % PSV
+\Candidat{Nordmann_Roger}{Roger Nordmann} % PSV
+\Candidat{Bendahan_Samuel}{Samuel Bendahan } % PSV
+\Candidat{Crottaz_Brigitte}{Brigitte Crottaz } % PSV
+\Candidat{Tschopp_Jean}{Jean Tschopp } % PSV
+\Candidat{Jaccoud_Jessica}{Jessica Jaccoud } % PSV
+\Candidat{Tuosto_Brenda}{Brenda Tuosto } % PSV
+\Candidat{Gaillard_Benoit}{Benoît Gaillard} % PSV
 %
-\Candidat{de_Quattro_Jacqueline}{de Quattro Jacqueline} % PLR
-\Candidat{Broulis_Pascal}{Broulis Pascal} % PLR
-\Candidat{Feller_Olivier}{Feller Olivier} % PLR
-\Candidat{Wehrli_Laurent}{Wehrli Laurent} % PLR
-\Candidat{Ruch_Daniel}{Ruch Daniel} % PLR
+\Candidat{de_Quattro_Jacqueline}{Jacqueline de Quattro } % PLR
+\Candidat{Broulis_Pascal}{Pascal Broulis } % PLR
+\Candidat{Feller_Olivier}{Olivier Feller } % PLR
+\Candidat{Wehrli_Laurent}{Laurent Wehrli } % PLR
+\Candidat{Ruch_Daniel}{Daniel Ruch } % PLR
 %
-\Candidat{Nicolet_Jacques}{Nicolet Jacques} % UDC
-\Candidat{Buffat_Michael}{Buffat Michaël} % UDC
-\Candidat{Pahud_Yvan}{Pahud Yvan} % UDC
-\Candidat{Freymond_Sylvain}{Freymond Sylvain} % UDC
+\Candidat{Nicolet_Jacques}{Jacques Nicolet} % UDC
+\Candidat{Buffat_Michael}{Michaël Buffat} % UDC
+\Candidat{Pahud_Yvan}{Yvan Pahud} % UDC
+\Candidat{Freymond_Sylvain}{Sylvain Freymond} % UDC
 %
-\Candidat{Michaud_Gigon_Sophie}{Michaud Gigon Sophie} % Les Vert·e·s
-\Candidat{Mahaim_Raphael}{Mahaim Raphaël} % Les Vert·e·s
-\Candidat{Porchet_Leonore}{Porchet Léonore} % Les Vert·e·s
+\Candidat{Michaud_Gigon_Sophie}{Sophie Michaud Gigon} % Les Vert·e·s
+\Candidat{Mahaim_Raphael}{Raphaël Mahaim} % Les Vert·e·s
+\Candidat{Porchet_Leonore}{Léonore Porchet} % Les Vert·e·s
 %
-\Candidat{Chappuis_Isabelle}{Chappuis Isabelle} % Le Centre
+\Candidat{Chappuis_Isabelle}{Isabelle Chappuis} % Le Centre
 
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%

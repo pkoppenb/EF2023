@@ -16,7 +16,7 @@ Candidats:
 #############################################################################
 # main
 #############################################################################
-from Utilities import lisScrutin,lisBulletins,lisOFS,lisCommunes,lisArrondissements,attribueListes,_sieges,analyseBilans, correlations, goodName, analyseChi2,_elus,fixArrondissements,ajouteArrondissements
+from Utilities import lisScrutin,lisBulletins,lisOFS,lisCommunes,lisArrondissements,attribueListes,_sieges,analyseBilans, correlations, goodName, analyseChi2,_elus,fixArrondissements,ajouteArrondissements,_suffragesExprimes
 import sys
 #############################################################################
 # args
@@ -43,7 +43,7 @@ lisCommunes(communes,candidats,listes)
 # arrondissements
 arrondissements = lisArrondissements(communes)
 fixArrondissements(arrondissements,Vaud)
-ajouteArrondissements(listes,arrondissements,communes,candidats)
+ajouteArrondissements(listes,partis,arrondissements,communes,candidats)
 
 pd = sum([b.poids for b in bulletins])
 sf = sum([b.exprimes*b.poids for b in bulletins])
@@ -51,6 +51,10 @@ sf = sum([b.exprimes*b.poids for b in bulletins])
 # des bulletins modifiés. Si je l'ajoute ici ça marche.
 nm = sum([p.suffrages_liste_complete+p.suffrages_comp_liste_modifiee for p in listes.values()])
 total_des_suffrages = sf+nm
+if total_des_suffrages!=_suffragesExprimes :
+    print("Je vois {0} suffrages mais en attends {1}".format(total_des_suffrages,_suffragesExprimes))
+    sys.exit()
+        
 
 print("#############################################################################")
 print("### J'ai {0} listes de {1} partis et {2} candidats".format(len(listes),len(partis),len(candidats)))
@@ -101,10 +105,9 @@ if args.partis:
         bilans[p] = p.bilan(para)
         p.candidatsParasites(candidats)
         p.communes(communes)
-        p.communes(communes,True)  # pires
-        p.communes(communes,False,True) # absolu
-        p.communes(communes,True,True)  # pires, absolu
-        p.communes(communes,grandes=True)  # pires, absolu
+        p.communes(communes,pires=True)  # pires
+        p.communes(communes,grandes=True)  # grandes
+        p.communes(arrondissements,constit="Arrondissement")
         Vaud.candidats(candidats,parti=p.nom)
         Vaud.candidats(candidats,parti=p.nom,avecBase=True)
 
@@ -127,7 +130,8 @@ if args.listes:
         print("Liste {0} : {1:0.1f}% ({2})".format(l.nom,l.pourcentage,l.suffrages))
         somme += l.suffrages
         l.communes(communes)
-        l.communes(communes,True)  # pires
+        l.communes(communes,pires=True)  # pires
+        l.communes(arrondissements,constit="Arrondissement")
         l.biffageDoublage()
         l.suffragesParCandidat()
         l.plotSuffrages(listes)
@@ -136,9 +140,8 @@ if args.listes:
         #    if l.parti.nom == "PVL" :
         l.candidatsParasites(candidats)
 
-        print("Total des suffrages {0:.0f} au lieu de {1:.0f}. Différence {2}.".format(somme,total_des_suffrages,somme-total_des_suffrages))
-        
-        analyseBilans(bilans)
+    print("Total des suffrages {0:.0f} au lieu de {1:.0f}. Différence {2}.".format(somme,total_des_suffrages,somme-total_des_suffrages))
+    analyseBilans(bilans)
 
 # graphiques pour les communes
 if args.communes:
