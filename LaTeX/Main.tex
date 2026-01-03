@@ -99,35 +99,37 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\Correlation}[2][NONE]{
 \IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\def\thewidthC{0.45\textwidth} 
 \begin{figure}[!h]\centering
-\IF{#2}{PVL}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PVL.pdf}}
-\IF{#2}{PLR}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PLR.pdf}}
-\IF{#2}{PS}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PS.pdf}}
-\IF{#2}{UDC}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-UDC.pdf}}
-\IF{#2}{Centre}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-Centre.pdf}}
-\IF{#2}{VERT-E-S}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-VERT-E-S.pdf}}
-\IF{#2}{PEV}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PEV.pdf}}
-\IF{#2}{PST_Sol}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PST_Sol.pdf}}
-\IF{#2}{UDF}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-UDF.pdf}}
+\IF{#2}{PVL}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-PVL.pdf}}
+\IF{#2}{PLR}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-PLR.pdf}}
+\IF{#2}{PS}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-PS.pdf}}
+\IF{#2}{UDC}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-UDC.pdf}}
+\IF{#2}{Centre}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-Centre.pdf}}
+\IF{#2}{VERT-E-S}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-VERT-E-S.pdf}}
+\IF{#2}{PEV}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-PEV.pdf}}
+\IF{#2}{PST_Sol}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-PST_Sol.pdf}}
+\IF{#2}{UDF}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-UDF.pdf}}
 \caption[Corrélations des résulats dans toutes les communes entre le parti \leNom\ et les autres partis.]{Corrélations des résulats dans toutes les communes entre le parti \leNom\ et les autres partis. Explications en page~\pageref{Expl:Corr}.}\label{Fig:Corr:#2}
 \end{figure}
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\CorrelationArr}[2][NONE]{
 \IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\def\thewidthA{0.38\textwidth} 
 \begin{figure}[!h]\centering
-\IF{#2}{PVL}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-PVL.pdf}}
-\IF{#2}{PLR}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-PLR.pdf}}
-\IF{#2}{PS}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-PS.pdf}}
-\IF{#2}{UDC}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-UDC.pdf}}
-\IF{#2}{Centre}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-Centre.pdf}}
-\IF{#2}{VERT-E-S}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-VERT-E-S.pdf}}
-\IF{#2}{PEV}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-PEV.pdf}}
-\IF{#2}{PST_Sol}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-PST_Sol.pdf}}
-\IF{#2}{UDF}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-UDF.pdf}}
-\IF{#2}{Libres}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-Libres.pdf}}
-\IF{#2}{Pirates}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-Pirates.pdf}}
-\caption[Corrélations des résulats dans les arrondissements entre le parti \leNom\ et les autres partis.]{Corrélations des résulats dans les arrondissements entre le parti \leNom\ et les autres partis. Explications en page~\pageref{Expl:Corr}.}\label{Fig:Corr:#2}
+\IF{#2}{PVL}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-PVL.pdf}}
+\IF{#2}{PLR}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-PLR.pdf}}
+\IF{#2}{PS}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-PS.pdf}}
+\IF{#2}{UDC}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-UDC.pdf}}
+\IF{#2}{Centre}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-Centre.pdf}}
+\IF{#2}{VERT-E-S}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-VERT-E-S.pdf}}
+\IF{#2}{PEV}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-PEV.pdf}}
+\IF{#2}{PST_Sol}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-PST_Sol.pdf}}
+\IF{#2}{UDF}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-UDF.pdf}}
+\IF{#2}{Libres}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-Libres.pdf}}
+\IF{#2}{Pirates}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-Pirates.pdf}}
+\caption[Corrélations des résulats dans les arrondissements entre le parti \leNom\ et les autres partis.]{Corrélations des résulats dans les arrondissements entre le parti \leNom\ et les autres partis. Explications en page~\pageref{Expl:Corr}.}\label{Fig:Corr:A:#2}
 \end{figure}
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -332,7 +334,12 @@ Mis à part la diagonale, les plus gros disques sont la perte de l'UDC vers le PL
 \Correlation{PVL}
 \CorrelationArr{PVL}
 Les résulats des listes PVL sont comparés commune-par-commune à ceux des autres partis en Figure~\ref{Fig:Corr:PVL}. Prenons le graphique ``PVL et Centre par commune''. Sur l'axe horizontal est représenté le résultat du PVL dans chaque commune et sur l'axe vertical celui du Centre. La taille des cercles et leur couleur indique la taille de la commune.
-Les lignes verticale et horizontale sont les résultats cantonaux respectifs. La ligne grise est une régression linéaire des résultats. Si elle monte ça veut dire que plus le PVL est fort dans une commune, plus le Centre y est fort aussi. Une ligne décroissante indique une anti-corrélation. Ici la ligne est essentiellement horizontale, et il n'y a donc pas de corrélation. Il y a par contre une forte anti-corrélation avec l'UDC. 
+Les lignes verticale et horizontale sont les résultats cantonaux respectifs. La ligne grise est une régression linéaire des résultats. Si elle monte ça veut dire que plus le PVL est fort dans une commune, plus le Centre y est fort aussi. Une ligne décroissante indique une anti-corrélation. Ici la ligne est essentiellement horizontale, et il n'y a donc pas de corrélation. Il y a par contre une forte anti-corrélation avec l'UDC.
+
+Les corrélations dans les arrondissements (Fig.~\ref{Fig:Corr:A:PVL}) montrent des tendances plus visibles.
+Il faut toutefois se méfier de la petite taill de l'échantillon. Un seul arrondissement (notamment Nyon) peut
+dominer la correlation. Ce graphe a l'avantage de tenir compte des Libres (correlation positive)
+et des Pirates (correlation positive).
 %%%%%%%
 \FloatBarrier
 \pagebreak
@@ -420,7 +427,12 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Arrondissements}\label{Arrondissements}
 Afin de planifier les cantonales de 2027, les résultats sont présentés
-par arrondissement électroral pour le Grand Conseil. 
+par arrondissement électroral pour le Grand Conseil.
+On notera la barre rouge au quorum de 5\%.
+Celui-ci perdrait toutefois de son importance suite à l'acceptation
+de l'initiative Christen, si le PVL conclut des apparentements.
+Plus de détails sont donnés dans un fichier annexe.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[ht]
@@ -505,9 +517,11 @@ par arrondissement électroral pour le Grand Conseil.
 \Liste{UDF}
 %%%
 \PartiNonOFS{Libres}
+\CorrelationArr{Libres}
 \Liste[Les Libres]{Les_Libres}
 %%%
 \PartiNonOFS{Pirates}
+\CorrelationArr{Pirates}
 \Liste{PPVD}
 %%%
 \Parti[POP/EàG]{PST_Sol}

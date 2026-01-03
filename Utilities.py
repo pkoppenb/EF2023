@@ -752,7 +752,8 @@ class Liste():
             sys.exit()
         plt.title("{1}: {0} {2}s".format(quoi,self.nom,constit))
         plt.yticks(y_pos, labels=noms)
-        if grandes or ""==quoi: plt.axvline(x = self.pourcentage, color = 'b')
+        if grandes: plt.axvline(x = self.pourcentage, color = 'b') # barre bleue au Canton
+        elif ""==quoi: plt.axvline(x = 5., color = 'r') # barre rouge à 5%
         if quoi=="": quoi2 = ""
         else: quoi2 = quoi+"-"
         if absolu and not pires and not grandes:
