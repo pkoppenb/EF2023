@@ -63,7 +63,8 @@
 %\includegraphics[width=\thewidth]{../pdf/Parti-Biffages-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-Parasite-#2.pdf}
 \includegraphics[width=\thewidth]{../pdf/Parti-CandidatsParasite-#2.pdf}
-\caption[Graphiques pour le parti \leNom]{Graphiques pour le Parti \leNom. Ce parti n'est pas traîté par l'OFS et n'a donc pas tous les graphiques.  Explications en page~\pageref{Expl:Parti}.}\label{Fig:Parti:#2}
+\includegraphics[width=\thewidth]{../pdf/Parti-#2-Arrondissements.pdf}
+\caption[Graphiques pour le parti \leNom]{Graphiques pour le Parti \leNom. Ce parti n'est pas traîté par l'OFS et n'a donc pas tous les graphiques. Explications en page~\pageref{Expl:Parti}.}\label{Fig:Parti:#2}
 \end{figure}
 \clearpage
 }
@@ -79,7 +80,7 @@
 \includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-#1.pdf}
 \includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-Unique-#1.pdf}
 \includegraphics[width=\thewidth]{../pdf/Candidat-#1-Arrondissements.pdf}
-\caption[Graphiques pour #2]{Graphiques pour #2. Explications en page~\pageref{Expl:Candidat}.}\label{Fig:Cand:#1}
+\caption[Graphiques pour #2]{Graphiques pour candidat(e) #2. Explications en page~\pageref{Expl:Candidat}.}\label{Fig:Cand:#1}
 \end{figure}
 %\clearpage
 }
@@ -109,6 +110,24 @@
 \IF{#2}{PST_Sol}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-PST_Sol.pdf}}
 \IF{#2}{UDF}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-#2-UDF.pdf}}
 \caption[Corrélations des résulats dans toutes les communes entre le parti \leNom\ et les autres partis.]{Corrélations des résulats dans toutes les communes entre le parti \leNom\ et les autres partis. Explications en page~\pageref{Expl:Corr}.}\label{Fig:Corr:#2}
+\end{figure}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\CorrelationArr}[2][NONE]{
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\begin{figure}[!h]\centering
+\IF{#2}{PVL}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-PVL.pdf}}
+\IF{#2}{PLR}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-PLR.pdf}}
+\IF{#2}{PS}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-PS.pdf}}
+\IF{#2}{UDC}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-UDC.pdf}}
+\IF{#2}{Centre}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-Centre.pdf}}
+\IF{#2}{VERT-E-S}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-VERT-E-S.pdf}}
+\IF{#2}{PEV}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-PEV.pdf}}
+\IF{#2}{PST_Sol}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-PST_Sol.pdf}}
+\IF{#2}{UDF}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-UDF.pdf}}
+\IF{#2}{Libres}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-Libres.pdf}}
+\IF{#2}{Pirates}{}{\includegraphics[width=0.45\textwidth]{../pdf/Correlation-Arrondissement-#2-Pirates.pdf}}
+\caption[Corrélations des résulats dans les arrondissements entre le parti \leNom\ et les autres partis.]{Corrélations des résulats dans les arrondissements entre le parti \leNom\ et les autres partis. Explications en page~\pageref{Expl:Corr}.}\label{Fig:Corr:#2}
 \end{figure}
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -311,6 +330,7 @@ Mis à part la diagonale, les plus gros disques sont la perte de l'UDC vers le PL
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Corrélations avec d'autres partis}\label{Expl:Corr}
 \Correlation{PVL}
+\CorrelationArr{PVL}
 Les résulats des listes PVL sont comparés commune-par-commune à ceux des autres partis en Figure~\ref{Fig:Corr:PVL}. Prenons le graphique ``PVL et Centre par commune''. Sur l'axe horizontal est représenté le résultat du PVL dans chaque commune et sur l'axe vertical celui du Centre. La taille des cercles et leur couleur indique la taille de la commune.
 Les lignes verticale et horizontale sont les résultats cantonaux respectifs. La ligne grise est une régression linéaire des résultats. Si elle monte ça veut dire que plus le PVL est fort dans une commune, plus le Centre y est fort aussi. Une ligne décroissante indique une anti-corrélation. Ici la ligne est essentiellement horizontale, et il n'y a donc pas de corrélation. Il y a par contre une forte anti-corrélation avec l'UDC. 
 %%%%%%%
@@ -400,9 +420,50 @@ Les graphiques des élus des autres partis sont en annexe~\ref{AutresElus}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Arrondissements}\label{Arrondissements}
 Afin de planifier les cantonales de 2027, les résultats sont présentés
-par arrondissement électroral pour le Grand Conseil.
+par arrondissement électroral pour le Grand Conseil. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[ht]
+\includegraphics[width=\thewidth]{../pdf/Parti-PVL-Arrondissements.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-Centre-Arrondissements.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-PEV-Arrondissements.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-Libres-Arrondissements.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-UDF-Arrondissements.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-Pirates-Arrondissements.pdf}
+\caption{Résultats des partis par arrondissement}\label{Fig:Arrondissement:Partis1}
+\end{figure}
+%
+\begin{figure}[ht]
+\includegraphics[width=\thewidth]{../pdf/Parti-UDC-Arrondissements.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-PLR-Arrondissements.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-PS-Arrondissements.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-VERT-E-S-Arrondissements.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-PST_Sol-Arrondissements.pdf}
+\caption{Résultats des partis par arrondissement}\label{Fig:Arrondissement:Partis2}
+\end{figure}
+%
+\begin{figure}[ht]
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-Aigle-Partis.pdf}
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-Broye-Vully-Partis.pdf}
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-Gros-de-Vaud-Partis.pdf}
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-Lausanne-Ville-Partis.pdf}
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-La_Vallee-Partis.pdf}
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-Lavaux-Oron-Partis.pdf}
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-Morges-Partis.pdf}
+\caption{Résultats par arrondissement}\label{Fig:Arrondissement:1}
+\end{figure}
+%
+\begin{figure}[ht]
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-Nyon-Partis.pdf}
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-Ouest_lausannois-Partis.pdf}
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-Pays_d-en_Haut-Partis.pdf}
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-Romanel-Partis.pdf}
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-Vevey-Partis.pdf}
+\includegraphics[width=\thewidth]{../pdf/Arrondissement-Yverdon-Partis.pdf}
+\caption{Résultats par arrondissement}\label{Fig:Arrondissement:2}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
 \appendix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Annexe}
@@ -494,7 +555,7 @@ a été validé à 11h45.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}\centering
-\includegraphics[width=0.5\textwidth]{../pdf/Communes-Typiques.pdf}
+\includegraphics[width=\thewidth]{../pdf/Communes-Typiques.pdf}
 \caption{Communes les plus similaires au Canton.}\label{Fig:typique}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%

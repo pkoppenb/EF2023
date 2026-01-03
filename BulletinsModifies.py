@@ -30,7 +30,8 @@ optional.add_argument("-p", "--partis", dest="partis", action="store_true", help
 optional.add_argument("-l", "--listes", dest="listes", action="store_true", help="Graphiques pour listes")
 optional.add_argument("-c", "--communes", dest="communes", action="store_true", help="Graphiques pour communes - ça met du temps")
 optional.add_argument("-cd", "--candidats", dest="candidats", action="store_true", help="Graphiques pour candidats")
-optional.add_argument("-d", "--arrondissements", dest="arrondissements", action="store_true", help="Graphiques pour arrondissements de vote (arrondissements)")
+optional.add_argument("-a", "--arrondissements", dest="arrondissements", action="store_true", help="Graphiques pour arrondissements de vote (arrondissements)")
+optional.add_argument("-corr", "--correlations", dest="corr", action="store_true", help="Graphiques de correlations de partis")
 args = parser.parse_args()
 #############################################################################
 # lecture
@@ -42,8 +43,8 @@ Vaud,communes = lisOFS(partis)
 lisCommunes(communes,candidats,listes)
 # arrondissements
 arrondissements = lisArrondissements(communes)
-fixArrondissements(arrondissements,Vaud)
 ajouteArrondissements(listes,partis,arrondissements,communes,candidats)
+fixArrondissements(arrondissements,Vaud,partis)
 
 pd = sum([b.poids for b in bulletins])
 sf = sum([b.exprimes*b.poids for b in bulletins])
@@ -115,10 +116,13 @@ if args.partis:
 
     analyseBilans(bilans)
 
+if args.corr:
+    print("### CORRELATIONS ###")
     for p in partis.values():
         for q in partis.values():
             if p==q : continue
             correlations(p,q,communes,Vaud)
+            correlations(p,q,arrondissements,Vaud,constit="Arrondissement")
 
 # graphiques pour les listes
 if args.listes:

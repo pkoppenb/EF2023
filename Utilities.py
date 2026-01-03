@@ -79,7 +79,7 @@ plt.figure(figsize=(7,5))
 fig, ax = plt.subplots()
 
 def goodName(name):
-    name2 = name.replace("VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN","ENGAGÉS POUR DEMAIN").replace("VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX","JEUNES VERT'LIBÉRAUX").replace(" ","_").replace("(","_").replace(")","_").replace("/","_").replace(">","_g_").replace("<","_l_").replace("*","_times_").replace(".","_").replace("[","_").replace("]","_").replace("{","_").replace("}","_").replace("||","_or_").replace("&&","_and_").replace("&","_").replace("|","_").replace(":","_vs_").replace("'","_").replace("#","N").replace('·','_').replace('É','E').replace('à','a').replace('é','e').replace('è','e').replace('ë','e').replace('ä','a').replace('ç','c').replace('ï','i').replace('î','i').replace('â','a').replace('ô','o').replace('ê','e').replace('ë','e').replace('__','_').replace('_-','-').replace('-_','-')
+    name2 = name.replace("VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN","ENGAGÉS POUR DEMAIN").replace("VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX","JEUNES VERT'LIBÉRAUX").replace(" ","_").replace("(","_").replace(")","_").replace("/","_").replace(">","_g_").replace("<","_l_").replace("*","_times_").replace(".","_").replace("[","_").replace("]","_").replace("{","_").replace("}","_").replace("||","_or_").replace("&&","_and_").replace("&","_").replace("|","_").replace(":","_vs_").replace("'","_").replace("#","N").replace('·','_').replace('É','E').replace('à','a').replace('é','e').replace('è','e').replace('ë','e').replace('ä','a').replace('ç','c').replace('ï','i').replace('î','i').replace('â','a').replace('ô','o').replace('ê','e').replace('ë','e').replace('__','_').replace('_-','-').replace('-_','-').replace('’','-')
     if name2[-1]=='_': return name2[:-1]  # remove trailing _
     else: return name2
 
@@ -708,8 +708,9 @@ class Liste():
             elif grandes : quoi = "Grandes"
         else:
             quoi = ""
-            
-        if len(self.total_par_commune)<1: return # pas pour pirates et libres
+        
+        if len(self.total_par_commune)<20 and "Commune"==constit:
+            return # pas pour pirates et libres
         if grandes:
             for k in list(grandesCommunes.values())[::-1] :
                 pourcents[k] = 100.*self.total_par_commune[k]/communes[k].suffrages
@@ -934,7 +935,7 @@ class Candidat():
         self.doubles = sum(self.doubles_par_liste.values())
         self.liste.miseAjour(self)
         self.suffrages_total = self.suffrages + self.liste.suffrages_liste_complete/_sieges
-        if "Weber" in self.nom: print(self.nom,self.suffrages,self.liste.suffrages_liste_complete)
+        # if "Weber" in self.nom: print(self.nom,self.suffrages,self.liste.suffrages_liste_complete)
 
     def biffage(self,candidats,listes,unique=True):
         """
@@ -1282,7 +1283,7 @@ def lisArrondissements(communes):
     return collections.OrderedDict(sorted(arrondissements.items())) 
         
 #############################################################################
-def fixArrondissements(arrondissements,Vaud):
+def fixArrondissements(arrondissements,Vaud,partis):
     """
     L'OFS ne connait pas les libres et le pirates
 
@@ -1308,6 +1309,10 @@ def fixArrondissements(arrondissements,Vaud):
         Vaud.suffrages_par_parti["Pirates"] += int(rows[1][idx])
         Vaud.suffrages_par_parti["Autres"] -= int(rows[1][idx])+int(rows[2][idx])
         # print("{0} a maintenant {1} suffrages pour les Libres, {2} pour les Pirates et {3} pour les autres".format(n,a.suffrages_par_parti["Libres"],a.suffrages_par_parti["Pirates"],a.suffrages_par_parti["Autres"]))
+        # Ajoute les résultats aux arrondissements
+        partis["Libres"].total_par_commune[n] = a.suffrages_par_parti["Libres"]
+        partis["Pirates"].total_par_commune[n] = a.suffrages_par_parti["Pirates"]
+        
         # Une erreur de frappe dans _libresPirates déclencherait ceci:
         if a.suffrages_par_parti["Autres"]!=0:
             print("Erreur: les suffrages pour les autres sont pas {1}!=0 dans {0}".format(n,a.suffrages_par_parti["Autres"]))
@@ -1459,11 +1464,14 @@ def analyseChi2(chi2):
     plt.clf()
 
 
-def correlations(p1,p2,communes,Vaud):
+def correlations(p1,p2,communes,Vaud,constit="Commune"):
     """
     correlations de deux partis par commune
+
+    Les Pirates et le Libres n'ont que les arrondissements
     """
-    if len(p1.total_par_commune)==0 or len(p2.total_par_commune)==0: return
+    if list(communes.keys())[0] not in p1.total_par_commune.keys(): return 
+    if list(communes.keys())[0] not in p2.total_par_commune.keys(): return 
     pourcents1 = [ 100.*p1.total_par_commune[c]/communes[c].suffrages for c in communes.keys() ]
     pourcents2 = [ 100.*p2.total_par_commune[c]/communes[c].suffrages for c in communes.keys() ]
 #    bulletins = [ 10*(np.log(communes[c].suffrages)/np.log(2.)-9) for c in communes.keys() ]
@@ -1481,7 +1489,7 @@ def correlations(p1,p2,communes,Vaud):
     plt.scatter(vaud1,vaud2,s=[1000],c='g',alpha=0.2)
     plt.annotate("Canton",(vaud1[0],vaud2[0]),c='g')
 
-    plt.title("{0} et {1} par commune".format(p1.nom,p2.nom))
+    plt.title("{0} et {1} par {2}".format(p1.nom,p2.nom,constit.lower()))
     xseq = np.linspace(0, 1.05*max(pourcents1), num=100)
     
     # plt.axvline(x = vaud1[0], color = p1.couleur )
@@ -1499,11 +1507,17 @@ def correlations(p1,p2,communes,Vaud):
     plt.ylabel("Poucentage du parti {0}".format(p2.nom))
     plt.xlim(0,1.05*min(max(pourcents1),2*vaud1[0]))
     plt.ylim(0,1.05*min(max(pourcents2),2*vaud2[0]))
-    for n in list(grandesCommunes.keys())[:10]:
-        c=grandesCommunes[n]
-        plt.annotate(n, (100.*p1.total_par_commune[c]/communes[c].suffrages,
-                         100.*p2.total_par_commune[c]/communes[c].suffrages))
-    deuxPlots("Correlation-{0}-{1}".format(goodName(p1.nom),goodName(p2.nom)))
+    if "Communes"==constit:
+        for n in list(grandesCommunes.keys())[:10]:
+            c=grandesCommunes[n]
+            plt.annotate(n, (100.*p1.total_par_commune[c]/communes[c].suffrages,
+                             100.*p2.total_par_commune[c]/communes[c].suffrages))
+        deuxPlots("Correlation-{0}-{1}".format(goodName(p1.nom),goodName(p2.nom)))
+    else: # arrondissements
+        for c in communes.keys():
+            plt.annotate(c, (100.*p1.total_par_commune[c]/communes[c].suffrages,
+                             100.*p2.total_par_commune[c]/communes[c].suffrages))        
+        deuxPlots("Correlation-Arrondissement-{0}-{1}".format(goodName(p1.nom),goodName(p2.nom)))
     plt.clf()
 
     """
@@ -1522,7 +1536,8 @@ def correlations(p1,p2,communes,Vaud):
             if (not QuatreCas[res]) or (communes[c].suffrages>communes[QuatreCas[res]].suffrages):
                 QuatreCas[res] = c
         for r,c in QuatreCas.items():
-            print("Plus grosse commune {0} : {1} avec {2:.1f}% et {3:.1f}%".format(r,communes[c].nom,
-                                                                                   100.*p1.total_par_commune[c]/communes[c].suffrages,
-                                                                                   100.*p2.total_par_commune[c]/communes[c].suffrages))
+            print("Plus gros(se) {4}  {0} : {1} avec {2:.1f}% et {3:.1f}%".format(r,communes[c].nom,
+                                                                                  100.*p1.total_par_commune[c]/communes[c].suffrages,
+                                                                                  100.*p2.total_par_commune[c]/communes[c].suffrages,
+                                                                                  constit))
     

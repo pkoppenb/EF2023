@@ -4,7 +4,7 @@ INFILES = $(widcard *.csv)
 all: csv/Parti-Bilan-PVL.csv LaTeX/EF23.pdf
 
 csv/Parti-Bilan-PVL.csv : BulletinsModifies.py Utilities.py $(INFILES)
-	python3 BulletinsModifies.py -v -p -l -c -cd -d | tee log
+	python3 BulletinsModifies.py -v -p -l -c -cd -a -corr | tee log
 
 LaTeX/EF23.pdf : csv/Parti-Bilan-PVL.csv
 	( cd  LaTeX/ ; make )
