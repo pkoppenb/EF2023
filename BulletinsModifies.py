@@ -200,16 +200,11 @@ if args.candidats:
             c.biffage(candidats,listes, unique=True)
            
 # graphiques pour le GC
-from GrandConseil import apparentementsValides, distribueSieges, plotSieges
+from GrandConseil import  graphiquesGC #apparentementsValides, distribueSieges, plotSieges
 if args.GC:
     print("### Grand Conseil ###")
-    partis_centre = [ partis["PVL"], partis["Centre"], partis["Libres"], partis["PEV"], partis["UDF"] ]
-    apps = apparentementsValides(partis_centre)
-    print("Il y a {0} apparentements possibles".format(len(apps)))
-    for p in apps: print(p)
-    for arr in arrondissements.keys():
-        combDeSieges = []  # liste de même taille que apps
-        print("## Arr. {0}".format(arr))
-        for p in apps:
-            combDeSieges.append(distribueSieges(arr,p,partis))
-        plotSieges(arr,apps,combDeSieges,partis)
+    graphiquesGC(partis,arrondissements)
+    for fudge in [ -25, -20, -15, -10, -5, 5, 10, 15, 20, 25 ]:
+        partis["PVL"].fudge = 1+fudge/100. # facteur sur les suffrages
+        graphiquesGC(partis,arrondissements,fudge=fudge)
+        

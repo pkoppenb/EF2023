@@ -345,55 +345,55 @@ class Liste():
         
         if 'Sans' in self.nom:
             self.nom_parti = None
-            self.alliance = None
+            self.apparentement = None
             self.couleur = "black"
         elif 'UDC' in self.nom:
             self.nom_parti = 'UDC'
-            self.alliance = 'Droite'
+            self.apparentement = 'Droite'
             self.couleur = "darkgreen"
         elif 'SV' in self.nom:
             self.nom_parti = 'PS'
-            self.alliance = 'Gauche'
+            self.apparentement = 'Gauche'
             self.couleur = "red"
         elif 'LR' in self.nom:
             self.nom_parti = 'PLR'
-            self.alliance = 'Droite'
+            self.apparentement = 'Droite'
             self.couleur = "royalblue"
         elif 'Vert' in self.nom or 'JVVD' in self.nom:
             self.nom_parti = 'VERT-E-S'
-            self.alliance = 'Gauche'
+            self.apparentement = 'Gauche'
             self.couleur = "forestgreen"
         elif 'VERT' in self.nom:
             self.nom_parti = 'PVL'
-            self.alliance = 'PVL'
+            self.apparentement = 'PVL'
             self.couleur = "yellowgreen"
         elif 'POP' in self.nom:
             self.nom_parti = 'PST/Sol.'
-            self.alliance = 'Gauche'
+            self.apparentement = 'Gauche'
             self.couleur = "maroon"
         elif 'Libres' in self.nom:
             self.nom_parti = 'Libres'
-            self.alliance = 'Centre'
+            self.apparentement = 'Centre'
             self.couleur = "gold"
         elif 'PPVD' in self.nom:
             self.nom_parti = 'Pirates'
-            self.alliance = 'Gauche'
+            self.apparentement = 'Gauche'
             self.couleur = "khaki"
         elif 'Centre' in self.nom:
             self.nom_parti = 'Centre'
-            self.alliance = 'Centre'
+            self.apparentement = 'Centre'
             self.couleur = "orange"
         elif 'UDF' in self.nom:
             self.nom_parti = 'UDF'
-            self.alliance = 'UDF'
+            self.apparentement = 'UDF'
             self.couleur = "gray"
         elif 'EàG' in self.nom:
             self.nom_parti = 'PST/Sol.'
-            self.alliance = 'Gauche'
+            self.apparentement = 'Gauche'
             self.couleur = "maroon"
         elif 'PEV' in self.nom:
             self.nom_parti = 'PEV'
-            self.alliance = 'Centre'
+            self.apparentement = 'Centre'
             self.couleur = "gainsboro"
         else:
             print("Je ne touve pas {0}".format(self.nom))
@@ -789,6 +789,7 @@ class Parti(Liste):
         self.compacts_par_commune = {}
         self.autres_suffrages_par_commune = {}
         self.total_par_commune = {}
+        self.fudge = 1.
         for l in listes.values():
             if l.nom_parti==nom:
                 l.parti = self
@@ -798,7 +799,7 @@ class Parti(Liste):
                 self.suffrages += l.suffrages
                 self.listes.append(l)
                 self.couleur = l.couleur
-                self.alliance = l.alliance
+                self.apparentement = l.apparentement
         self.suffrages_par_liste = {}
         self.doubles_par_liste = {}
         self.classe = "Parti"

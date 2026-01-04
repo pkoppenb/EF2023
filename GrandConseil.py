@@ -22,6 +22,7 @@ _sieges = {
     "Ouest lausannois" : 15, 
     "Pays d'En Haut" : 2, 
     "Vevey" : 14 }
+_sieges["Vaud"] = sum(_sieges.values())
 _quorum = 0.05
 
 from itertools import combinations
@@ -50,7 +51,8 @@ class Apparentement():
             self.partis.insert(0, PVL)     
         
         # total
-        self.total_par_arrondissement = { arr: sum([ p.total_par_commune[arr] for p in self.partis ]) for arr in _sieges.keys() } 
+        self.total_par_arrondissement = { arr: sum([ p.total_par_commune[arr]*p.fudge for p in self.partis ]) for arr in list(_sieges.keys())[:-1] } 
+        self.total_par_arrondissement["Vaud"] = sum([ p.suffrages*p.fudge for p in self.partis ])
         self.sieges_par_arrondissement = {} 
         # print("Apparentement de {0}".format(self))
 
@@ -63,7 +65,7 @@ class Apparentement():
         """
         attribue les sieges pour un arrondissement et distribue sur les partis
         """
-        resultats = { p: p.total_par_commune[arr] for p in self.partis }
+        resultats = { p: p.total_par_commune[arr]*p.fudge for p in self.partis }
         self.sieges_par_arrondissement[arr] = GrandConseil( resultats, ns )
         
         # EDIT HERE
@@ -187,7 +189,7 @@ def distribueSieges(arr,centres,partis,fudge=0.,debug=False):
     if debug: print(resultats,resultats5)
     sieges = GrandConseil(resultats5, _sieges[arr] )
     for a,s in sieges.items():
-        a.attribueSieges(s,arr)  #distribue sur les partis
+        a.attribueSieges(s,arr)  # distribue sur les partis
         if debug: print("     {0}: l'apparentement {1} fait {2} suffrages et {3} sièges".format(arr,a,a.total_par_arrondissement[arr],sieges[a]))
         for p in a.partis:
             if a.sieges_par_arrondissement[arr][p]>0 and debug: print("         {0} fait {1} siège(s) à {2}".format(p,a.sieges_par_arrondissement[arr][p],arr))
@@ -198,7 +200,7 @@ def distribueSieges(arr,centres,partis,fudge=0.,debug=False):
     return sieges_partis
 
 ####################################################
-def plotSieges(arr,apps,combDeSieges,partis):
+def plotSieges(arr,apps,combDeSieges,partis,maxx=None,fudge=None):
     """
     graphique des sièges
 
@@ -217,21 +219,74 @@ def plotSieges(arr,apps,combDeSieges,partis):
 
     base = [0]*len(apps) # sieges
     base_s = 0 # suffrages
-    facteur = sum([ p.total_par_commune[arr] for p in partis.values()])/sum([ siegesParParti[p][0] for p in partis.values() ] )
+    nsieges = sum([ siegesParParti[p][0] for p in partis.values() ] )
+    if "Vaud"==arr: facteur = sum([ p.suffrages*p.fudge for p in partis.values()])/nsieges
+    else: facteur = sum([ p.total_par_commune[arr]*p.fudge for p in partis.values()])/nsieges
     for p in siegesParParti.keys():  # boucle sur le parti
+        if maxx and p.apparentement not in ["Centre","PVL"]: continue
         # print(len(y_pos[:-2]),len(siegesParParti[p]),len(base))
         plt.barh(y_pos[:-2],siegesParParti[p],color=p.couleur,left=base)  # garde les 2 derniers pour les suffrages
-        plt.barh(y_pos[-1], p.total_par_commune[arr]/facteur, color=p.couleur,left=base_s,label=p.nom)
+        if "Vaud"==arr : plt.barh(y_pos[-1], p.suffrages*p.fudge/facteur, color=p.couleur,left=base_s,label=p.nom)
+        else: plt.barh(y_pos[-1], p.total_par_commune[arr]*p.fudge/facteur, color=p.couleur,left=base_s,label=p.nom)
         base = [ b+s for b,s in zip(base,siegesParParti[p]) ]
-        base_s += p.total_par_commune[arr]/facteur
+        if "Vaud"==arr: base_s += p.suffrages*p.fudge/facteur
+        else: base_s += p.total_par_commune[arr]*p.fudge/facteur
 
+    #texte
+    pvl = partis["PVL"]
+    for i in range(len(apps)):
+        if siegesParParti[pvl][i]>0:
+             plt.text(siegesParParti[pvl][i]-0.3, i - .45, str(siegesParParti[pvl][i]), color='blue', fontsize=7, horizontalalignment='right')
+    if "Vaud"==arr:
+        plt.text(pvl.suffrages*pvl.fudge/facteur/2, len(apps)+1 - .45,
+                             "{0:.1f}%".format(100*pvl.suffrages*pvl.fudge/sum([ p.suffrages*p.fudge for p in partis.values()])), color='blue', fontsize=7, horizontalalignment='center')
+    else:  plt.text(pvl.total_par_commune[arr]*pvl.fudge/facteur/2, len(apps)+1 - .45,
+                             "{0:.1f}%".format(100*pvl.total_par_commune[arr]*pvl.fudge/sum([ p.total_par_commune[arr]*p.fudge for p in partis.values()])), color='blue', fontsize=7, horizontalalignment='center')
+    
     labels = [printApps(a) for a in apps]
     labels.extend(["", "Suffrages"])  # garde les 2 derniers pour les suffrages
     plt.yticks(y_pos, labels=labels, fontsize = fontAxis['size'])
     plt.ylabel('Apparentements')
     plt.xlabel('Sièges'.format(arr))
-    plt.title("Arrondissement de {0}".format(arr))
-    plt.legend(loc="lower right")
+    if not fudge: ff = ""
+    elif fudge>0: ff = " - PVL à +{0}%".format(fudge)
+    else: ff = " - PVL à {0}%".format(fudge)
+    if "Vaud"==arr : plt.title("Canton de {0}{1}".format(arr,ff))
+    else : plt.title("Arrondissement de {0}{1}".format(arr,ff))
+    if not maxx: plt.legend(loc="lower right")
+    if maxx: plt.xlim(0,maxx)
 
-    deuxPlots("Apparentements-{0}".format(goodName(arr)))
+    if fudge:
+        if maxx: deuxPlots("Apparentements-{0}-fudge{1}-max{2}".format(goodName(arr),fudge,maxx))
+        else: deuxPlots("Apparentements-{0}-fudge{1}".format(goodName(arr),fudge))
+    else:
+        if maxx: deuxPlots("Apparentements-{0}-max{1}".format(goodName(arr),maxx))
+        else: deuxPlots("Apparentements-{0}".format(goodName(arr)))
+        
     plt.clf()
+
+#############################
+def graphiquesGC(partis,arrondissements,fudge=None):
+    """
+    Les graphiques du GC
+    """
+    partis_centre = [ partis["PVL"], partis["Centre"], partis["Libres"], partis["PEV"], partis["UDF"] ]
+    apps = apparentementsValides(partis_centre)
+    print("Il y a {0} apparentements possibles".format(len(apps)))
+#    for p in apps: print(p)
+    totalSieges = [{} for a in apps]
+    # print("totalSieges est {0}".format(totalSieges))
+    for arr in arrondissements.keys():
+        combDeSieges = []  # liste de même taille que apps
+        if not fudge: print("## Arr. {0}".format(arr))
+        for p in apps:
+            combDeSieges.append(distribueSieges(arr,p,partis))
+        plotSieges(arr,apps,combDeSieges,partis,fudge=fudge)
+        # somme
+        for i in range(len(combDeSieges)):
+            for p,s in combDeSieges[i].items():
+                if p in totalSieges[i].keys(): totalSieges[i][p]+=s
+                else: totalSieges[i][p]=s
+    # print("### Total {0} ###".format(totalSieges))
+    plotSieges("Vaud",apps,totalSieges,partis,maxx=None,fudge=fudge)
+    plotSieges("Vaud",apps,totalSieges,partis,maxx=25,fudge=fudge)
