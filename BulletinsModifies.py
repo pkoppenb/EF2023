@@ -11,6 +11,10 @@ Candidats:
 3. Sur les listes où je suis doublé, qui est biffé?
 4. Sur les listes où je suis biffé, qui est ajouté ou doublé?
 5. Qui sont mes amis qui se trouvent souvent avec moi
+
+Arrondissements pour le Grand Conseil:
+1. Quels apparenetement produisent quels résultats?
+2. Quelle est leur stabilité si je varie les résultats.
 """
         
 #############################################################################
@@ -32,6 +36,7 @@ optional.add_argument("-c", "--communes", dest="communes", action="store_true", 
 optional.add_argument("-cd", "--candidats", dest="candidats", action="store_true", help="Graphiques pour candidats")
 optional.add_argument("-a", "--arrondissements", dest="arrondissements", action="store_true", help="Graphiques pour arrondissements de vote (arrondissements)")
 optional.add_argument("-corr", "--correlations", dest="corr", action="store_true", help="Graphiques de correlations de partis")
+optional.add_argument("-g", "--grandConseil", dest="GC", action="store_true", help="Graphiques pour le Grand Conseil")
 args = parser.parse_args()
 #############################################################################
 # lecture
@@ -108,7 +113,7 @@ if args.partis:
         p.communes(communes)
         p.communes(communes,pires=True)  # pires
         p.communes(communes,grandes=True)  # grandes
-        p.communes(arrondissements,constit="Arrondissement")
+        p.communes(arrondissements,circonscription="Arrondissement")
         Vaud.candidats(candidats,parti=p.nom)
         Vaud.candidats(candidats,parti=p.nom,avecBase=True)
 
@@ -122,7 +127,7 @@ if args.corr:
         for q in partis.values():
             if p==q : continue
             correlations(p,q,communes,Vaud)
-            correlations(p,q,arrondissements,Vaud,constit="Arrondissement")
+            correlations(p,q,arrondissements,Vaud,circonscription="Arrondissement")
 
 # graphiques pour les listes
 if args.listes:
@@ -135,7 +140,7 @@ if args.listes:
         somme += l.suffrages
         l.communes(communes)
         l.communes(communes,pires=True)  # pires
-        l.communes(arrondissements,constit="Arrondissement")
+        l.communes(arrondissements,circonscription="Arrondissement")
         l.biffageDoublage()
         l.suffragesParCandidat()
         l.plotSuffrages(listes)
@@ -168,13 +173,13 @@ if args.communes:
 if args.arrondissements:
     print("### ARRONDISSEMENTS ###")
     for a in arrondissements.values():
-        a.partis(listes,normalise=False,constit="Arrondissement")
-        a.partis(partis,normalise=True,constit="Arrondissement")
-        a.candidats(candidats,constit="Arrondissement")
-        a.candidats(candidats,avecBase=True,constit="Arrondissement")
-        a.candidats(candidats,parti="PVL",constit="Arrondissement")
-        a.candidats(candidats,parti="PVL",avecBase=True,constit="Arrondissement")
-        a.candidats(candidats,parti="Centres",constit="Arrondissement")
+        a.partis(listes,normalise=False,circonscription="Arrondissement")
+        a.partis(partis,normalise=True,circonscription="Arrondissement")
+        a.candidats(candidats,circonscription="Arrondissement")
+        a.candidats(candidats,avecBase=True,circonscription="Arrondissement")
+        a.candidats(candidats,parti="PVL",circonscription="Arrondissement")
+        a.candidats(candidats,parti="PVL",avecBase=True,circonscription="Arrondissement")
+        a.candidats(candidats,parti="Centres",circonscription="Arrondissement")
         # if len(chi2)==25: analyseChi2(chi2)
 
 
@@ -194,3 +199,17 @@ if args.candidats:
             c.biffage(candidats,listes, unique=False)
             c.biffage(candidats,listes, unique=True)
            
+# graphiques pour le GC
+from GrandConseil import apparentementsValides, distribueSieges, plotSieges
+if args.GC:
+    print("### Grand Conseil ###")
+    partis_centre = [ partis["PVL"], partis["Centre"], partis["Libres"], partis["PEV"], partis["UDF"] ]
+    apps = apparentementsValides(partis_centre)
+    print("Il y a {0} apparentements possibles".format(len(apps)))
+    for p in apps: print(p)
+    for arr in arrondissements.keys():
+        combDeSieges = []  # liste de même taille que apps
+        print("## Arr. {0}".format(arr))
+        for p in apps:
+            combDeSieges.append(distribueSieges(arr,p,partis))
+        plotSieges(arr,apps,combDeSieges,partis)

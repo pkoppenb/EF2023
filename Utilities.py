@@ -203,7 +203,10 @@ class Commune():
                     self.suffrages_par_parti[p] = 0
         self.arrondissement = None
 
-    def partis(self,partis,normalise=True,constit="Commune"):
+    def __repr__(self):
+        return self.nom
+
+    def partis(self,partis,normalise=True,circonscription="Commune"):
         """
         Résultats par partis dans une commune
         """
@@ -238,14 +241,14 @@ class Commune():
             plt.axvline(x = 5., color = 'b')
             plt.xlabel('Pourcentages des {0}'.format(what))
         else: plt.xlabel('Suffrages des {0}'.format(what))
-        plt.title("{0} de {1}".format(constit,self.nom))
+        plt.title("{0} de {1}".format(circonscription,self.nom))
         plt.xlim([0.,1.15*list(total.values())[-1]])
         plt.yticks(y_pos, labels=[partis[k].nom for k in total.keys()])
         plt.legend()
-        deuxPlots("{2}-{0}-{1}s".format(goodName(self.nom),list(partis.values())[0].classe,constit))
+        deuxPlots("{2}-{0}-{1}s".format(goodName(self.nom),list(partis.values())[0].classe,circonscription))
         plt.clf()
 
-    def candidats(self,candidats,parti=None,avecBase=False,constit="Commune"):
+    def candidats(self,candidats,parti=None,avecBase=False,circonscription="Commune"):
         """
         Résultats par partis dans une commune
         """
@@ -284,21 +287,21 @@ class Commune():
             for i, v in enumerate(vv):
                 plt.text(off+v, i - .25, str(int(v)), color='black', ha='left', fontsize=9) # horizontal alignment
         plt.xlabel('Suffrages des Candidats')
-        constit2 = "{0} de ".format(constit)
-        if "Canton" in self.nom: constit2 = ""
+        circonscription2 = "{0} de ".format(circonscription)
+        if "Canton" in self.nom: circonscription2 = ""
         if parti:
-            if "Centres"==parti: plt.title("{2}{0}: candidats des {1}".format(self.nom,parti,constit2))
-            else: plt.title("{2}{0}: candidats du {1}".format(self.nom,parti,constit2))
-        else: plt.title("{1}{0}: candidats".format(self.nom,constit2))
+            if "Centres"==parti: plt.title("{2}{0}: candidats des {1}".format(self.nom,parti,circonscription2))
+            else: plt.title("{2}{0}: candidats du {1}".format(self.nom,parti,circonscription2))
+        else: plt.title("{1}{0}: candidats".format(self.nom,circonscription2))
         if len(vv)>0: plt.xlim([0.,1.15*vv[-1]])
         plt.yticks(y_pos, labels= [candidats[k].nom for k in kk] )
         plt.legend()
         textBase = ""
         if avecBase: textBase = "-avecBase"
         if parti:
-            deuxPlots("{3}-{0}-{1}-Candidats{2}".format(goodName(self.nom),goodName(parti),textBase,constit))
+            deuxPlots("{3}-{0}-{1}-Candidats{2}".format(goodName(self.nom),goodName(parti),textBase,circonscription))
         else:
-            deuxPlots("{2}-{0}-Candidats{1}".format(goodName(self.nom),textBase,constit))
+            deuxPlots("{2}-{0}-Candidats{1}".format(goodName(self.nom),textBase,circonscription))
         plt.clf()
 
     def chi2(self,Vaud):
@@ -396,6 +399,9 @@ class Liste():
             print("Je ne touve pas {0}".format(self.nom))
             exit()
         
+    def __repr__(self):
+        return self.nom
+
     def connu(self,nom):
         """
         Liste déja existante?
@@ -691,7 +697,7 @@ class Liste():
         return diff
         
 
-    def communes(self,communes,pires=False,absolu=False,grandes=False,constit="Commune"):
+    def communes(self,communes,pires=False,absolu=False,grandes=False,circonscription="Commune"):
         """
         Meilleures et pires communes de la liste
 
@@ -699,17 +705,17 @@ class Liste():
 
         Je ne suis pas sûr de ce que fait absolu
         """
-        # print("Communes pires: {0} absolu: {1} grandes: {2} constit: {3}".format(  pires,absolu,grandes,constit))
+        # print("Communes pires: {0} absolu: {1} grandes: {2} circonscription: {3}".format(  pires,absolu,grandes,circonscription))
         
         pourcents = {}
-        if "Commune"==constit:
+        if "Commune"==circonscription:
             quoi = "Meilleures"
             if pires: quoi = "Pires"
             elif grandes : quoi = "Grandes"
         else:
             quoi = ""
         
-        if len(self.total_par_commune)<20 and "Commune"==constit:
+        if len(self.total_par_commune)<20 and "Commune"==circonscription:
             return # pas pour pirates et libres
         if grandes:
             for k in list(grandesCommunes.values())[::-1] :
@@ -741,16 +747,16 @@ class Liste():
         # print("y_pos",len(y_pos),y_pos)
         # print("pc25",len(pc25),pc25)
         plt.barh(y_pos,pc25,color=self.couleur)
-        if "Commune"==constit:
+        if "Commune"==circonscription:
             if absolu:  plt.xlabel('Suffrages dans la commune')
             else: plt.xlabel('Pourcentage dans la commune')
-        elif "Arrondissement"==constit:
+        elif "Arrondissement"==circonscription:
             if absolu:  plt.xlabel("Suffrages dans l'arrondissement")
             else: plt.xlabel("Pourcentage dans l'arrondissement")
         else:
-            print("Inconnu {0}".format(constit))
+            print("Inconnu {0}".format(circonscription))
             sys.exit()
-        plt.title("{1}: {0} {2}s".format(quoi,self.nom,constit))
+        plt.title("{1}: {0} {2}s".format(quoi,self.nom,circonscription))
         plt.yticks(y_pos, labels=noms)
         if grandes: plt.axvline(x = self.pourcentage, color = 'b') # barre bleue au Canton
         elif ""==quoi: plt.axvline(x = 5., color = 'r') # barre rouge à 5%
@@ -758,8 +764,8 @@ class Liste():
         else: quoi2 = quoi+"-"
         if absolu and not pires and not grandes:
             if communes[top25[-1]].nom=='Lausanne' and 1.5*pc25[-2]<pc25[-1]: plt.xlim(0,1.5*pc25[-2]) # couper Lausanne
-            deuxPlots("{0}-{1}-Suffrages-{2}{3}s".format(self.classe,goodName(self.nom),quoi2,constit))
-        else: deuxPlots("{0}-{1}-{2}{3}s".format(self.classe,goodName(self.nom),quoi2,constit))
+            deuxPlots("{0}-{1}-Suffrages-{2}{3}s".format(self.classe,goodName(self.nom),quoi2,circonscription))
+        else: deuxPlots("{0}-{1}-{2}{3}s".format(self.classe,goodName(self.nom),quoi2,circonscription))
         plt.clf()
         
         
@@ -797,6 +803,9 @@ class Parti(Liste):
         self.doubles_par_liste = {}
         self.classe = "Parti"
         print("Nouveau parti {0} contenant {1} listes".format(self.nom_parti,len(self.listes)))
+
+    def __repr__(self):
+        return self.nom
 
     def miseAjour(self,listes):
         """
@@ -876,6 +885,9 @@ class Candidat():
         self.suffrages = 0
         self.suffrages_total = 0
         self.classe = "Candidat"
+
+    def __repr__(self):
+        return self.nom
 
     def analyse(self,bulletins):
         """
@@ -1163,7 +1175,8 @@ def lisScrutin():
             l.suffrages_par_liste[nl] = 0
             l.doubles_par_liste[nl] = 0
 
-    noms_des_partis = {}
+    # ordre prédéfin
+    noms_des_partis = { 'PVL' : [], 'Libres' : [], 'PEV' : [], 'Centre' : [], 'UDF' : [], 'UDC' : [], 'PLR' : [], 'PS' : [], 'VERT-E-S' : [], 'PST/Sol.' : [], 'Pirates' : [] }
     for l in listes.values():
         if l.nom_parti not in noms_des_partis.keys():
             noms_des_partis[l.nom_parti] = [l]
@@ -1465,7 +1478,7 @@ def analyseChi2(chi2):
     plt.clf()
 
 
-def correlations(p1,p2,communes,Vaud,constit="Commune"):
+def correlations(p1,p2,communes,Vaud,circonscription="Commune"):
     """
     correlations de deux partis par commune
 
@@ -1490,7 +1503,7 @@ def correlations(p1,p2,communes,Vaud,constit="Commune"):
     plt.scatter(vaud1,vaud2,s=[1000],c='g',alpha=0.2)
     plt.annotate("Canton",(vaud1[0],vaud2[0]),c='g')
 
-    plt.title("{0} et {1} par {2}".format(p1.nom,p2.nom,constit.lower()))
+    plt.title("{0} et {1} par {2}".format(p1.nom,p2.nom,circonscription.lower()))
     xseq = np.linspace(0, 1.05*max(pourcents1), num=100)
     
     # plt.axvline(x = vaud1[0], color = p1.couleur )
@@ -1508,7 +1521,7 @@ def correlations(p1,p2,communes,Vaud,constit="Commune"):
     plt.ylabel("Poucentage du parti {0}".format(p2.nom))
     plt.xlim(0,1.05*min(max(pourcents1),2*vaud1[0]))
     plt.ylim(0,1.05*min(max(pourcents2),2*vaud2[0]))
-    if "Communes"==constit:
+    if "Communes"==circonscription:
         for n in list(grandesCommunes.keys())[:10]:
             c=grandesCommunes[n]
             plt.annotate(n, (100.*p1.total_par_commune[c]/communes[c].suffrages,
@@ -1540,5 +1553,5 @@ def correlations(p1,p2,communes,Vaud,constit="Commune"):
             print("Plus gros(se) {4}  {0} : {1} avec {2:.1f}% et {3:.1f}%".format(r,communes[c].nom,
                                                                                   100.*p1.total_par_commune[c]/communes[c].suffrages,
                                                                                   100.*p2.total_par_commune[c]/communes[c].suffrages,
-                                                                                  constit))
+                                                                                  circonscription))
     
