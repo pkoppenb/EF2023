@@ -70,13 +70,22 @@ class Apparentement():
         
         # EDIT HERE
         
-def printApps(apps):
+#############################################################################
+class Scrutin():
     """
-    imprime un ensemble d'apparentements
+    Une système d'apparentements 
     """
-    r = ""
-    for a in apps: r += "{0}, ".format(a)
-    return r[:-2]
+    def __init__(self,apps):
+        if isinstance(apps,list): self.apps = apps
+        else: self.apps = [apps]
+
+    def __repr__(self):
+        """
+        imprime un ensemble d'apparentements
+        """
+        r = ""
+        for a in self.apps: r += "{0}, ".format(a)
+        return r[:-2]
         
 #######################################################
 def GrandConseil(resultats,nsieges,debug=False):
@@ -108,84 +117,96 @@ def GrandConseil(resultats,nsieges,debug=False):
     return sieges
     
 #############################################################################
-def compareApps(l1,l2):
+def compareScrutins(l1,l2):
     r1,r2 = 1,1
-    for a1 in l1: r1*=a1.total_par_arrondissement['Nyon']
-    for a2 in l1: r2*=a2.total_par_arrondissement['Nyon']
+    for a1 in l1.apps: r1*=a1.total_par_arrondissement['Nyon']
+    for a2 in l1.apps: r2*=a2.total_par_arrondissement['Nyon']
     return (not r1==r2)
 
 #############################################################################
+def Scrutins(partis_centre):
+    """
+    Construit tous les scrutins valables
+    """
+    
+#############################################################################
 def apparentementsValides(partis_centre):
     """
-    Construit tous les apparentemets de 5 partis
+    Construit tous les apparentemets de 5 partis - OBSOLETE
     """
-    valides = [[Apparentement(partis_centre)]]
+    valides = [Scrutin([Apparentement(partis_centre)])]
     for a4 in list(combinations(partis_centre,4)):
-        valides.append( [ Apparentement(a4), Apparentement(set(partis_centre) - set(a4)) ] )
+        valides.append( Scrutin([ Apparentement(a4), Apparentement(set(partis_centre) - set(a4)) ]) )
     for a3 in list(combinations(partis_centre,3)):
         rest = list(set(partis_centre) - set(a3))
-        valides.append( [ Apparentement(a3), Apparentement(rest) ] )
-        valides.append( [ Apparentement(a3), Apparentement(rest[0] ), Apparentement( rest[1] ) ])
+        valides.append( Scrutin([ Apparentement(a3), Apparentement(rest) ]) )
+        valides.append( Scrutin([ Apparentement(a3), Apparentement(rest[0] ), Apparentement( rest[1] ) ]))
     for a2 in list(combinations(partis_centre,2)):
         rest = list(set(partis_centre) - set(a2))
         for a22 in list(combinations(rest,2)):
-            test = [ Apparentement(a2), Apparentement(a22), Apparentement(set(rest) - set(a22)) ] # I am generating duplicates here. Do not append yet
+            test = Scrutin([ Apparentement(a2), Apparentement(a22), Apparentement(set(rest) - set(a22)) ]) # I am generating duplicates here. Do not append yet
             good = True
-            for v in valides: good = (good and compareApps(v,test))
-            if good: valides.append(test)
-        valides.append( [ Apparentement(a2), Apparentement(rest[0]), Apparentement(rest[1]), Apparentement(rest[2]) ] )
-    valides.append( [ Apparentement(partis_centre[0]), Apparentement(partis_centre[1]), Apparentement(partis_centre[2]),
-                      Apparentement(partis_centre[3]), Apparentement(partis_centre[4]) ] )
+            for v in valides: good = (good and compareScrutins(v,test))
+            if good: valides.append(Scrutin(test))
+        valides.append( Scrutin([ Apparentement(a2), Apparentement(rest[0]), Apparentement(rest[1]), Apparentement(rest[2]) ]) )
+    valides.append( Scrutin([ Apparentement(partis_centre[0]), Apparentement(partis_centre[1]), Apparentement(partis_centre[2]),
+                      Apparentement(partis_centre[3]), Apparentement(partis_centre[4]) ]) )
     # ordonne pour que le PVL soit toujours premier
     valides2 = []
     for v in valides:
-        v2 = []
-        for k in range(len(v)):
+        v2 = Scrutin([])
+        for k in range(len(v.apps)):
             # print(partis_centre[0], v[k].partis)
-            if partis_centre[0] in v[k].partis: v2.append( v[k] ) # PVL
-        for k in range(len(v)):
-            if partis_centre[0] not in v[k].partis: v2.append( v[k] )
+            if partis_centre[0] in v.apps[k].partis: v2.apps.append( v.apps[k] ) # PVL
+        for k in range(len(v.apps)):
+            if partis_centre[0] not in v.apps[k].partis: v2.apps.append( v.apps[k] )
         valides2.append(v2)
 
+    """
     # check
     for i in range(len(valides2)):
         for j in range(len(valides2)):
             if j<=i: continue
-            if compareApps(valides2[i],valides2[j]):
+            if compareScrutins(valides2.apps[i],valides2.apps[j]):
                 print("{0} et {1} sont identiques".format(valides2[i],valides2[j]))
                 sys.exit()
-        
+    """
+    
     return valides2
 
 #######################################################
-def genereApparentements(centre,partis):
+def genereScrutin(centre,partis):
+    """
+    A fusionner avec apparentementsValides
+    """
     _leCentre = Apparentement([ partis['Centre'] ])
     _CUDF = Apparentement([ partis['Centre'], partis['UDF'] ])
     gauche = Apparentement([ partis['PST/Sol.'], partis['VERT-E-S'], partis['PS'], partis['Pirates'] ])
     droite = Apparentement([ partis['UDC'], partis['PLR'] ])  # redéfinis à chaque fois
-    apps = [ i for i in centre ]  # clone the thing
-    if _leCentre in apps:
-        apps.remove(_leCentre)
+    scrutin = Scrutin([ i for i in centre.apps ])  # clone the thing
+    if _leCentre in scrutin.apps:
+        scrutin.apps.remove(_leCentre)
         droite.append( _leCentre[0] ) # add element
-    elif _CUDF  in apps:              # ai-je besoin de reverse? 
-        apps.remove(_CUDF)
+    elif _CUDF  in scrutin.apps:              # ai-je besoin de reverse? 
+        scrutin.apps.remove(_CUDF)
         droite.append(_CUDF[0])
         droite.append(_CUDF[1])
-    apps.append(droite)
-    apps.append(gauche)
-    return apps
+    scrutin.apps.append(droite)
+    scrutin.apps.append(gauche)
+    return scrutin
     
 #######################################################
 def distribueSieges(arr,centres,partis,fudge=0.,debug=False):
     """
     Distribue les sièges de l'arrondissement
     """
+    debug = True
     if debug: print("Je commence avec {0}".format(centres))
     sieges_partis = {}
-    apps = genereApparentements(centres,partis)
-    if debug: print("Je teste les apparentements {0}".format(apps))
-    resultats = { a: a.total_par_arrondissement[arr] for a in apps }
-    resultats5 = { a: resultats[a] if resultats[a]/sum(resultats.values())>=_quorum else 0 for a in apps } # quorum
+    scrutin = genereScrutin(centres,partis) 
+    if debug: print("Je teste les apparentements {0}".format(scrutin))
+    resultats = { a: a.total_par_arrondissement[arr] for a in scrutin.apps }
+    resultats5 = { a: resultats[a] if resultats[a]/sum(resultats.values())>=_quorum else 0 for a in scrutin.apps } # quorum
     if debug: print(resultats,resultats5)
     sieges = GrandConseil(resultats5, _sieges[arr] )
     for a,s in sieges.items():
@@ -200,13 +221,13 @@ def distribueSieges(arr,centres,partis,fudge=0.,debug=False):
     return sieges_partis
 
 ####################################################
-def plotSieges(arr,apps,combDeSieges,partis,maxx=None,fudge=None):
+def plotSieges(arr,scrutins,combDeSieges,partis,maxx=None,fudge=None):
     """
     graphique des sièges
 
     arr: arrondissement de vote
-    apps: apparentements considérés (liste)
-    combDeSieges [ {parti: siege,...}, {}...] : combinaisons de sièges par parti. Liste de même taille que apps.
+    scrutins: apparentements considérés (liste)
+    combDeSieges [ {parti: siege,...}, {}...] : combinaisons de sièges par parti. Liste de même taille que scrutins.
     partis: tous les partis
     """
     # redistribue les sieges par parti
@@ -215,9 +236,9 @@ def plotSieges(arr,apps,combDeSieges,partis,maxx=None,fudge=None):
     # print("Arrondissement {0} - PVL: {1}".format(arr,siegesParParti[partis['PVL']]))
 
     fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.40)
-    y_pos = np.arange(len(apps)+2)
+    y_pos = np.arange(len(scrutins)+2)
 
-    base = [0]*len(apps) # sieges
+    base = [0]*len(scrutins) # sieges
     base_s = 0 # suffrages
     nsieges = sum([ siegesParParti[p][0] for p in partis.values() ] )
     if "Vaud"==arr: facteur = sum([ p.suffrages*p.fudge for p in partis.values()])/nsieges
@@ -234,16 +255,16 @@ def plotSieges(arr,apps,combDeSieges,partis,maxx=None,fudge=None):
 
     #texte
     pvl = partis["PVL"]
-    for i in range(len(apps)):
+    for i in range(len(scrutins)):
         if siegesParParti[pvl][i]>0:
              plt.text(siegesParParti[pvl][i]-0.3, i - .45, str(siegesParParti[pvl][i]), color='blue', fontsize=7, horizontalalignment='right')
     if "Vaud"==arr:
-        plt.text(pvl.suffrages*pvl.fudge/facteur/2, len(apps)+1 - .45,
+        plt.text(pvl.suffrages*pvl.fudge/facteur/2, len(scrutins)+1 - .45,
                              "{0:.1f}%".format(100*pvl.suffrages*pvl.fudge/sum([ p.suffrages*p.fudge for p in partis.values()])), color='blue', fontsize=7, horizontalalignment='center')
-    else:  plt.text(pvl.total_par_commune[arr]*pvl.fudge/facteur/2, len(apps)+1 - .45,
+    else:  plt.text(pvl.total_par_commune[arr]*pvl.fudge/facteur/2, len(scrutins)+1 - .45,
                              "{0:.1f}%".format(100*pvl.total_par_commune[arr]*pvl.fudge/sum([ p.total_par_commune[arr]*p.fudge for p in partis.values()])), color='blue', fontsize=7, horizontalalignment='center')
     
-    labels = [printApps(a) for a in apps]
+    labels = [s for s in scrutins]
     labels.extend(["", "Suffrages"])  # garde les 2 derniers pour les suffrages
     plt.yticks(y_pos, labels=labels, fontsize = fontAxis['size'])
     plt.ylabel('Apparentements')
@@ -271,22 +292,22 @@ def graphiquesGC(partis,arrondissements,fudge=None):
     Les graphiques du GC
     """
     partis_centre = [ partis["PVL"], partis["Centre"], partis["Libres"], partis["PEV"], partis["UDF"] ]
-    apps = apparentementsValides(partis_centre)
-    print("Il y a {0} apparentements possibles".format(len(apps)))
-#    for p in apps: print(p)
-    totalSieges = [{} for a in apps]
+    scrutins = apparentementsValides(partis_centre)
+    print("Il y a {0} apparentements possibles".format(len(scrutins)))
+#    for p in scrutins: print(p)
+    totalSieges = [{} for a in scrutins]
     # print("totalSieges est {0}".format(totalSieges))
     for arr in arrondissements.keys():
-        combDeSieges = []  # liste de même taille que apps
+        combDeSieges = []  # liste de même taille que scrutins
         if not fudge: print("## Arr. {0}".format(arr))
-        for p in apps:
+        for p in scrutins:
             combDeSieges.append(distribueSieges(arr,p,partis))
-        plotSieges(arr,apps,combDeSieges,partis,fudge=fudge)
+        plotSieges(arr,scrutins,combDeSieges,partis,fudge=fudge)
         # somme
         for i in range(len(combDeSieges)):
             for p,s in combDeSieges[i].items():
                 if p in totalSieges[i].keys(): totalSieges[i][p]+=s
                 else: totalSieges[i][p]=s
     # print("### Total {0} ###".format(totalSieges))
-    plotSieges("Vaud",apps,totalSieges,partis,maxx=None,fudge=fudge)
-    plotSieges("Vaud",apps,totalSieges,partis,maxx=25,fudge=fudge)
+    plotSieges("Vaud",scrutins,totalSieges,partis,maxx=None,fudge=fudge)
+    plotSieges("Vaud",scrutins,totalSieges,partis,maxx=25,fudge=fudge)
