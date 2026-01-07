@@ -433,6 +433,8 @@ def grandeTable(pvl,totalSieges,partis,fudge=0,fudgeParti="PVL"):
         thehead+="\\\\ \\midrule"
         if debug: print(thehead)
         f.write(thehead+" \n")
+        f.write("Résultats EC 2022 & 1 &  & 1 & 2 & 1 & 2 & 3 & 1 &  & 1 &  & 10 &  & 21 & 50 & 32 & 25 & 7 \\\\") # plus un libre qui siège avec nous
+        f.write("\\midrule \n")
         for s,resultat in reversed(totalSieges.items()):  # inverse pour avoir le même ordre que dans les plots
             theline = "{}"+" {0} ".format(s)
             for a in bonsArr: theline += "& {0} ".format(pasZero(pvl[a][s]))
