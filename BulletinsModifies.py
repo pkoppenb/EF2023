@@ -217,10 +217,29 @@ if args.GC:
         plotVariations(s,{fudge:totalSieges[fudge][s][partis['PVL']] for fudge in totalSieges.keys()},
                        {fudge:totalSieges[fudge][s][partis['Centre']] for fudge in totalSieges.keys()},
                        partis['PVL'].suffrages/sum([p.suffrages for p in partis.values()]),partis)
-    
+    partis["PVL"].fudge = 1 # reset
+   
     # Je varie le Centre
-    partis["PVL"].fudge = 1
-    for fudge in [ -25, -20, -15, -10, -5, 5, 10, 15, 20, 25 ]:  
+    totalSieges = {}
+    for fudge in [ -25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25 ]:  
         print("Je varie le score du Centre de {0}%".format(fudge))
         partis["Centre"].fudge = 1+fudge/100. # facteur sur les suffrages
-        totalSieges[fudge] = graphiquesGC(partis,scrutins,arrondissements,fudge=fudge)
+        totalSieges[fudge] = graphiquesGC(partis,scrutins,arrondissements,fudge=fudge,fudgeParti="Centre")
+    for s in scrutins:
+        plotVariations(s,{fudge:totalSieges[fudge][s][partis['PVL']] for fudge in totalSieges.keys()},
+                       {fudge:totalSieges[fudge][s][partis['Centre']] for fudge in totalSieges.keys()},
+                       partis['Centre'].suffrages/sum([p.suffrages for p in partis.values()]),partis,nom="Centre")
+    partis["Centre"].fudge = 1
+
+    # Je varie les Libres
+    totalSieges = {}
+    for fudge in [ -20, -10, 0, 10, 20, 30, 40, 50 ]:  
+        print("Je varie le score des Libres de {0}%".format(fudge))
+        partis["Libres"].fudge = 1+fudge/100. # facteur sur les suffrages
+        totalSieges[fudge] = graphiquesGC(partis,scrutins,arrondissements,fudge=fudge,fudgeParti="Libres")
+    for s in scrutins:
+        plotVariations(s,{fudge:totalSieges[fudge][s][partis['PVL']] for fudge in totalSieges.keys()},
+                       {fudge:totalSieges[fudge][s][partis['Centre']] for fudge in totalSieges.keys()},
+                       partis['Libres'].suffrages/sum([p.suffrages for p in partis.values()]),partis,nom="Libres",
+                       tiers={fudge:totalSieges[fudge][s][partis['Libres']] for fudge in totalSieges.keys()}
+                      )

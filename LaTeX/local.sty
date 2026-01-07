@@ -113,28 +113,125 @@
 \end{figure}
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\ArrFudge}[2][NONE]{
+\newcommand{\ArrFudge}[3][NONE]{
 \IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
- \begin{figure}[!h]\centering
+\IF{#3}{PVL}{\def\leParti{}}{\def\leParti{-#3}}
+\IF{#3}{Libres}{\def\duParti{des Libres}}{\def\duParti{du #3}}
+\begin{figure}[!h]\centering
 \def\thewidthA{0.32\textwidth} 
-\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-25.pdf}
-\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-20.pdf}
-\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-15.pdf}
-\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-10.pdf}
-\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-5.pdf}
+\IF{#3}{Libres}{}{\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-25\leParti.pdf}}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-20\leParti.pdf}
+\IF{#3}{Libres}{}{\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-15\leParti.pdf}}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-10\leParti.pdf}
+\IF{#3}{Libres}{}{\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-5\leParti.pdf}}
 \includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2.pdf}
-\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-5.pdf}
-\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge10.pdf}
-\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge15.pdf}
-\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge20.pdf}
-\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge25.pdf}
+\IF{#3}{Libres}{}{\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-5\leParti.pdf}}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge10\leParti.pdf}
+\IF{#3}{Libres}{}{\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge15\leParti.pdf}}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge20\leParti.pdf}
+\IF{#3}{Libres}{}{\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge25\leParti.pdf}}
+\IF{#3}{Libres}{\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge30\leParti.pdf}
+  \includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge40\leParti.pdf}
+  \includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge50\leParti.pdf}}{}
+
 \IF{#2}{Vaud}{
 \caption{Sièges au Grand Conseil pour les différentes hypothèses d'apparentement en fonction
-  des résultats du PVL.}
+  des résultats \duParti.}
 }{%
-  \caption{Résultats des partis pour les différentes hypothèses d'apparentement  dans l'arrondissements de \leNom\ en fonction
-  des résultats du PVL.}
+  \caption{Sièges des partis pour les différentes hypothèses d'apparentement dans l'arrondissements de \leNom\ en fonction
+  des résultats \duParti.}
 }
-\label{Fig:Arr:Fudge:#2}
+\label{Fig:Arr:Fudge:#2:#3}
+\end{figure}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\GrandeTable}[2][PVL]{
+\begin{table}
+  \caption{Sièges selon l'hypothèse d'apparentements pour un score #1 changé de $#2\%$ par rapport à 2023.
+    Les sous-arrondissements de la Vallée et du Pays d'en Haut ne sont pas listés parce que
+le PVL n'y obtient jamais de siège.}\label{Tab:Resultats:#1:#2}\vskip 1ex
+\resizebox{\textwidth}{!}{\input{../tables/grandeTable-#2-#1}}
+\end{table}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Variation}[1]{
+  \begin{figure}\centering
+\def\thewidthA{0.32\textwidth}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-Centre-_-UDC_PLR-_-Libres_PEV_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-Centre-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-Centre_Libres-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-Centre_Libres-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-Centre_Libres_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-Centre_Libres_PEV-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-Centre_Libres_PEV-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-Centre_Libres_PEV_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-Centre_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-Centre_PEV-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-Centre_PEV-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-Centre_PEV_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-UDC_PLR_Centre-_-Libres_PEV_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL-_-UDC_PLR_Centre_UDF-.pdf}
+\caption{Sièges du PVL et du Centre en fonction du résultat du #1 pour chaque hypothèse d'apparentements où le PVL est seul.}\label{Fig:App:Sieges:#1:1}
+\end{figure}
+%
+\begin{figure}\centering
+\def\thewidthA{0.24\textwidth}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres-_-Centre-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres-_-Centre-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres-_-Centre_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres-_-Centre_PEV-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres-_-Centre_PEV-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres-_-Centre_PEV_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres-_-UDC_PLR_Centre-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres-_-UDC_PLR_Centre_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres_UDF-_-Centre-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres_UDF-_-Centre_PEV-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres_UDF-_-UDC_PLR_Centre-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres_PEV-_-Centre-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres_PEV-_-Centre-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres_PEV-_-Centre_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres_PEV-_-UDC_PLR_Centre-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres_PEV-_-UDC_PLR_Centre_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres_PEV_UDF-_-Centre-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Libres_PEV_UDF-_-UDC_PLR_Centre-.pdf}
+\caption{Sièges du PVL et du Centre en fonction du résultat du #1 pour chaque hypothèse d'apparentements où le PVL est avec les Libres.}\label{Fig:App:Sieges:#1:2}
+\end{figure}
+%
+\begin{figure}\centering
+\def\thewidthA{0.24\textwidth}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_UDF-_-Centre-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_UDF-_-Centre_Libres-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_UDF-_-Centre_Libres_PEV-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_UDF-_-Centre_PEV-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_UDF-_-UDC_PLR_Centre-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_PEV-_-Centre-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_PEV-_-Centre-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_PEV-_-Centre_Libres-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_PEV-_-Centre_Libres-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_PEV-_-Centre_Libres_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_PEV-_-Centre_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_PEV-_-UDC_PLR_Centre-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_PEV-_-UDC_PLR_Centre_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_PEV_UDF-_-Centre-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_PEV_UDF-_-Centre_Libres-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_PEV_UDF-_-UDC_PLR_Centre-.pdf}
+\caption{Sièges du PVL et du Centre en fonction du résultat du #1 pour chaque hypothèse d'apparentements où le PVL est avec le PEV et/ou l'UDF.}\label{Fig:App:Sieges:#1:3}
+\end{figure}
+%
+\begin{figure}\centering
+\def\thewidthA{0.32\textwidth}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Centre-_-UDC_PLR-_-Libres_PEV_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Centre-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Centre_Libres-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Centre_Libres-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Centre_Libres_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Centre_Libres_PEV-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Centre_Libres_PEV-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Centre_Libres_PEV_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Centre_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Centre_PEV-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Centre_PEV-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#1-Sieges--PVL_Centre_PEV_UDF-_-UDC_PLR-.pdf}
+\caption{Sièges du PVL et du Centre en fonction du résultat du #1 pour chaque hypothèse d'apparentements où le PVL est avec le Centre.}\label{Fig:App:Sieges:#1:4}
 \end{figure}
 }

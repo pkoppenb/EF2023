@@ -314,7 +314,7 @@ def plotSieges(arr,combDeSieges,partis,maxx=None,fudge=None,fudgeParti="PVL"):
         else: base_s += p.total_par_commune[arr]*p.fudge/facteur
 
     #texte
-    pvl = partis[fudgeParti]
+    pvl = partis["PVL"]
     for i in range(len(combDeSieges.keys())):
         if siegesParParti[pvl][i]>0:
              plt.text(siegesParParti[pvl][i]-0.3, i - .45, str(siegesParParti[pvl][i]), color='blue', fontsize=fontAxis['size'], horizontalalignment='right')
@@ -332,8 +332,8 @@ def plotSieges(arr,combDeSieges,partis,maxx=None,fudge=None,fudgeParti="PVL"):
     plt.ylabel('Apparentements')
     plt.xlabel('Sièges'.format(arr))
     if not fudge: ff = ""
-    elif fudge>0: ff = " - PVL à +{0}%".format(fudge)
-    else: ff = " - PVL à {0}%".format(fudge)
+    elif fudge>0: ff = " - {1} à +{0}%".format(fudge,fudgeParti)
+    else: ff = " - {1} à {0}%".format(fudge,fudgeParti)
     if "Vaud"==arr : plt.title("Canton de {0}{1}".format(arr,ff))
     else : plt.title("Arrondissement de {0}{1}".format(arr,ff))
     if not maxx: plt.legend(loc="lower right")
@@ -351,7 +351,7 @@ def plotSieges(arr,combDeSieges,partis,maxx=None,fudge=None,fudgeParti="PVL"):
     plt.clf()
 
 #######################################################################################
-def graphiquesGC(partis,scrutins,arrondissements,fudge=None,fudgeParti="PVL"):
+def graphiquesGC(partis,scrutins,arrondissements,fudge=0,fudgeParti="PVL"):
     """
     Les graphiques du GC
     """
@@ -361,7 +361,7 @@ def graphiquesGC(partis,scrutins,arrondissements,fudge=None,fudgeParti="PVL"):
     pvl = {}
     for arr in arrondissements.keys():
         combDeSieges = {s : distribueSieges(arr,s,partis) for s in scrutins}  #
-        pvl[arr] = { s : combDeSieges[s][partis['PVL']] for s in scrutins}
+        pvl[arr] = { s : combDeSieges[s][partis['PVL']] for s in scrutins} # pour la table
         plotSieges(arr,combDeSieges,partis,fudge=fudge,fudgeParti=fudgeParti)
         # somme
         for i in combDeSieges.keys():
@@ -375,18 +375,23 @@ def graphiquesGC(partis,scrutins,arrondissements,fudge=None,fudgeParti="PVL"):
     
     return totalSieges
 
-#############################
-def plotVariations(s,pvl,centre,score,partis,nom="PVL"):
+#############################centre
+
+def plotVariations(s,pvl,centre,score,partis,nom="PVL",tiers=None):
     """
     Variation avec le score du PVL 
     """
     # print("input",s,parti)
     fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.10)
     pvls = dict(sorted(pvl.items(), key=lambda item: item[0]))
+    plt.plot([ score*(100+v) for v in pvls.keys()],   pvls.values(),'.-',color=partis['PVL'].couleur,label='PVL')
     centres = dict(sorted(centre.items(), key=lambda item: item[0]))
-    # print("sorted",s,pvls)
-    plt.plot([ score*(100+v) for v in pvls.keys()],   pvls.values(),'*-',color=partis['PVL'].couleur,label='PVL')           # normaliser à 100-score?
-    plt.plot([ score*(100+v) for v in centres.keys()],centres.values(),'*-',color=partis['Centre'].couleur,label='Centre')  # normaliser à 100-score?
+    plt.plot([ score*(100+v) for v in centres.keys()], centres.values(),'o-',color=partis['Centre'].couleur,label='Centre') 
+    if tiers:
+        tierss = dict(sorted(tiers.items(), key=lambda item: item[0]))
+        plt.plot([ score*(100+v) for v in tierss.keys()], tiers.values(),'*-',color=partis[nom].couleur,label=nom)  # normaliser à 100-score?
+
+    plt.axvline(x = 100*score, color = partis[nom].couleur) # barre 
     plt.ylabel('Sièges')
     plt.xlabel('Résultat du {0} [%]'.format(nom))
     plt.title('{0}'.format(s))
@@ -403,11 +408,11 @@ def pasZero(v):
     if 0==v: return ""
     else: return str(v)
 #############################
-def grandeTable(pvl,totalSieges,partis,fudge=0):
+def grandeTable(pvl,totalSieges,partis,fudge=0,fudgeParti="PVL"):
     """
     La grande table de tout
     """
-    debug = 0==fudge
+    debug = False and 0==fudge
     if debug: print("Grande table")
     ordre = [ partis['PVL'], partis['Centre'], partis['UDC'], partis['PLR'], partis['PS'], partis['VERT-E-S'], partis['PST/Sol.'] ]
     bonsArr = list(pvl.keys())
@@ -415,7 +420,9 @@ def grandeTable(pvl,totalSieges,partis,fudge=0):
     bonsArr.remove("Pays d'En Haut")
 #    print(bonsArr)
     import codecs
-    with codecs.open("tables/grandeTable-{0}.tex".format(fudge),'w',"ISO-8859-1") as f:
+    if 0==fudge and "PVL"==fudgeParti: ff=""
+    else: ff = "-{0}-{1}".format(fudge,fudgeParti)
+    with codecs.open("tables/grandeTable{0}.tex".format(ff),'w',"ISO-8859-1") as f:
         f.write("\\begin{tabular}{l|ccccccccccc|r||rrrrrr}\n \\toprule\n")
         f.write(" & \\multicolumn{12}{c||}{Sièges du PVL} & \\multicolumn{6}{c}{Autres partis} \\\\ \n")
         thehead = "Hypothèse "
