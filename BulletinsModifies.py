@@ -33,9 +33,9 @@ optional.add_argument("-v", "--Vaud", dest="Vaud", action="store_true", help="Gr
 optional.add_argument("-p", "--partis", dest="partis", action="store_true", help="Graphiques pour partis")
 optional.add_argument("-l", "--listes", dest="listes", action="store_true", help="Graphiques pour listes")
 optional.add_argument("-c", "--communes", dest="communes", action="store_true", help="Graphiques pour communes - ça met du temps")
-optional.add_argument("-cd", "--candidats", dest="candidats", action="store_true", help="Graphiques pour candidats")
+optional.add_argument("-x", "--candidats", dest="candidats", action="store_true", help="Graphiques pour candidats")
 optional.add_argument("-a", "--arrondissements", dest="arrondissements", action="store_true", help="Graphiques pour arrondissements de vote (arrondissements)")
-optional.add_argument("-corr", "--correlations", dest="corr", action="store_true", help="Graphiques de correlations de partis")
+optional.add_argument("-r", "--correlations", dest="corr", action="store_true", help="Graphiques de correlations de partis")
 optional.add_argument("-g", "--grandConseil", dest="GC", action="store_true", help="Graphiques pour le Grand Conseil")
 args = parser.parse_args()
 #############################################################################
@@ -200,11 +200,27 @@ if args.candidats:
             c.biffage(candidats,listes, unique=True)
            
 # graphiques pour le GC
-from GrandConseil import  graphiquesGC #apparentementsValides, distribueSieges, plotSieges
 if args.GC:
+    # doit être là ou il y a interférence dans fig.subfigure
+    from GrandConseil import  graphiquesGC, genereScrutins, plotVariations #apparentementsValides, distribueSieges, plotSieges
     print("### Grand Conseil ###")
-    graphiquesGC(partis,arrondissements)
-    for fudge in [ -25, -20, -15, -10, -5, 5, 10, 15, 20, 25 ]:
+    scrutins = genereScrutins(partis)
+    print("Il y a {0} scrutins possibles".format(len(scrutins)))
+    totalSieges = {}
+    totalSieges[0] = graphiquesGC(partis,scrutins,arrondissements)
+    # Je varie le PVL
+    for fudge in [ -25, -20, -15, -10, -5, 5, 10, 15, 20, 25 ]:  
+        print("Je varie le score du PVL de {0}%".format(fudge))
         partis["PVL"].fudge = 1+fudge/100. # facteur sur les suffrages
-        graphiquesGC(partis,arrondissements,fudge=fudge)
-        
+        totalSieges[fudge] = graphiquesGC(partis,scrutins,arrondissements,fudge=fudge)
+    for s in scrutins:
+        plotVariations(s,{fudge:totalSieges[fudge][s][partis['PVL']] for fudge in totalSieges.keys()},
+                       {fudge:totalSieges[fudge][s][partis['Centre']] for fudge in totalSieges.keys()},
+                       partis['PVL'].suffrages/sum([p.suffrages for p in partis.values()]),partis)
+    
+    # Je varie le Centre
+    partis["PVL"].fudge = 1
+    for fudge in [ -25, -20, -15, -10, -5, 5, 10, 15, 20, 25 ]:  
+        print("Je varie le score du Centre de {0}%".format(fudge))
+        partis["Centre"].fudge = 1+fudge/100. # facteur sur les suffrages
+        totalSieges[fudge] = graphiquesGC(partis,scrutins,arrondissements,fudge=fudge)

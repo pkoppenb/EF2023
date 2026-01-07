@@ -79,7 +79,7 @@ plt.figure(figsize=(7,5))
 fig, ax = plt.subplots()
 
 def goodName(name):
-    name2 = name.replace("VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN","ENGAGÉS POUR DEMAIN").replace("VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX","JEUNES VERT'LIBÉRAUX").replace(" ","_").replace("(","_").replace(")","_").replace("/","_").replace(">","_g_").replace("<","_l_").replace("*","_times_").replace(".","_").replace("[","_").replace("]","_").replace("{","_").replace("}","_").replace("||","_or_").replace("&&","_and_").replace("&","_").replace("|","_").replace(":","_vs_").replace("'","_").replace("#","N").replace('·','_').replace('É','E').replace('à','a').replace('é','e').replace('è','e').replace('ë','e').replace('ä','a').replace('ç','c').replace('ï','i').replace('î','i').replace('â','a').replace('ô','o').replace('ê','e').replace('ë','e').replace('__','_').replace('_-','-').replace('-_','-').replace('’','-')
+    name2 = name.replace("VERT'LIBÉRAUX-ENGAGÉS POUR DEMAIN","ENGAGÉS POUR DEMAIN").replace("VERT'LIBÉRAUX-JEUNES VERT'LIBÉRAUX","JEUNES VERT'LIBÉRAUX").replace(" ","_").replace("(","_").replace(")","_").replace("/","_").replace(">","_g_").replace("<","_l_").replace("*","_times_").replace(".","_").replace("[","-").replace("]","-").replace("{","_").replace("}","_").replace("||","_or_").replace("&&","_and_").replace("&","_").replace("|","_").replace(":","_vs_").replace("'","_").replace("#","N").replace('·','_').replace('É','E').replace('à','a').replace('é','e').replace('è','e').replace('ë','e').replace('ä','a').replace('ç','c').replace('ï','i').replace('î','i').replace('â','a').replace('ô','o').replace('ê','e').replace('ë','e').replace('__','_').replace('_-','-').replace('-_','-').replace('’','-').replace(',','_').replace('__','_')
     if name2[-1]=='_': return name2[:-1]  # remove trailing _
     else: return name2
 
@@ -741,9 +741,10 @@ class Liste():
             pc25.insert(0,self.pourcentage)
             noms.insert(0,"Canton de Vaud")
             
+        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
+
         # print(pourcents,top25,pc25)
         y_pos = np.arange(len(top25))
-        fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.30)
         # print("y_pos",len(y_pos),y_pos)
         # print("pc25",len(pc25),pc25)
         plt.barh(y_pos,pc25,color=self.couleur)

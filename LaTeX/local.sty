@@ -1,0 +1,140 @@
+\def\thewidth{0.49\textwidth}
+\def\thewidthS{0.33\textwidth}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Liste}[2][NONE]{
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\begin{figure}[!h]\centering
+%\includegraphics[width=\thewidth]{../pdf/Liste-Suffrages-Camembert-#2.pdf}\\
+\includegraphics[width=\thewidth]{../pdf/Liste-Suffrages-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-Bilan-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-Suffrages-Par-Candidat-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-DoublagesBiffages-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-Parasite-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-CandidatsParasite-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-#2-Meilleures-Communes.pdf}
+\includegraphics[width=\thewidth]{../pdf/Liste-#2-Pires-Communes.pdf}
+\caption[Graphiques pour la Liste \leNom]{Graphiques pour la Liste \leNom. Explications en page~\pageref{Expl:Liste}.}\label{Fig:Liste:#2}
+\end{figure}
+\clearpage
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Parti}[2][NONE]{
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\begin{figure}[!h]\centering
+\includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-Camembert-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-Bilan-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Commune-Canton_de_Vaud-#2-Candidats-avecBase.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-Parasite-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-CandidatsParasite-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-#2-Meilleures-Communes.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-#2-Pires-Communes.pdf}
+\caption[Graphiques pour le parti \leNom]{Graphiques pour le Parti \leNom. Explications en page~\pageref{Expl:Parti}.}\label{Fig:Parti:#2}
+\end{figure}
+\clearpage
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\PartiNonOFS}[2][NONE]{  % parti inconnu de l'OFS
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\begin{figure}[!h]\centering
+\includegraphics[width=\thewidth]{../pdf/Parti-Bilan-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-Suffrages-#2.pdf}
+%\includegraphics[width=\thewidth]{../pdf/Parti-SuffragesParCandidat-#2.pdf}
+%\includegraphics[width=\thewidth]{../pdf/Parti-Biffages-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-Parasite-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-CandidatsParasite-#2.pdf}
+\includegraphics[width=\thewidth]{../pdf/Parti-#2-Arrondissements.pdf}
+\caption[Graphiques pour le parti \leNom]{Graphiques pour le Parti \leNom. Ce parti n'est pas traîté par l'OFS et n'a donc pas tous les graphiques. Explications en page~\pageref{Expl:Parti}.}\label{Fig:Parti:#2}
+\end{figure}
+\clearpage
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Candidat}[2]{
+%\subsection{Résultats de #2}
+\begin{figure}[!h]\centering
+\includegraphics[width=\thewidth]{../pdf/Candidat-Suffrages-#1.pdf}
+\includegraphics[width=\thewidth]{../pdf/Candidat-#1-Communes.pdf}
+%\includegraphics[width=\thewidth]{../pdf/Candidat-#1-Meilleures-Communes-relatif-a-la-liste.pdf}
+\includegraphics[width=\thewidth]{../pdf/Candidat-Amis-#1.pdf}
+\includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-#1.pdf}
+\includegraphics[width=\thewidth]{../pdf/Candidat-Biffage-Unique-#1.pdf}
+\includegraphics[width=\thewidth]{../pdf/Candidat-#1-Arrondissements.pdf}
+\caption[Graphiques pour #2]{Graphiques pour candidat(e) #2. Explications en page~\pageref{Expl:Candidat}.}\label{Fig:Cand:#1}
+\end{figure}
+%\clearpage
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Commune}[2][NONE]{
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\begin{figure}[!h]\centering
+\includegraphics[width=\thewidth]{../pdf/Commune-#2-Partis.pdf}
+\includegraphics[width=\thewidth]{../pdf/Commune-#2-Listes.pdf}
+\includegraphics[width=\thewidthS]{../pdf/Commune-#2-Candidats-avecBase.pdf}%
+\includegraphics[width=\thewidthS]{../pdf/Commune-#2-PVL-Candidats-avecBase.pdf}%
+\includegraphics[width=\thewidthS]{../pdf/Commune-#2-Centres-Candidats.pdf}
+\caption[Graphiques pour \leNom]{Graphiques pour \leNom. Explications en page~\pageref{Expl:Commune}.}\label{Fig:Com:#2}
+\end{figure}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Correlation}[2][NONE]{
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\def\thewidthC{0.45\textwidth} 
+\begin{figure}[!h]\centering
+\IF{#2}{PVL}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-PVL.pdf}}
+\IF{#2}{PLR}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-PLR.pdf}}
+\IF{#2}{PS}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-PS.pdf}}
+\IF{#2}{UDC}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-UDC.pdf}}
+\IF{#2}{Centre}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-Centre.pdf}}
+\IF{#2}{VERT-E-S}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-VERT-E-S.pdf}}
+\IF{#2}{PEV}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-PEV.pdf}}
+\IF{#2}{PST_Sol}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-PST_Sol.pdf}}
+\IF{#2}{UDF}{}{\includegraphics[width=\thewidthC]{../pdf/Correlation-#2-UDF.pdf}}
+\caption[Corrélations des résulats dans toutes les communes entre le parti \leNom\ et les autres partis.]{Corrélations des résulats dans toutes les communes entre le parti \leNom\ et les autres partis. Explications en page~\pageref{Expl:Corr}.}\label{Fig:Corr:#2}
+\end{figure}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\CorrelationArr}[2][NONE]{
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+\def\thewidthA{0.38\textwidth} 
+\begin{figure}[!h]\centering
+\IF{#2}{PVL}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-PVL.pdf}}
+\IF{#2}{PLR}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-PLR.pdf}}
+\IF{#2}{PS}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-PS.pdf}}
+\IF{#2}{UDC}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-UDC.pdf}}
+\IF{#2}{Centre}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-Centre.pdf}}
+\IF{#2}{VERT-E-S}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-VERT-E-S.pdf}}
+\IF{#2}{PEV}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-PEV.pdf}}
+\IF{#2}{PST_Sol}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-PST_Sol.pdf}}
+\IF{#2}{UDF}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-UDF.pdf}}
+\IF{#2}{Libres}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-Libres.pdf}}
+\IF{#2}{Pirates}{}{\includegraphics[width=\thewidthA]{../pdf/Correlation-Arrondissement-#2-Pirates.pdf}}
+\caption[Corrélations des résulats dans les arrondissements entre le parti \leNom\ et les autres partis.]{Corrélations des résulats dans les arrondissements entre le parti \leNom\ et les autres partis. Explications en page~\pageref{Expl:Corr}.}\label{Fig:Corr:A:#2}
+\end{figure}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\ArrFudge}[2][NONE]{
+\IF{#1}{NONE}{\def\leNom{#2}}{\def\leNom{#1}}
+ \begin{figure}[!h]\centering
+\def\thewidthA{0.32\textwidth} 
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-25.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-20.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-15.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-10.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-5.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge-5.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge10.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge15.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge20.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-#2-fudge25.pdf}
+\IF{#2}{Vaud}{
+\caption{Sièges au Grand Conseil pour les différentes hypothèses d'apparentement en fonction
+  des résultats du PVL.}
+}{%
+  \caption{Résultats des partis pour les différentes hypothèses d'apparentement  dans l'arrondissements de \leNom\ en fonction
+  des résultats du PVL.}
+}
+\label{Fig:Arr:Fudge:#2}
+\end{figure}
+}
