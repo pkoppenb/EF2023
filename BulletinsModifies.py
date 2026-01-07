@@ -233,7 +233,7 @@ if args.GC:
 
     # Je varie les Libres
     totalSieges = {}
-    for fudge in [ -20, -10, 0, 10, 20, 30, 40, 50 ]:  
+    for fudge in [ -20, 0, 20, 40, 60, 80, 100 ]:  
         print("Je varie le score des Libres de {0}%".format(fudge))
         partis["Libres"].fudge = 1+fudge/100. # facteur sur les suffrages
         totalSieges[fudge] = graphiquesGC(partis,scrutins,arrondissements,fudge=fudge,fudgeParti="Libres")

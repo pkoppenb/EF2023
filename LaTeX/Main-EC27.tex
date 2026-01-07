@@ -195,7 +195,7 @@ les défavorables sont celles où le PVL est seul. Dans ce cas, le résultat final 
 \begin{table}
 \caption{Sièges selon l'hypothèse d'apparentements. Les sous-arrondissements de la Vallée et du Pays d'en Haut ne sont pas listés parce que
 le PVL n'y obtient jamais de siège.}\label{Tab:Resultats}\vskip 1ex
-\resizebox{\textwidth}{!}{\input{../tables/grandeTable}}
+\resizebox{\textwidth}{!}{\input{../tables/grandeTable-0-PVL}}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[!b]\centering
@@ -230,40 +230,135 @@ le PVL n'y obtient jamais de siège.}\label{Tab:Resultats}\vskip 1ex
 \includegraphics[width=\thewidth]{../GC-pdf/Apparentements-Yverdon.pdf}
 \caption{Résultats des différents apparentements par arrondissement.}\label{Fig:App:Arr:2}
 \end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[ht]
-\includegraphics[width=\thewidth]{../GC-pdf/Apparentements-Vaud-fudge-25.pdf}
-\includegraphics[width=\thewidth]{../GC-pdf/Apparentements-Vaud-fudge-10.pdf}
-\includegraphics[width=\thewidth]{../GC-pdf/Apparentements-Vaud-fudge10.pdf}
-\includegraphics[width=\thewidth]{../GC-pdf/Apparentements-Vaud-fudge25.pdf}
-\caption{Résultats des partis en fonction hypothèses d'apparentements au Grand Conseil en fonction
-  des résultats du PVL variés de $-25\%$, $-10\%$, $+10\%$, $+25\%$.
-  Tous les graphiques sont en Fig.~\ref{Fig:Arr:Fudge:Vaud:PVL}.}\label{Fig:Vaud:Fudge}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \FloatBarrier
 \pagebreak
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Variation de la force du PVL}
-Il serait dangereux de baser des choix d'apparentements sur la seule hypothèse des élections fédérales de 2023. Certains apparenetments protègent
-plus que d'autres le PVL contre la perte de sièges en cas de diminution de son score, et inversément en cas de progression.
+Il serait dangereux de baser des choix d'apparentements sur la seule hypothèse des élections fédérales de 2023. Certains apparentements protègent
+plus que d'autres le PVL contre la perte de sièges en cas de diminution de son score, et inversement en cas de progression.
 Pour tester cela, je varie la force du PVL de $\pm25\%$. Ce changement est fait de manière {\bf cohérente} sur tous les arrondissements,
 un choix qui n'affecte que le nombre total de députés. Toutes les informations sont à disposition pour tester des autres hypothèses.
 
-Les résultats pour une progression de $+20\%$ sont en Table~\ref{Tab:Resultats:PVL:20} et ceux pour $-20\%$ sont en Table~\ref{Tab:Resultats:PVL:-20}.
-Les autres tables dans l'appendice en Tables~\ref{Tab:Resultats:PVL:-25} à~\ref{Tab:Resultats:PVL:25}.
+Le nombre de sièges en fonction de la force du parti est montrée en Fig.~\ref{Fig:App:Sieges:PVL} pour 6 hypothèses.
+Toutes les hypothèses sont en Figs.~\ref{Fig:App:Sieges:PVL:1}--\ref{Fig:App:Sieges:PVL:4}.
+Les tables sont dans l'appendice en Tables~\ref{Tab:Resultats:PVL:-25} à~\ref{Tab:Resultats:PVL:25}.
+Les détails par arrondissement sont en Figs.~\ref{Fig:Arr:Fudge:Vaud:PVL}--\ref{Fig:Arr:Fudge:Yverdon:PVL}.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\GrandeTable{20}
-\GrandeTable{-20}
+\begin{figure}[ht]\centering
+\def\thewidthA{0.49\textwidth}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-PVL-Sieges--PVL-_-Centre-_-UDC_PLR-_-Libres_PEV_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-PVL-Sieges--PVL-_-Centre_Libres_PEV_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-PVL-Sieges--PVL-_-UDC_PLR_Centre_UDF-.pdf}
+%\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-PVL-Sieges--PVL_Libres_PEV_UDF-_-Centre-_-UDC_PLR-.pdf}  ajout ça pour le centre
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-PVL-Sieges--PVL_Libres_PEV_UDF-_-UDC_PLR_Centre-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-PVL-Sieges--PVL_Centre_Libres_PEV_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-PVL-Sieges--PVL_Centre-_-UDC_PLR-_-Libres_PEV_UDF-.pdf}
+\caption{Quelques exemples d'apparentements et leur conséquences
+en fonction de la force du PVL. Toutes les options
+sont en Figs.~\ref{Fig:App:Sieges:PVL:1}--\ref{Fig:App:Sieges:PVL:4}.}\label{Fig:App:Sieges:PVL}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+On voit que si le PVL est seul, il obtient 6 à 12 sièges si le Centre est seul aussi,
+3 à 13 si le Centre est allié avec les petits partis,
+et 5 à 13 si le Centre s'allie à la droite.
+
+Si le PVL est allié aux petits partis, il obtient 10 à 15 sièges. Si le Centre joint cette alliance,
+presque rien ne change. 
+
+Enfin si le PVL et le Centre s'allient sans les petits partis, le résultat est de 10 à 16 sièges.  
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \FloatBarrier
 \clearpage
-\section{Enseignements}
+\section{Variation de la force du Centre}
+Les calculs ci-dessus seront sans doute faits par nos collègues du Centre. Ainsi, je
+présente ici la situation de leur point de vue. Ici je varie les suffrages du Centre de $\pm25\%$.
+
+Le nombre de sièges en fonction de la force du Centre est montrée en Fig.~\ref{Fig:App:Sieges:Centre} pour 8 hypothèses.
+Toutes les hypothèses sont en Figs.~\ref{Fig:App:Sieges:Centre:1}--\ref{Fig:App:Sieges:Centre:4}.
+Les tables sont dans l'appendice en Tables~\ref{Tab:Resultats:Centre:-25} à~\ref{Tab:Resultats:Centre:25}.
+Les détails par arrondissement sont en Figs.~\ref{Fig:Arr:Fudge:Vaud:Centre}--\ref{Fig:Arr:Fudge:Yverdon:Centre}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[ht]\centering
+\def\thewidthB{0.32\textwidth}
+\includegraphics[width=\thewidthB]{../GC-pdf/Apparentements-Centre-Sieges--PVL-_-Centre-_-UDC_PLR-_-Libres_PEV_UDF-.pdf}
+\includegraphics[width=\thewidthB]{../GC-pdf/Apparentements-Centre-Sieges--PVL_Libres_PEV_UDF-_-Centre-_-UDC_PLR-.pdf} % ajout ça pour le centre
+\includegraphics[width=\thewidthB]{../GC-pdf/Apparentements-Centre-Sieges--PVL_Libres_PEV_UDF-_-Centre-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthB]{../GC-pdf/Apparentements-Centre-Sieges--PVL-_-Centre_Libres_PEV_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthB]{../GC-pdf/Apparentements-Centre-Sieges--PVL_Libres_PEV_UDF-_-UDC_PLR_Centre-.pdf}
+\includegraphics[width=\thewidthB]{../GC-pdf/Apparentements-Centre-Sieges--PVL_Centre_Libres_PEV_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthB]{../GC-pdf/Apparentements-Centre-Sieges--PVL_Centre-_-UDC_PLR-_-Libres_PEV_UDF-.pdf}
+\includegraphics[width=\thewidthB]{../GC-pdf/Apparentements-Centre-Sieges--PVL-_-UDC_PLR_Centre_UDF-.pdf}
+\includegraphics[width=\thewidthB]{../GC-pdf/Apparentements-Centre-Sieges--PVL_Libres_PEV_UDF-_-UDC_PLR_Centre-.pdf}
+\caption{Quelques exemples d'apparentements et leur conséquences
+en fonction de la force du Centre. Toutes les options
+sont en Figs.~\ref{Fig:App:Sieges:Centre:1}--\ref{Fig:App:Sieges:Centre:4}.}\label{Fig:App:Sieges:Centre}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Le Centre a obtenu 4.5\% des suffrages aux EF 2023, donc juste en-dessous du quorum.
+Il passe celui-ci dans la Broye, le Gros-de-Vaud et à Nyon. Il a donc intérêt à signer des
+apparentements. Seul il peut espérer 4 sièges au maximum; le statu-quo à zéro étant une option.
+
+La situation est meilleure s'il rejoint l'alliance de droite (avec ou sans l'UDF): 2 à 9 sièges.
+Similairement, s'il s'allie au PVL, il peut espérer 1 à 7 sièges.
+
+Son assurance-vie, ce sont les petits partis: dans une alliance du centre sans le PVL, le Centre
+atteint 6 à 11 sièges.
+Si le PVL rejoint cette alliance, le Centre obtient entre 7 à 9 sièges.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\FloatBarrier
+\clearpage
+\section{Variation de la force des Libres}
+Le PEV et l'UDF n'ont rien à espérer. Par contre, les Libres peuvent espérer un siège à l'Est de Lausanne.
+On peut aussi s'attendre à une base plus volatile qui vote Vaud-Libre dans les élections locales
+et autrement au Conseil National.
+Je varie donc le résultat des Libres entre $-20\%$ et $+100\%$ 
+
+Le nombre de sièges en fonction de la force du Libres est montrée en Fig.~\ref{Fig:App:Sieges:Libres} pour 3 hypothèses.
+Toutes les hypothèses sont en Figs.~\ref{Fig:App:Sieges:Libres:1}--\ref{Fig:App:Sieges:Libres:4}.
+Les tables sont dans l'appendice en Tables~\ref{Tab:Resultats:Libres:-20} à~\ref{Tab:Resultats:Libres:100}.
+Les détails par arrondissement sont en Figs.~\ref{Fig:Arr:Fudge:Vaud:Libres}--\ref{Fig:Arr:Fudge:Yverdon:Libres}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[ht]\centering
+\def\thewidthA{0.49\textwidth}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-Libres-Sieges--PVL-_-Centre_Libres_PEV_UDF-_-UDC_PLR-.pdf}
+%\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-Libres-Sieges--PVL_Centre_Libres_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-Libres-Sieges--PVL_Centre_Libres_PEV-_-UDC_PLR-.pdf}
+%\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-Libres-Sieges--PVL_Centre_Libres_PEV-_-UDC_PLR_UDF-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-Libres-Sieges--PVL_Centre_Libres_PEV_UDF-_-UDC_PLR-.pdf}
+\includegraphics[width=\thewidthA]{../GC-pdf/Apparentements-Libres-Sieges--PVL_Libres_PEV_UDF-_-UDC_PLR_Centre-.pdf}
+\caption{Quelques exemples d'apparentements et leur conséquences
+en fonction de la force des Libres. Toutes les options
+sont en Figs.~\ref{Fig:App:Sieges:Libres:1}--\ref{Fig:App:Sieges:Libres:4}.}\label{Fig:App:Sieges:Libres}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Les Libres peuvent espérer un siège à Nyon dès $+40\%$ et un autre à Vevey dès $+80\%$.
+Le premier siège ne peut être atteint que s'ils sont membres d'un apparentement. Le second que s'ils s'allient avec le PVL et sans le Centre
+(dans la limite des hypothèses testées).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\FloatBarrier
+\clearpage
+\section{Enseignements et recommandations}
 \begin{enumerate}
-\item Aucun des scénarios envisagés ne donne de siège aux Libres, PEV et UDF.
+\item Le PVL ne doit pas partir seul! Il y a un risque non négligeable de perte de sièges, voire de disparition du groupe.
+L'option la plus intéressante est une alliance avec les petits partis.
+\item Le Centre n'a aucun siège et ne peut que gagner. Mais c'est seul qu'il gagne le moins. Une alliance de Droite l'aide peu,
+alors qu'une alliance avec les petits partis --- avec ou sans le PVL --- est la plus intéressante.
+\item Aucun des scénarios raisonnables ne donne de siège aux Libres, au PEV et à l'UDF.
+Ils doivent sérieusement augmenter leur électorat pour espérer accéder au Grand Conseil.
 Paradoxalement, cela les met dans une position de négociation intéressante
 comme donneur des voix. Ils n'ont aucun intérêt mathématique à favoriser une alliance ou une autre.
+\item Les Libres peuvent rêver, mais doivent s'allier au PVL ou au Centre pour ce faire.
+L'option du PVL est plus solide.
+\item L'UDF est petite et son choix n'a que peu d'effet sur les résultats.
 \end{enumerate}
+Je recommande une négociation prioritaire avec les Libres et le PEV. Tactiquement, il est bon de négocier avec le Centre.
+Il faut à tout prix éviter que les petits partis s'allient au Centre sans le PVL.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -280,16 +375,20 @@ comme donneur des voix. Ils n'ont aucun intérêt mathématique à favoriser une all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Annexes}\addcontentsline{toc}{section}{Annexe}
 \section{Sièges au Grand Conseil en fonction du résultat du PVL}\label{App:sieges}
-Les résultats en fonction de la force du PVL sont listés en Tables~\ref{Tab:Resultats:PVL:-25} à~\ref{Tab:Resultats:PVL:25}. Les tables manquantes ci-dessous sont Tables~\ref{Tab:Resultats:PVL:-20} ($-20\%$),~\ref{Tab:Resultats} ($0\%$), et~\ref{Tab:Resultats:PVL:20} ($+20\%$).
+Les résultats en fonction de la force du PVL sont listés en Tables~\ref{Tab:Resultats:PVL:-25} à~\ref{Tab:Resultats:PVL:25}. Les tables figurant lus haut sont répétées. 
 Ces résultats sont présentés sous forme graphique en Figs.~\ref{Fig:Arr:Fudge:Vaud:PVL} à~\ref{Fig:Arr:Fudge:Yverdon:PVL}.
+Les résultats de La Vallée (un PS, un UDC) et du Pays d'en Haut (1 PLR, 1 UDC) ne dépendent pas de la force des partis du centre et donc ne sont pas inclus ici.
 Le nombre total de députés est présenté en Figs.~\ref{Fig:App:Sieges:PVL:1}--\ref{Fig:App:Sieges:PVL:4}.
 \GrandeTable{-25}
+\GrandeTable{-20}
 \GrandeTable{-15}
 \GrandeTable{-10}
 \GrandeTable{-5}
+\GrandeTable{0}
 \GrandeTable{5}
 \GrandeTable{10}
 \GrandeTable{15}
+\GrandeTable{20}
 \GrandeTable{25}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ArrFudge{Vaud}{PVL}
@@ -297,12 +396,12 @@ Le nombre total de députés est présenté en Figs.~\ref{Fig:App:Sieges:PVL:1}--\re
 \ArrFudge{Broye-Vully}{PVL}
 \ArrFudge{Gros-de-Vaud}{PVL}
 \ArrFudge{Lausanne-Ville}{PVL}
-\ArrFudge[La Vallée]{La_Vallee}{PVL}
+%\ArrFudge[La Vallée]{La_Vallee}{PVL}
 \ArrFudge{Lavaux-Oron}{PVL}
 \ArrFudge{Morges}{PVL}
 \ArrFudge{Nyon}{PVL}
 \ArrFudge[Ouest lausannois]{Ouest_lausannois}{PVL}
-\ArrFudge[Pays d'en Haut]{Pays_d_En_Haut}{PVL}
+%\ArrFudge[Pays d'en Haut]{Pays_d_En_Haut}{PVL}
 \ArrFudge{Romanel}{PVL}
 \ArrFudge{Vevey}{PVL}
 \ArrFudge{Yverdon}{PVL}
@@ -334,12 +433,12 @@ Le nombre total de députés est présenté en Figs.~\ref{Fig:App:Sieges:Centre:1}--
 \ArrFudge{Broye-Vully}{Centre}
 \ArrFudge{Gros-de-Vaud}{Centre}
 \ArrFudge{Lausanne-Ville}{Centre}
-\ArrFudge[La Vallée]{La_Vallee}{Centre}
+%\ArrFudge[La Vallée]{La_Vallee}{Centre}
 \ArrFudge{Lavaux-Oron}{Centre}
 \ArrFudge{Morges}{Centre}
 \ArrFudge{Nyon}{Centre}
 \ArrFudge[Ouest lausannois]{Ouest_lausannois}{Centre}
-\ArrFudge[Pays d'en Haut]{Pays_d_En_Haut}{Centre}
+%\ArrFudge[Pays d'en Haut]{Pays_d_En_Haut}{Centre}
 \ArrFudge{Romanel}{Centre}
 \ArrFudge{Vevey}{Centre}
 \ArrFudge{Yverdon}{Centre}
@@ -349,30 +448,29 @@ Le nombre total de députés est présenté en Figs.~\ref{Fig:App:Sieges:Centre:1}--
 \clearpage
 \FloatBarrier
 \section{Sièges au Grand Conseil en fonction du résultat des Libres}\label{App:sieges:Libres}
-Les résultats en fonction de la force des Libres sont listés en Tables~\ref{Tab:Resultats:Libres:-25} à~\ref{Tab:Resultats:Libres:25}.
+Les résultats en fonction de la force des Libres sont listés en Tables~\ref{Tab:Resultats:Libres:-20} à~\ref{Tab:Resultats:Libres:100}.
 Ces résultats sont présentés sous forme graphique en Figs.~\ref{Fig:Arr:Fudge:Vaud:Libres} à~\ref{Fig:Arr:Fudge:Yverdon:Libres}.
 La situation inchangée est en Table~\ref{Tab:Resultats}.
 Le nombre total de députés est présenté en Figs.~\ref{Fig:App:Sieges:Libres:1}--\ref{Fig:App:Sieges:Libres:4}.
 \GrandeTable[Libres]{-20}
-\GrandeTable[Libres]{-10}
 %\GrandeTable[Libres]{0}
-\GrandeTable[Libres]{10}
 \GrandeTable[Libres]{20}
-\GrandeTable[Libres]{30}
 \GrandeTable[Libres]{40}
-\GrandeTable[Libres]{50}
+\GrandeTable[Libres]{60}
+\GrandeTable[Libres]{80}
+\GrandeTable[Libres]{100}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ArrFudge{Vaud}{Libres}
 \ArrFudge{Aigle}{Libres}
 \ArrFudge{Broye-Vully}{Libres}
 \ArrFudge{Gros-de-Vaud}{Libres}
 \ArrFudge{Lausanne-Ville}{Libres}
-\ArrFudge[La Vallée]{La_Vallee}{Libres}
+%\ArrFudge[La Vallée]{La_Vallee}{Libres}
 \ArrFudge{Lavaux-Oron}{Libres}
 \ArrFudge{Morges}{Libres}
 \ArrFudge{Nyon}{Libres}
 \ArrFudge[Ouest lausannois]{Ouest_lausannois}{Libres}
-\ArrFudge[Pays d'en Haut]{Pays_d_En_Haut}{Libres}
+%\ArrFudge[Pays d'en Haut]{Pays_d_En_Haut}{Libres}
 \ArrFudge{Romanel}{Libres}
 \ArrFudge{Vevey}{Libres}
 \ArrFudge{Yverdon}{Libres}

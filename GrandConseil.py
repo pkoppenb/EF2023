@@ -384,19 +384,19 @@ def plotVariations(s,pvl,centre,score,partis,nom="PVL",tiers=None):
     # print("input",s,parti)
     fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.10)
     pvls = dict(sorted(pvl.items(), key=lambda item: item[0]))
-    plt.plot([ score*(100+v) for v in pvls.keys()],   pvls.values(),'.-',color=partis['PVL'].couleur,label='PVL')
+    plt.plot([ score*(100+v) for v in pvls.keys()],   pvls.values(),'o-',color=partis['PVL'].couleur,label='PVL',linewidth=2)
     centres = dict(sorted(centre.items(), key=lambda item: item[0]))
-    plt.plot([ score*(100+v) for v in centres.keys()], centres.values(),'o-',color=partis['Centre'].couleur,label='Centre') 
+    plt.plot([ score*(100+v) for v in centres.keys()], centres.values(),'.-',color=partis['Centre'].couleur,label='Centre') 
     if tiers:
         tierss = dict(sorted(tiers.items(), key=lambda item: item[0]))
-        plt.plot([ score*(100+v) for v in tierss.keys()], tiers.values(),'*-',color=partis[nom].couleur,label=nom)  # normaliser à 100-score?
+        plt.plot([ score*(100+v) for v in tierss.keys()], tiers.values(),'s-',color=partis[nom].couleur,label=nom)  # normaliser à 100-score?
 
     plt.axvline(x = 100*score, color = partis[nom].couleur) # barre 
     plt.ylabel('Sièges')
     plt.xlabel('Résultat du {0} [%]'.format(nom))
     plt.title('{0}'.format(s))
-    plt.legend()
-    plt.ylim(0,16)
+    plt.legend(loc="upper left")
+    plt.ylim(0,17)
     deuxPlotsGC("Apparentements-{1}-Sieges-{0}".format(goodName(s.__repr__()),nom))
     plt.clf()
     
@@ -415,15 +415,17 @@ def grandeTable(pvl,totalSieges,partis,fudge=0,fudgeParti="PVL"):
     debug = False and 0==fudge
     if debug: print("Grande table")
     ordre = [ partis['PVL'], partis['Centre'], partis['UDC'], partis['PLR'], partis['PS'], partis['VERT-E-S'], partis['PST/Sol.'] ]
+    if partis[fudgeParti] not in ordre: ordre.append(partis[fudgeParti])
     bonsArr = list(pvl.keys())
     bonsArr.remove('La Vallée')   # toujours 0
     bonsArr.remove("Pays d'En Haut")
 #    print(bonsArr)
     import codecs
-    if 0==fudge and "PVL"==fudgeParti: ff=""
-    else: ff = "-{0}-{1}".format(fudge,fudgeParti)
+    ff = "-{0}-{1}".format(fudge,fudgeParti)
     with codecs.open("tables/grandeTable{0}.tex".format(ff),'w',"ISO-8859-1") as f:
-        f.write("\\begin{tabular}{l|ccccccccccc|r||rrrrrr}\n \\toprule\n")
+        f.write("\\begin{tabular}{l|ccccccccccc|r||")
+        f.write('r'*len(ordre))
+        f.write("}\n \\toprule\n")
         f.write(" & \\multicolumn{12}{c||}{Sièges du PVL} & \\multicolumn{6}{c}{Autres partis} \\\\ \n")
         thehead = "Hypothèse "
         for a in bonsArr: thehead +=" & \\rotatebox{90}{"+a+"}"
