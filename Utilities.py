@@ -1342,7 +1342,7 @@ def ajouteArrondissements(listes,partis,arrondissements,communes,candidats):
     """
     for n,c in communes.items():
         a = c.arrondissement
-        print("Commune {0} {1} arrondissement {2}".format(n,c.nom,c.arrondissement))
+        # print("Commune {0} {1} arrondissement {2}".format(n,c.nom,c.arrondissement))
         for LouP in [ listes, partis ]:
             for p in LouP.values():
                 #            print(p.nom,p.autres_suffrages_par_commune)

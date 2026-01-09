@@ -81,7 +81,7 @@ class Apparentement():
         attribue les sieges pour un arrondissement et distribue sur les partis
         """
         resultats = { p: p.total_par_commune[arr]*p.fudge for p in self.partis }
-        self.sieges_par_arrondissement[arr] = GrandConseil( resultats, ns )
+        self.sieges_par_arrondissement[arr] = AlgorithmeGrandConseil( resultats, ns )
         #print("attribueSieges {0} arr {1}:".format(self.__repr__(),arr))
         #for p in self.partis: print("    {0}*{1}: {2}".format(p.total_par_commune[arr],p.fudge, self.sieges_par_arrondissement[arr][p]))
 
@@ -128,7 +128,7 @@ class Scrutin():
         return p
         
 #######################################################
-def GrandConseil(resultats,nsieges,debug=False):
+def AlgorithmeGrandConseil(resultats,nsieges,debug=False):
     """
     Algorithme du grand conseil - des plus grands restes
     """
@@ -152,7 +152,7 @@ def GrandConseil(resultats,nsieges,debug=False):
     if debug: print("Seconde distribution: {0}".format(sieges))
     if (sum(sieges.values())!=nsieges):
         print("Oups! J'ai distribué {0} au lieu de {1} sièges".format(sieges,nsieges))
-        if not debug: GrandConseil(resultats,nsieges,debug=True) # rejoue en mode debug
+        if not debug: AlgorithmeGrandConseil(resultats,nsieges,debug=True) # rejoue en mode debug
         sys.exit()
     return sieges
     
@@ -250,7 +250,7 @@ def genereScrutins(partis):
             s.apps.append(x)
             print("    J'obtiens {0}".format(s))
             
-    for s in scrutins: print("{0}\\\\[1pt]".format(s))
+    for s in scrutins: print("{0}".format(s))
     scrutins.reverse()
     return scrutins
     
@@ -265,7 +265,7 @@ def distribueSieges(arr,scrutin,partis,fudge=0.,debug=False):
     resultats = { a: a.total_par_arrondissement(arr) for a in scrutin.apps }
     resultats5 = { a: resultats[a] if resultats[a]/sum(resultats.values())>=_quorum else 0 for a in scrutin.apps } # quorum
     if debug: print(resultats,resultats5)
-    sieges = GrandConseil(resultats5, _sieges[arr] )
+    sieges = AlgorithmeGrandConseil(resultats5, _sieges[arr] )
     for a,s in sieges.items():
         a.attribueSieges(s,arr)  # distribue sur les partis
         if debug: print("     {0}: l'apparentement {1} fait {2} suffrages et {3} sièges".format(arr,a,a.total_par_arrondissement(arr),sieges[a]))
@@ -280,7 +280,7 @@ def distribueSieges(arr,scrutin,partis,fudge=0.,debug=False):
     return sieges_partis
 
 ####################################################
-def plotSieges(arr,combDeSieges,partis,maxx=None,fudge=None,fudgeParti="PVL"):
+def plotSieges(arr,combDeSieges,partis,maxx=None,fudge=None,fudgeParti="PVL",MC=False):
     """
     graphique des sièges
 
@@ -288,6 +288,8 @@ def plotSieges(arr,combDeSieges,partis,maxx=None,fudge=None,fudgeParti="PVL"):
     scrutins: apparentements considérés (liste)
     combDeSieges [ {parti: siege,...}, {}...] : combinaisons de sièges par parti. Liste de même taille que scrutins.
     partis: tous les partis
+
+    MC not yet implemented
     """
     # redistribue les sieges par parti
     siegesParParti = {}
@@ -339,14 +341,16 @@ def plotSieges(arr,combDeSieges,partis,maxx=None,fudge=None,fudgeParti="PVL"):
     if not maxx: plt.legend(loc="lower right")
     if maxx: plt.xlim(0,maxx)
 
+    if MC: head = "Apparentements-MC"
+    else: head = "Apparentements"
     if fudge:
         if "PVL"==fudgeParti : ff = "fudge{0}".format(fudge)
         else: ff = "fudge{0}-{1}".format(fudge,fudgeParti)
-        if maxx: deuxPlotsGC("Apparentements-{0}-{1}-max{2}".format(goodName(arr),ff,maxx))
-        else: deuxPlotsGC("Apparentements-{0}-{1}".format(goodName(arr),ff))
+        if maxx: deuxPlotsGC("{3}-{0}-{1}-max{2}".format(goodName(arr),ff,maxx,head))
+        else: deuxPlotsGC("{2}-{0}-{1}".format(goodName(arr),ff,head))
     else:
-        if maxx: deuxPlotsGC("Apparentements-{0}-max{1}".format(goodName(arr),maxx))
-        else: deuxPlotsGC("Apparentements-{0}".format(goodName(arr)))
+        if maxx: deuxPlotsGC("{2}-{0}-max{1}".format(goodName(arr),maxx,head))
+        else: deuxPlotsGC("{1}-{0}".format(goodName(arr),head))
         
     plt.clf()
 
@@ -364,10 +368,10 @@ def graphiquesGC(partis,scrutins,arrondissements,fudge=0,fudgeParti="PVL"):
         pvl[arr] = { s : combDeSieges[s][partis['PVL']] for s in scrutins} # pour la table
         plotSieges(arr,combDeSieges,partis,fudge=fudge,fudgeParti=fudgeParti)
         # somme
-        for i in combDeSieges.keys():
-            for p,s in combDeSieges[i].items():
-                if p in totalSieges[i].keys(): totalSieges[i][p]+=s
-                else: totalSieges[i][p]=s
+        for a in combDeSieges.keys():                 # apparentements
+            for p,s in combDeSieges[a].items():
+                if p in totalSieges[a].keys(): totalSieges[a][p]+=s
+                else: totalSieges[a][p]=s
     # print("### Total {0} ###".format(totalSieges))
     plotSieges("Vaud",totalSieges,partis,maxx=None,fudge=fudge,fudgeParti=fudgeParti)
     plotSieges("Vaud",totalSieges,partis,maxx=25,fudge=fudge,fudgeParti=fudgeParti)
@@ -375,29 +379,81 @@ def graphiquesGC(partis,scrutins,arrondissements,fudge=0,fudgeParti="PVL"):
     
     return totalSieges
 
-#############################centre
-
-def plotVariations(s,pvl,centre,score,partis,nom="PVL",tiers=None):
+#######################################################################################
+def mcGC(partis,scrutins,arrondissements,fudgeParti="PVL",width=0.1,nMC=100):
     """
-    Variation avec le score du PVL 
+    Les du graphiques GC - version avec MC
+    """
+    tousLesSieges = {s: { p: { a: [] for a in arrondissements} for p in partis.values()  } for s in scrutins}   # structure :: scrutin:parti:arrondissement:iteration
+    # print(tousLesSieges)
+    pF = int(np.sqrt(nMC))
+    for iMC in range(nMC):
+        # if iMC % pF == 0 : print("Itération {0} de {1}".format(iMC,nMC))
+        for n,p in partis.items():
+            if fudgeParti != n: p.fudge = np.random.normal(1,width) 
+        
+        for arr in arrondissements.keys():
+            combDeSieges = {s : distribueSieges(arr,s,partis) for s in scrutins}  #
+            # somme
+            # print("Iter {2} Arr {0} donne {1}".format(arr,combDeSieges,iMC))
+            for a in combDeSieges.keys():                 # scrutins
+                for p,s in combDeSieges[a].items():       # partis, sieges
+                    tousLesSieges[a][p][arr].append(s)
+#                    if True : #  or and fudgeParti==p.nom "[ PVL, Libres, PEV ], [ UDC, PLR, Centre ]"==a.__repr__()
+#                        print("{0} {1} {2} {3} ({5}) fait {4}".format(iMC,arr,a,p,s,p.fudge))
+    # print(tousLesSieges)
+
+    # somme les arrondissements
+    totalSieges = {s: { p: None for p in partis.values()  } for s in scrutins}   # structure :: scrutin:parti:iteration
+    for s in tousLesSieges.keys():
+        for p in partis.values():
+            total = [ 0 ]*nMC
+            for arr in arrondissements:
+                for k in range(nMC):
+                    total[k] += tousLesSieges[s][p][arr][k]  # somme sur arrondissements
+            totalSieges[s][p] = [ np.mean(total), np.var(total) ]
+                    
+    # print(totalSieges)
+    # plotSieges("Vaud",totalSieges,partis,fudge=int(100*(partis[fudgeParti].fudge-1)),fudgeParti=fudgeParti,MC=True)
+    for n,p in partis.items():
+        if fudgeParti != n: p.fudge = 1 # reset
+    return totalSieges
+
+#############################
+def plotVariations(s,pvl,centre,score,partis,nom="PVL",tiers=None,MC=False):
+    """
+    Variation avec le score du PVL, su Centre ou d'un autre
     """
     # print("input",s,parti)
     fig.subplots_adjust(top=0.93,right=0.97,bottom=0.12,left=0.10)
     pvls = dict(sorted(pvl.items(), key=lambda item: item[0]))
-    plt.plot([ score*(100+v) for v in pvls.keys()],   pvls.values(),'o-',color=partis['PVL'].couleur,label='PVL',linewidth=2)
     centres = dict(sorted(centre.items(), key=lambda item: item[0]))
-    plt.plot([ score*(100+v) for v in centres.keys()], centres.values(),'.-',color=partis['Centre'].couleur,label='Centre') 
-    if tiers:
-        tierss = dict(sorted(tiers.items(), key=lambda item: item[0]))
-        plt.plot([ score*(100+v) for v in tierss.keys()], tiers.values(),'s-',color=partis[nom].couleur,label=nom)  # normaliser à 100-score?
+    if tiers: tierss = dict(sorted(tiers.items(), key=lambda item: item[0]))
+    if MC:
+        plt.plot([ score*(100+v) for v in centres.keys()], [v[0] for v in centres.values()],'.-',color=partis['Centre'].couleur,label='Centre') 
+        plt.fill_between([ score*(100+v) for v in centres.keys()],  [v[0]-v[1] for v in centres.values()], [v[0]+v[1] for v in centres.values()],color=partis['Centre'].couleur,alpha=0.3)
+        plt.plot([ score*(100+v) for v in pvls.keys()],  [v[0] for v in pvls.values()],'o-',color=partis['PVL'].couleur,label='PVL',linewidth=2)
+        plt.fill_between([ score*(100+v) for v in pvls.keys()],  [v[0]-v[1] for v in pvls.values()], [v[0]+v[1] for v in pvls.values()],color=partis['PVL'].couleur,alpha=0.5)
+        if tiers:
+            plt.plot([ score*(100+v) for v in tierss.keys()], [v[0] for v in tierss.values()],'s-',color=partis[nom].couleur,label=nom)  # normaliser à 100-score?
+            plt.fill_between([ score*(100+v) for v in tierss.keys()],  [v[0]-v[1] for v in tierss.values()], [v[0]+v[1] for v in tierss.values()],color=partis[nom].couleur,alpha=0.5)
+    else:
+        plt.plot([ score*(100+v) for v in pvls.keys()],  pvls.values(),'o-',color=partis['PVL'].couleur,label='PVL',linewidth=2)
+        plt.plot([ score*(100+v) for v in centres.keys()], centres.values(),'.-',color=partis['Centre'].couleur,label='Centre') 
+        if tiers: plt.plot([ score*(100+v) for v in tierss.keys()], tiers.values(),'s-',color=partis[nom].couleur,label=nom)  # normaliser à 100-score?
 
     plt.axvline(x = 100*score, color = partis[nom].couleur) # barre 
     plt.ylabel('Sièges')
-    plt.xlabel('Résultat du {0} [%]'.format(nom))
+    if nom=='Libres': plt.xlabel('Résultat des Libres [%]'.format(nom))
+    else: plt.xlabel('Résultat du {0} [%]'.format(nom)) 
     plt.title('{0}'.format(s))
     plt.legend(loc="upper left")
     plt.ylim(0,17)
-    deuxPlotsGC("Apparentements-{1}-Sieges-{0}".format(goodName(s.__repr__()),nom))
+    plt.xlim(score*(100+list(pvls.keys())[0]),score*(100+list(pvls.keys())[-1]))
+    if MC:
+        deuxPlotsGC("Apparentements-MC-{1}-Sieges-{0}".format(goodName(s.__repr__()),nom))
+    else:
+        deuxPlotsGC("Apparentements-{1}-Sieges-{0}".format(goodName(s.__repr__()),nom))
     plt.clf()
     
 #############################
@@ -407,6 +463,7 @@ def pasZero(v):
     """
     if 0==v: return ""
     else: return str(v)
+
 #############################
 def grandeTable(pvl,totalSieges,partis,fudge=0,fudgeParti="PVL"):
     """
@@ -445,3 +502,29 @@ def grandeTable(pvl,totalSieges,partis,fudge=0,fudgeParti="PVL"):
         f.write("\\bottomrule\\end{tabular}\n")
         f.close()
 
+#################################################################################
+def GrandConseil(scrutins,partis,arrondissements,parti="PVL",MC=True):
+    """
+    Main du Grand Conseil
+    """
+    totalSieges = {}
+    if not MC: totalSieges[0] = graphiquesGC(partis,scrutins,arrondissements)
+    # Je varie le parti
+    if 'Libres'==parti: fudges = range(-20,105,5)
+    else: fudges = range(-26,27,2)
+    
+    for fudge in fudges:  
+        if MC: print("Je fais un MC en variant le score de {1} de {0}%".format(fudge,parti))
+        else: print("Je varie le score de {1} de {0}%".format(fudge,parti))
+        partis[parti].fudge = 1+fudge/100. # facteur sur les suffrages
+        if MC: totalSieges[fudge] = mcGC(partis,scrutins,arrondissements,nMC=1000,fudgeParti=parti)
+        else: totalSieges[fudge] = graphiquesGC(partis,scrutins,arrondissements,fudge=fudge,fudgeParti=parti)
+    # plotte les résultats versus fudge
+    for s in scrutins:
+        if 'Libres'==parti: tiers = {fudge:totalSieges[fudge][s][partis['Libres']] for fudge in totalSieges.keys()}
+        else: tiers = None
+        plotVariations(s,{fudge:totalSieges[fudge][s][partis['PVL']] for fudge in totalSieges.keys()},
+                       {fudge:totalSieges[fudge][s][partis['Centre']] for fudge in totalSieges.keys()},
+                       partis[parti].suffrages/sum([p.suffrages for p in partis.values()]),partis,
+                       nom=parti,tiers=tiers,MC=MC)
+    partis[parti].fudge = 1 # reset

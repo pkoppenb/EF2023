@@ -37,6 +37,7 @@ optional.add_argument("-x", "--candidats", dest="candidats", action="store_true"
 optional.add_argument("-a", "--arrondissements", dest="arrondissements", action="store_true", help="Graphiques pour arrondissements de vote (arrondissements)")
 optional.add_argument("-r", "--correlations", dest="corr", action="store_true", help="Graphiques de correlations de partis")
 optional.add_argument("-g", "--grandConseil", dest="GC", action="store_true", help="Graphiques pour le Grand Conseil")
+optional.add_argument("-m", "--MC", dest="MC", action="store_true", help="MC pour le Grand Conseil")
 args = parser.parse_args()
 #############################################################################
 # lecture
@@ -200,46 +201,19 @@ if args.candidats:
             c.biffage(candidats,listes, unique=True)
            
 # graphiques pour le GC
-if args.GC:
+if args.GC or args.MC:
     # doit être là ou il y a interférence dans fig.subfigure
-    from GrandConseil import  graphiquesGC, genereScrutins, plotVariations #apparentementsValides, distribueSieges, plotSieges
+    from GrandConseil import GrandConseil, genereScrutins
+    
     print("### Grand Conseil ###")
     scrutins = genereScrutins(partis)
     print("Il y a {0} scrutins possibles".format(len(scrutins)))
-    totalSieges = {}
-    totalSieges[0] = graphiquesGC(partis,scrutins,arrondissements)
-    # Je varie le PVL
-    for fudge in [ -25, -20, -15, -10, -5, 5, 10, 15, 20, 25 ]:  
-        print("Je varie le score du PVL de {0}%".format(fudge))
-        partis["PVL"].fudge = 1+fudge/100. # facteur sur les suffrages
-        totalSieges[fudge] = graphiquesGC(partis,scrutins,arrondissements,fudge=fudge)
-    for s in scrutins:
-        plotVariations(s,{fudge:totalSieges[fudge][s][partis['PVL']] for fudge in totalSieges.keys()},
-                       {fudge:totalSieges[fudge][s][partis['Centre']] for fudge in totalSieges.keys()},
-                       partis['PVL'].suffrages/sum([p.suffrages for p in partis.values()]),partis)
-    partis["PVL"].fudge = 1 # reset
-   
-    # Je varie le Centre
-    totalSieges = {}
-    for fudge in [ -25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25 ]:  
-        print("Je varie le score du Centre de {0}%".format(fudge))
-        partis["Centre"].fudge = 1+fudge/100. # facteur sur les suffrages
-        totalSieges[fudge] = graphiquesGC(partis,scrutins,arrondissements,fudge=fudge,fudgeParti="Centre")
-    for s in scrutins:
-        plotVariations(s,{fudge:totalSieges[fudge][s][partis['PVL']] for fudge in totalSieges.keys()},
-                       {fudge:totalSieges[fudge][s][partis['Centre']] for fudge in totalSieges.keys()},
-                       partis['Centre'].suffrages/sum([p.suffrages for p in partis.values()]),partis,nom="Centre")
-    partis["Centre"].fudge = 1
 
-    # Je varie les Libres
-    totalSieges = {}
-    for fudge in [ -20, 0, 20, 40, 60, 80, 100 ]:  
-        print("Je varie le score des Libres de {0}%".format(fudge))
-        partis["Libres"].fudge = 1+fudge/100. # facteur sur les suffrages
-        totalSieges[fudge] = graphiquesGC(partis,scrutins,arrondissements,fudge=fudge,fudgeParti="Libres")
-    for s in scrutins:
-        plotVariations(s,{fudge:totalSieges[fudge][s][partis['PVL']] for fudge in totalSieges.keys()},
-                       {fudge:totalSieges[fudge][s][partis['Centre']] for fudge in totalSieges.keys()},
-                       partis['Libres'].suffrages/sum([p.suffrages for p in partis.values()]),partis,nom="Libres",
-                       tiers={fudge:totalSieges[fudge][s][partis['Libres']] for fudge in totalSieges.keys()}
-                      )
+    if args.GC:
+        GrandConseil(scrutins,partis,arrondissements,parti="PVL",MC=False)
+        GrandConseil(scrutins,partis,arrondissements,parti="Centre",MC=False)
+        GrandConseil(scrutins,partis,arrondissements,parti="Libres",MC=False)
+    if args.MC:
+        GrandConseil(scrutins,partis,arrondissements,parti="PVL",MC=True)
+        GrandConseil(scrutins,partis,arrondissements,parti="Centre",MC=True)
+        GrandConseil(scrutins,partis,arrondissements,parti="Libres",MC=True)

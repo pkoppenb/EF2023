@@ -1,0 +1,30 @@
+\begin{verbatim}
+#######################################################
+def GrandConseil(resultats,nsieges,debug=False):
+    """
+    Algorithme du grand conseil - des plus grands restes
+    """
+    if 0==nsieges : return { p: 0 for p in resultats.keys() }
+    if debug:  print("Je dois distribuer {0} sieges sur la base de {1}".format(nsieges,resultats))
+    sieges = {}
+    total = sum(resultats.values())
+    quotient = total/(nsieges+0.5)
+    # 1er passage
+    for p,v in resultats.items():
+        sieges[p] = int(nsieges*resultats[p]/total)
+    second = nsieges-sum(sieges.values())
+    if debug: print("Première distribution: {0}. Il reste {1} siège(s)".format(sieges,second))
+    if 0==second: return sieges  # peu probable
+    # plus grands restes
+    restes = { p: resultats[p]-sieges[p]*quotient for p in resultats.keys() }
+    restes = dict(sorted(restes.items(), key=lambda item: item[1], reverse=True))  # classement
+    if debug: print("    Restes: {0}.".format(restes))
+    for k in list(restes.keys())[:second]: # les n premiers prennent un siège
+        sieges[k]+=1
+    if debug: print("Seconde distribution: {0}".format(sieges))
+    if (sum(sieges.values())!=nsieges):
+        print("Oups! J'ai distribué {0} au lieu de {1} sièges".format(sieges,nsieges))
+        if not debug: GrandConseil(resultats,nsieges,debug=True) # rejoue en mode debug
+        sys.exit()
+    return sieges
+\end{verbatim}        
