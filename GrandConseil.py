@@ -76,12 +76,12 @@ class Apparentement():
         for p in self.partis: r+=p.nom+", "
         return r[:-2]+" ]"   # supprime `, ` et replace par ` ]`
 
-    def attribueSieges(self,ns,arr):
+    def attribueSieges(self,nsieges,arr):
         """
         attribue les sieges pour un arrondissement et distribue sur les partis
         """
         resultats = { p: p.total_par_commune[arr]*p.fudge for p in self.partis }
-        self.sieges_par_arrondissement[arr] = AlgorithmeGrandConseil( resultats, ns )
+        self.sieges_par_arrondissement[arr] = AlgorithmeGrandConseil( resultats, nsieges )
         #print("attribueSieges {0} arr {1}:".format(self.__repr__(),arr))
         #for p in self.partis: print("    {0}*{1}: {2}".format(p.total_par_commune[arr],p.fudge, self.sieges_par_arrondissement[arr][p]))
 
@@ -127,6 +127,49 @@ class Scrutin():
         for a in self.apps: p.extend(a.partis)
         return p
         
+#############################################################################
+class Election():
+    """
+    Une élection dans une circonscription
+    """
+    circonscription = None
+    sieges = None
+    scrutin = None
+    partis = []
+    sieges_partis = {}   # defini plus bas
+
+    def __init__(self,circonscription,partis,sieges=None,scrutin=None):
+        self.circonscription = circonscription
+        self.sieges = sieges
+        self.scrutin = scrutin    # classe Scrutin
+        self.partis = []
+        self.partis = partis
+        if self.sieges: self.distribueSieges()
+        
+    def distribueSieges(self,debug=False):
+        """
+        Distribue les sièges de l'arrondissement
+        """
+        debug = False
+        self.sieges_partis = {}
+        if debug: print("Je teste les apparentements {0}".format(self.scrutin))
+        resultats = { a: a.total_par_arrondissement(self.circonscription) for a in self.scrutin.apps }
+        resultats5 = { a: resultats[a] if resultats[a]/sum(resultats.values())>=_quorum else 0 for a in self.scrutin.apps } # quorum
+        if debug: print(resultats,resultats5)
+        sieges = AlgorithmeGrandConseil(resultats5, self.sieges)
+        for a,s in sieges.items():
+            a.attribueSieges(s,self.circonscription)  # distribue sur les partis
+            if debug: print("     {0}: l'apparentement {1} fait {2} suffrages et {3} sièges".format(self.circonscription,a,a.total_par_arrondissement(self.circonscription),sieges[a]))
+            for p in a.partis:
+                if a.sieges_par_arrondissement[self.circonscription][p]>0 and debug: print("         {0} fait {1} siège(s) à {2}".format(p,a.sieges_par_arrondissement[self.circonscription][p],self.circonscription))
+                if p in self.sieges_partis.keys():
+                    print("{0} est dans plusieurs apparentements".format(p))
+                    sys.exit()
+                self.sieges_partis[p] = a.sieges_par_arrondissement[self.circonscription][p]
+        for p in self.partis.values():
+            if p not in self.sieges_partis.keys(): self.sieges_partis[p] = 0 # si les petits partis ne sont pas dans un apparementement ils n'ont pas de siege
+        # print("Election à {0}, apps. {1}, sieges {2}".format(self.circonscription,self.scrutin,self.sieges_partis))
+            
 #######################################################
 def AlgorithmeGrandConseil(resultats,nsieges,debug=False):
     """
@@ -254,30 +297,6 @@ def genereScrutins(partis):
     scrutins.reverse()
     return scrutins
     
-#######################################################
-def distribueSieges(arr,scrutin,partis,fudge=0.,debug=False):
-    """
-    Distribue les sièges de l'arrondissement
-    """
-    debug = False
-    sieges_partis = {}
-    if debug: print("Je teste les apparentements {0}".format(scrutin))
-    resultats = { a: a.total_par_arrondissement(arr) for a in scrutin.apps }
-    resultats5 = { a: resultats[a] if resultats[a]/sum(resultats.values())>=_quorum else 0 for a in scrutin.apps } # quorum
-    if debug: print(resultats,resultats5)
-    sieges = AlgorithmeGrandConseil(resultats5, _sieges[arr] )
-    for a,s in sieges.items():
-        a.attribueSieges(s,arr)  # distribue sur les partis
-        if debug: print("     {0}: l'apparentement {1} fait {2} suffrages et {3} sièges".format(arr,a,a.total_par_arrondissement(arr),sieges[a]))
-        for p in a.partis:
-            if a.sieges_par_arrondissement[arr][p]>0 and debug: print("         {0} fait {1} siège(s) à {2}".format(p,a.sieges_par_arrondissement[arr][p],arr))
-            if p in sieges_partis.keys():
-                print("{0} est dans plusieurs apparentements".format(p))
-                sys.exit()
-            sieges_partis[p] = a.sieges_par_arrondissement[arr][p]
-    for p in partis.values():
-        if p not in sieges_partis.keys(): sieges_partis[p] = 0 # si les petits partis ne sont pas dans un apparementement ils n'ont pas de siege
-    return sieges_partis
 
 ####################################################
 def plotSieges(arr,combDeSieges,partis,maxx=None,fudge=None,fudgeParti="PVL",MC=False):
@@ -288,8 +307,6 @@ def plotSieges(arr,combDeSieges,partis,maxx=None,fudge=None,fudgeParti="PVL",MC=
     scrutins: apparentements considérés (liste)
     combDeSieges [ {parti: siege,...}, {}...] : combinaisons de sièges par parti. Liste de même taille que scrutins.
     partis: tous les partis
-
-    MC not yet implemented
     """
     # redistribue les sieges par parti
     siegesParParti = {}
@@ -364,7 +381,10 @@ def graphiquesGC(partis,scrutins,arrondissements,fudge=0,fudgeParti="PVL"):
     # print("totalSieges est {0}".format(totalSieges))
     pvl = {}
     for arr in arrondissements.keys():
-        combDeSieges = {s : distribueSieges(arr,s,partis) for s in scrutins}  #
+        combDeSieges = {}
+        for s in scrutins:
+            election = Election(arr,partis,_sieges[arr],s )
+            combDeSieges[s] = election.sieges_partis  # TMP. Utilis ela class Election partout
         pvl[arr] = { s : combDeSieges[s][partis['PVL']] for s in scrutins} # pour la table
         plotSieges(arr,combDeSieges,partis,fudge=fudge,fudgeParti=fudgeParti)
         # somme
@@ -393,8 +413,10 @@ def mcGC(partis,scrutins,arrondissements,fudgeParti="PVL",width=0.1,nMC=100):
             if fudgeParti != n: p.fudge = np.random.normal(1,width) 
         
         for arr in arrondissements.keys():
-            combDeSieges = {s : distribueSieges(arr,s,partis) for s in scrutins}  #
-            # somme
+            combDeSieges = {}
+            for s in scrutins:
+                election = Election(arr,partis,_sieges[arr],s )
+                combDeSieges[s] = election.sieges_partis  # TMP. Utilis ela cla            # somme
             # print("Iter {2} Arr {0} donne {1}".format(arr,combDeSieges,iMC))
             for a in combDeSieges.keys():                 # scrutins
                 for p,s in combDeSieges[a].items():       # partis, sieges
